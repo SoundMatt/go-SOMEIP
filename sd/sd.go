@@ -227,10 +227,14 @@ type registryKey struct {
 	instanceID someip.InstanceID
 }
 
+//fusa:req REQ-SD-005
+
 // NewRegistry returns an empty in-process registry.
 func NewRegistry() *Registry {
 	return &Registry{services: make(map[registryKey]ServiceRecord)}
 }
+
+//fusa:req REQ-SD-006
 
 // Offer registers a service offer. A zero TTL removes the entry.
 func (r *Registry) Offer(entry Entry, endpoint IPv4EndpointOption) {
@@ -247,6 +251,8 @@ func (r *Registry) Offer(entry Entry, endpoint IPv4EndpointOption) {
 	}
 	r.mu.Unlock()
 }
+
+//fusa:req REQ-SD-007
 
 // Find returns all non-expired service records matching serviceID.
 // Use [someip.ServiceID](0xFFFF) to find all services.

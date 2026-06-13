@@ -68,6 +68,8 @@ type Server struct {
 	wg       sync.WaitGroup
 }
 
+//fusa:req REQ-UDP-001
+
 // NewServer creates and starts a SOME/IP UDP server.
 // The server begins listening immediately; call [Server.Close] to stop it.
 func NewServer(cfg ServerConfig) (*Server, error) {
@@ -91,6 +93,8 @@ func NewServer(cfg ServerConfig) (*Server, error) {
 	return s, nil
 }
 
+//fusa:req REQ-UDP-002
+
 // RegisterMethod registers handler for methodID.
 func (s *Server) RegisterMethod(methodID someip.MethodID, handler someip.MethodHandler) error {
 	if s.closed.Load() {
@@ -101,6 +105,8 @@ func (s *Server) RegisterMethod(methodID someip.MethodID, handler someip.MethodH
 	s.mu.Unlock()
 	return nil
 }
+
+//fusa:req REQ-UDP-003
 
 // Emit sends a SOME/IP notification for eventID to all registered subscriber addresses.
 func (s *Server) Emit(eventID someip.EventID, payload []byte) error {
@@ -132,6 +138,8 @@ func (s *Server) Emit(eventID someip.EventID, payload []byte) error {
 	}
 	return nil
 }
+
+//fusa:req REQ-UDP-004
 
 // Close stops the server and releases the UDP socket.
 func (s *Server) Close() error {
@@ -250,6 +258,8 @@ type Service struct {
 	wg        sync.WaitGroup
 }
 
+//fusa:req REQ-UDP-005
+
 // NewService creates a SOME/IP UDP client connected to a remote server.
 func NewService(cfg ServiceConfig) (*Service, error) {
 	serverAddr, err := net.ResolveUDPAddr("udp4", cfg.ServerAddr)
@@ -285,6 +295,8 @@ func (svc *Service) nextSession() someip.SessionID {
 	svc.mu.Unlock()
 	return someip.SessionID(id)
 }
+
+//fusa:req REQ-UDP-006
 
 // Call sends a SOME/IP request and waits for the response.
 func (svc *Service) Call(ctx context.Context, methodID someip.MethodID, payload []byte) (someip.Message, error) {
@@ -332,6 +344,8 @@ func (svc *Service) Call(ctx context.Context, methodID someip.MethodID, payload 
 	}
 }
 
+//fusa:req REQ-UDP-007
+
 // CallNoReturn sends a fire-and-forget SOME/IP request.
 func (svc *Service) CallNoReturn(ctx context.Context, methodID someip.MethodID, payload []byte) error {
 	if svc.closed.Load() {
@@ -350,6 +364,8 @@ func (svc *Service) CallNoReturn(ctx context.Context, methodID someip.MethodID, 
 	_, err := svc.conn.WriteToUDP(frame, svc.serverAddr)
 	return err
 }
+
+//fusa:req REQ-UDP-008
 
 // Subscribe creates a subscription for event notifications.
 // UDP subscriptions receive notifications emitted by the server to this
@@ -378,6 +394,8 @@ func (svc *Service) Subscribe(eventID someip.EventID, opts ...someip.SubscribeOp
 	sub := &udpSubscription{svc: svc, eventID: eventID, ch: ch}
 	return sub, nil
 }
+
+//fusa:req REQ-UDP-009
 
 // Close stops the service.
 func (svc *Service) Close() error {
@@ -447,8 +465,10 @@ type udpSubscription struct {
 	closed  atomic.Bool
 }
 
+//fusa:req REQ-UDP-010
 func (s *udpSubscription) C() <-chan someip.Message { return s.ch }
 
+//fusa:req REQ-UDP-011
 func (s *udpSubscription) Unsubscribe() error {
 	if val, ok := s.svc.subs.Load(s.eventID); ok {
 		if chans, ok := val.([]chan someip.Message); ok {
@@ -464,6 +484,7 @@ func (s *udpSubscription) Unsubscribe() error {
 	return nil
 }
 
+//fusa:req REQ-UDP-012
 func (s *udpSubscription) Close() error {
 	_ = s.Unsubscribe()
 	s.once.Do(func() {
