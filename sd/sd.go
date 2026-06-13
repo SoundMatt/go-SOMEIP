@@ -170,9 +170,6 @@ type IPv4EndpointOption struct {
 	Port uint16
 }
 
-// optionHeaderSize is the 3-byte common option header (Length[2] + Type[1]).
-const optionHeaderSize = 3
-
 // ipv4OptionLength is the Length field value for IPv4 endpoint options (9 bytes after the header type).
 const ipv4OptionLength = 9
 
