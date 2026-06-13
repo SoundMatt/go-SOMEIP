@@ -177,6 +177,7 @@ type offerKey struct {
 type offerRecord struct {
 	cfg    OfferConfig
 	ticker *time.Ticker
+	done   chan struct{}
 }
 
 // Daemon is a SOME/IP-SD agent that uses real UDP sockets.
@@ -263,11 +264,13 @@ func (d *Daemon) Offer(cfg OfferConfig) {
 	d.sendOffer(cfg, false)
 
 	ticker := time.NewTicker(interval)
-	rec := &offerRecord{cfg: cfg, ticker: ticker}
+	done := make(chan struct{})
+	rec := &offerRecord{cfg: cfg, ticker: ticker, done: done}
 
 	d.mu.Lock()
 	if old, ok := d.offers[key]; ok {
 		old.ticker.Stop()
+		close(old.done)
 	}
 	d.offers[key] = rec
 	d.mu.Unlock()
@@ -277,14 +280,13 @@ func (d *Daemon) Offer(cfg OfferConfig) {
 		defer d.wg.Done()
 		for {
 			select {
-			case _, ok := <-ticker.C:
-				if !ok {
-					return
-				}
+			case <-ticker.C:
 				if d.closed.Load() {
 					return
 				}
 				d.sendOffer(cfg, false)
+			case <-done:
+				return
 			}
 		}
 	}()
@@ -318,10 +320,11 @@ func (d *Daemon) Close() error {
 		return nil
 	}
 
-	// Stop all offer tickers and send StopOffer (TTL=0).
+	// Stop all offer tickers, wake their goroutines, and send StopOffer (TTL=0).
 	d.mu.Lock()
 	for _, rec := range d.offers {
 		rec.ticker.Stop()
+		close(rec.done)
 		stop := rec.cfg
 		stop.Entry.TTL = 0
 		d.sendOffer(stop, true)
