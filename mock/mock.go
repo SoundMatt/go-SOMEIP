@@ -323,7 +323,7 @@ func (sub *subscription) Unsubscribe() error {
 }
 
 func (sub *subscription) Close() error {
-	sub.Unsubscribe()
+	_ = sub.Unsubscribe()
 	sub.closeOnce()
 	return nil
 }
