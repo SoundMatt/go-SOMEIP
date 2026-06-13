@@ -16,6 +16,8 @@ import (
 // ── Payload codec unit tests (no network, no build tag) ───────────────────────
 
 func TestEncodeDecodeSDFrame_OfferNoOption(t *testing.T) {
+	//fusa:test REQ-SDUDP-001
+	//fusa:test REQ-SDUDP-002
 	entry := sd.Entry{
 		Type:         sd.EntryTypeOffer,
 		ServiceID:    someip.ServiceID(0x1234),
@@ -55,6 +57,8 @@ func TestEncodeDecodeSDFrame_OfferNoOption(t *testing.T) {
 }
 
 func TestEncodeDecodeSDFrame_OfferWithEndpointOption(t *testing.T) {
+	//fusa:test REQ-SDUDP-001
+	//fusa:test REQ-SDUDP-002
 	entry := sd.Entry{
 		Type:         sd.EntryTypeOffer,
 		ServiceID:    someip.ServiceID(0x5678),
@@ -88,6 +92,9 @@ func TestEncodeDecodeSDFrame_OfferWithEndpointOption(t *testing.T) {
 }
 
 func TestEncodeDecodeSDFrame_Find(t *testing.T) {
+	//fusa:test REQ-SDUDP-001
+	//fusa:test REQ-SDUDP-002
+	//fusa:test REQ-SDUDP-007
 	entry := sd.Entry{
 		Type:         sd.EntryTypeFind,
 		ServiceID:    someip.ServiceID(0xAAAA),
@@ -111,6 +118,8 @@ func TestEncodeDecodeSDFrame_Find(t *testing.T) {
 }
 
 func TestEncodeDecodeSDFrame_Subscribe(t *testing.T) {
+	//fusa:test REQ-SDUDP-001
+	//fusa:test REQ-SDUDP-009
 	entry := sd.Entry{
 		Type:         sd.EntryTypeSubscribe,
 		ServiceID:    someip.ServiceID(0x1234),
@@ -134,6 +143,7 @@ func TestEncodeDecodeSDFrame_Subscribe(t *testing.T) {
 }
 
 func TestDecodeSDPayload_TooShort(t *testing.T) {
+	//fusa:test REQ-SDUDP-002
 	_, err := decodeSDPayload([]byte{0x80, 0x00, 0x00})
 	if err == nil {
 		t.Error("expected error for truncated payload, got nil")
@@ -141,6 +151,7 @@ func TestDecodeSDPayload_TooShort(t *testing.T) {
 }
 
 func TestDecodeSDPayload_EntriesLenOverflow(t *testing.T) {
+	//fusa:test REQ-SDUDP-002
 	// Flags(4) + EntriesLen(4 = 0xFFFFFFFF) — entries extend past end of slice.
 	payload := make([]byte, 8)
 	payload[4] = 0xFF
@@ -154,6 +165,8 @@ func TestDecodeSDPayload_EntriesLenOverflow(t *testing.T) {
 }
 
 func TestEncodeDecodeSDFrame_StopOffer(t *testing.T) {
+	//fusa:test REQ-SDUDP-001
+	//fusa:test REQ-SDUDP-008
 	entry := sd.Entry{
 		Type:         sd.EntryTypeOffer,
 		ServiceID:    someip.ServiceID(0x1234),
@@ -173,6 +186,7 @@ func TestEncodeDecodeSDFrame_StopOffer(t *testing.T) {
 }
 
 func TestEncodeSDFrame_AppendsToDst(t *testing.T) {
+	//fusa:test REQ-SDUDP-001
 	header := []byte("HEADER")
 	entry := sd.Entry{Type: sd.EntryTypeFind, ServiceID: 0x0001, InstanceID: 0xFFFF, MajorVersion: 0xFF, TTL: 1, MinorVersion: 0xFFFFFFFF}
 	result := encodeSDFrame(header, 0x00, entry, nil, 0)

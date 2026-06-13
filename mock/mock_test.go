@@ -30,6 +30,10 @@ func newBusWithEchoServer(t *testing.T) (*mock.Bus, someip.Server) {
 }
 
 func TestCallEcho(t *testing.T) {
+	//fusa:test REQ-MOCK-001
+	//fusa:test REQ-MOCK-002
+	//fusa:test REQ-MOCK-003
+	//fusa:test REQ-MOCK-007
 	bus, srv := newBusWithEchoServer(t)
 	defer srv.Close()
 
@@ -52,6 +56,7 @@ func TestCallEcho(t *testing.T) {
 }
 
 func TestCallUnknownMethod(t *testing.T) {
+	//fusa:test REQ-MOCK-007
 	bus, srv := newBusWithEchoServer(t)
 	defer srv.Close()
 
@@ -65,6 +70,7 @@ func TestCallUnknownMethod(t *testing.T) {
 }
 
 func TestNewServiceUnknownService(t *testing.T) {
+	//fusa:test REQ-MOCK-002
 	bus := mock.NewBus()
 	_, err := bus.NewService(0xDEAD, 0x0001)
 	if !errors.Is(err, someip.ErrUnknownService) {
@@ -73,6 +79,8 @@ func TestNewServiceUnknownService(t *testing.T) {
 }
 
 func TestCallNoReturn(t *testing.T) {
+	//fusa:test REQ-MOCK-004
+	//fusa:test REQ-MOCK-008
 	bus := mock.NewBus()
 	srv, _ := bus.NewServer(0x1234, 0x0001)
 	defer srv.Close()
@@ -98,6 +106,9 @@ func TestCallNoReturn(t *testing.T) {
 }
 
 func TestEventSubscribeEmit(t *testing.T) {
+	//fusa:test REQ-MOCK-005
+	//fusa:test REQ-MOCK-009
+	//fusa:test REQ-MOCK-011
 	bus, srv := newBusWithEchoServer(t)
 	defer srv.Close()
 
@@ -130,6 +141,8 @@ func TestEventSubscribeEmit(t *testing.T) {
 }
 
 func TestSubscribeUnsubscribeNoFurtherEvents(t *testing.T) {
+	//fusa:test REQ-MOCK-012
+	//fusa:test REQ-MOCK-013
 	bus, srv := newBusWithEchoServer(t)
 	defer srv.Close()
 
@@ -153,6 +166,7 @@ func TestSubscribeUnsubscribeNoFurtherEvents(t *testing.T) {
 }
 
 func TestServerCloseIdempotent(t *testing.T) {
+	//fusa:test REQ-MOCK-006
 	bus := mock.NewBus()
 	srv, _ := bus.NewServer(0x1234, 0x0001)
 	if err := srv.Close(); err != nil {
@@ -164,6 +178,8 @@ func TestServerCloseIdempotent(t *testing.T) {
 }
 
 func TestCallAfterServerClose(t *testing.T) {
+	//fusa:test REQ-MOCK-006
+	//fusa:test REQ-MOCK-010
 	bus, srv := newBusWithEchoServer(t)
 	svc, _ := bus.NewService(0x1234, 0x0001)
 	srv.Close()
@@ -175,6 +191,7 @@ func TestCallAfterServerClose(t *testing.T) {
 }
 
 func TestSessionIDIncrement(t *testing.T) {
+	//fusa:test REQ-MOCK-007
 	bus, srv := newBusWithEchoServer(t)
 	defer srv.Close()
 

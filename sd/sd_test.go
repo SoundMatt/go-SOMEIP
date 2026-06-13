@@ -29,6 +29,7 @@ var knownGoodOfferEntry = []byte{
 }
 
 func TestDecodeOfferEntry(t *testing.T) {
+	//fusa:test REQ-SD-003
 	e, err := sd.DecodeEntry(knownGoodOfferEntry)
 	if err != nil {
 		t.Fatalf("DecodeEntry: %v", err)
@@ -48,6 +49,9 @@ func TestDecodeOfferEntry(t *testing.T) {
 }
 
 func TestEncodeDecodeEntryRoundTrip(t *testing.T) {
+	//fusa:test REQ-SD-001
+	//fusa:test REQ-SD-002
+	//fusa:test REQ-SD-003
 	original := sd.Entry{
 		Type:         sd.EntryTypeOffer,
 		ServiceID:    0xABCD,
@@ -76,6 +80,8 @@ func TestEncodeDecodeEntryRoundTrip(t *testing.T) {
 }
 
 func TestEncodeDecodeSubscribeEntry(t *testing.T) {
+	//fusa:test REQ-SD-002
+	//fusa:test REQ-SD-003
 	original := sd.Entry{
 		Type:         sd.EntryTypeSubscribe,
 		ServiceID:    0x1234,
@@ -95,6 +101,7 @@ func TestEncodeDecodeSubscribeEntry(t *testing.T) {
 }
 
 func TestDecodeShortEntry(t *testing.T) {
+	//fusa:test REQ-SD-003
 	_, err := sd.DecodeEntry([]byte{0x01, 0x00})
 	if !errors.Is(err, sd.ErrShortEntry) {
 		t.Errorf("expected ErrShortEntry, got %v", err)
@@ -102,6 +109,7 @@ func TestDecodeShortEntry(t *testing.T) {
 }
 
 func TestDecodeUnknownEntryType(t *testing.T) {
+	//fusa:test REQ-SD-003
 	b := make([]byte, sd.EntrySize)
 	b[0] = 0xFF // unknown type
 	_, err := sd.DecodeEntry(b)
@@ -111,6 +119,7 @@ func TestDecodeUnknownEntryType(t *testing.T) {
 }
 
 func TestIPv4OptionRoundTrip(t *testing.T) {
+	//fusa:test REQ-SD-004
 	original := sd.IPv4EndpointOption{
 		IP:       net.ParseIP("192.168.1.100").To4(),
 		Protocol: 0x11, // UDP
@@ -136,6 +145,9 @@ func TestIPv4OptionRoundTrip(t *testing.T) {
 }
 
 func TestRegistryOfferAndFind(t *testing.T) {
+	//fusa:test REQ-SD-005
+	//fusa:test REQ-SD-006
+	//fusa:test REQ-SD-007
 	reg := sd.NewRegistry()
 
 	entry := sd.Entry{
@@ -162,6 +174,7 @@ func TestRegistryOfferAndFind(t *testing.T) {
 }
 
 func TestRegistryFindAll(t *testing.T) {
+	//fusa:test REQ-SD-007
 	reg := sd.NewRegistry()
 	for i := someip.ServiceID(0x0001); i <= 0x0003; i++ {
 		reg.Offer(sd.Entry{
@@ -178,6 +191,7 @@ func TestRegistryFindAll(t *testing.T) {
 }
 
 func TestRegistryOfferTTLZeroRemoves(t *testing.T) {
+	//fusa:test REQ-SD-006
 	reg := sd.NewRegistry()
 	entry := sd.Entry{
 		Type: sd.EntryTypeOffer, ServiceID: 0x1234, InstanceID: 0x0001, TTL: 60,

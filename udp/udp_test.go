@@ -18,6 +18,10 @@ import (
 )
 
 func TestUDPCallEcho(t *testing.T) {
+	//fusa:test REQ-UDP-001
+	//fusa:test REQ-UDP-002
+	//fusa:test REQ-UDP-005
+	//fusa:test REQ-UDP-006
 	srv, err := udp.NewServer(udp.ServerConfig{
 		Addr:       "127.0.0.1:0",
 		ServiceID:  0x1234,
@@ -56,6 +60,8 @@ func TestUDPCallEcho(t *testing.T) {
 }
 
 func TestUDPCallUnknownMethod(t *testing.T) {
+	//fusa:test REQ-UDP-003
+	//fusa:test REQ-UDP-006
 	srv, err := udp.NewServer(udp.ServerConfig{
 		Addr: "127.0.0.1:0", ServiceID: 0x1234, InstanceID: 0x0001,
 	})
@@ -87,6 +93,9 @@ func TestUDPCallUnknownMethod(t *testing.T) {
 }
 
 func TestUDPCallNoReturn(t *testing.T) {
+	//fusa:test REQ-UDP-004
+	//fusa:test REQ-UDP-007
+	//fusa:test REQ-UDP-009
 	srv, err := udp.NewServer(udp.ServerConfig{
 		Addr: "127.0.0.1:0", ServiceID: 0x1234, InstanceID: 0x0001,
 	})

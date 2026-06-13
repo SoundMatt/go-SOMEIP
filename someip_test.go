@@ -12,6 +12,7 @@ import (
 )
 
 func TestMessageTypeConstants(t *testing.T) {
+	//fusa:test REQ-MSG-001
 	cases := []struct {
 		name string
 		got  someip.MessageType
@@ -33,6 +34,7 @@ func TestMessageTypeConstants(t *testing.T) {
 }
 
 func TestReturnCodeConstants(t *testing.T) {
+	//fusa:test REQ-MSG-002
 	cases := []struct {
 		name string
 		got  someip.ReturnCode
@@ -53,6 +55,7 @@ func TestReturnCodeConstants(t *testing.T) {
 }
 
 func TestSubscribeConfigDefaults(t *testing.T) {
+	//fusa:test REQ-SUB-001
 	cfg := someip.ApplySubscribeOpts(nil)
 	if got := cfg.ChanDepth(64); got != 64 {
 		t.Errorf("default ChanDepth: got %d, want 64", got)
@@ -60,6 +63,7 @@ func TestSubscribeConfigDefaults(t *testing.T) {
 }
 
 func TestSubscribeConfigWithChannelDepth(t *testing.T) {
+	//fusa:test REQ-SUB-001
 	cfg := someip.ApplySubscribeOpts([]someip.SubscribeOption{someip.WithChannelDepth(128)})
 	if got := cfg.ChanDepth(64); got != 128 {
 		t.Errorf("WithChannelDepth: got %d, want 128", got)
@@ -67,6 +71,7 @@ func TestSubscribeConfigWithChannelDepth(t *testing.T) {
 }
 
 func TestSentinelErrors(t *testing.T) {
+	//fusa:test REQ-ERR-001
 	errs := []error{
 		someip.ErrClosed,
 		someip.ErrTimeout,
