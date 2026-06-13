@@ -45,6 +45,8 @@ AUTOSAR spec completeness does not.
 | v0.5.0 | `e2e` | E2E protection — CRC and counter headers (AUTOSAR E2E Profile 01/05) |
 | v0.6.0 | `bridge/dds` | Bidirectional SOME/IP ↔ DDS bridge (go-DDS) |
 | v0.7.0 | `bridge/mqtt` | Bidirectional SOME/IP ↔ MQTT bridge (go-mqtt) |
+| v0.8.0 | `bridge/grpc` | SOME/IP ↔ gRPC bridge — method calls as Unary RPCs, events as server-streaming |
+| v0.9.0 | `bridge/rest` | SOME/IP ↔ REST/SSE bridge — HTTP endpoints for methods, SSE stream for events |
 | v1.0.0 | — | Stable API, full test coverage, production-ready |
 
 ---
@@ -95,3 +97,17 @@ AUTOSAR spec completeness does not.
 - [ ] `bridge/mqtt/`: bidirectional SOME/IP ↔ MQTT bridge using go-mqtt
 - [ ] Event notifications forwarded to MQTT topics; MQTT → SOME/IP request mapping
 - [ ] QoS and topic prefix configuration
+
+### v0.8.0 — gRPC Bridge
+
+- [ ] `bridge/grpc/`: SOME/IP ↔ gRPC bridge
+- [ ] SOME/IP method calls mapped to gRPC Unary RPCs
+- [ ] SOME/IP event streams mapped to gRPC server-streaming RPCs
+- [ ] Protobuf payload pass-through; serviceID/methodID → service/method reflection
+
+### v0.9.0 — REST/SSE Bridge
+
+- [ ] `bridge/rest/`: SOME/IP ↔ REST bridge
+- [ ] HTTP POST endpoint per SOME/IP method (path `/services/{svcID}/{methodID}`)
+- [ ] SSE stream for SOME/IP event notifications (`GET /events/{svcID}/{eventID}`)
+- [ ] JSON payload encoding; configurable port and path prefix
