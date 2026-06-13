@@ -138,9 +138,9 @@ func (s *Server) Close() error {
 	if !s.closed.CompareAndSwap(false, true) {
 		return nil
 	}
-	s.conn.Close()
+	err := s.conn.Close()
 	s.wg.Wait()
-	return nil
+	return err
 }
 
 // LocalAddr returns the local UDP address the server is bound to.
@@ -361,12 +361,19 @@ func (svc *Service) Subscribe(eventID someip.EventID, opts ...someip.SubscribeOp
 	cfg := someip.ApplySubscribeOpts(opts)
 	ch := make(chan someip.Message, cfg.ChanDepth(64))
 
-	actual, _ := svc.subs.LoadOrStore(eventID, &sync.Mutex{})
-	_ = actual
-	// Store the channel in a slice under the eventID.
-	val, _ := svc.subs.LoadOrStore(eventID, []chan someip.Message{})
-	chans := val.([]chan someip.Message)
-	svc.subs.Store(eventID, append(chans, ch))
+	for {
+		actual, loaded := svc.subs.LoadOrStore(eventID, []chan someip.Message{ch})
+		if !loaded {
+			break
+		}
+		old, ok := actual.([]chan someip.Message)
+		if !ok {
+			break
+		}
+		if svc.subs.CompareAndSwap(eventID, actual, append(old, ch)) {
+			break
+		}
+	}
 
 	sub := &udpSubscription{svc: svc, eventID: eventID, ch: ch}
 	return sub, nil
@@ -377,9 +384,9 @@ func (svc *Service) Close() error {
 	if !svc.closed.CompareAndSwap(false, true) {
 		return nil
 	}
-	svc.conn.Close()
+	err := svc.conn.Close()
 	svc.wg.Wait()
-	return nil
+	return err
 }
 
 func (svc *Service) readLoop() {
@@ -408,10 +415,12 @@ func (svc *Service) dispatchFrame(frame []byte) {
 	switch msg.MessageType {
 	case someip.Notification:
 		if val, ok := svc.subs.Load(msg.MethodID); ok {
-			for _, ch := range val.([]chan someip.Message) {
-				select {
-				case ch <- msg:
-				default:
+			if chans, ok := val.([]chan someip.Message); ok {
+				for _, ch := range chans {
+					select {
+					case ch <- msg:
+					default:
+					}
 				}
 			}
 		}
@@ -442,20 +451,21 @@ func (s *udpSubscription) C() <-chan someip.Message { return s.ch }
 
 func (s *udpSubscription) Unsubscribe() error {
 	if val, ok := s.svc.subs.Load(s.eventID); ok {
-		chans := val.([]chan someip.Message)
-		filtered := chans[:0]
-		for _, c := range chans {
-			if c != s.ch {
-				filtered = append(filtered, c)
+		if chans, ok := val.([]chan someip.Message); ok {
+			filtered := chans[:0]
+			for _, c := range chans {
+				if c != s.ch {
+					filtered = append(filtered, c)
+				}
 			}
+			s.svc.subs.Store(s.eventID, filtered)
 		}
-		s.svc.subs.Store(s.eventID, filtered)
 	}
 	return nil
 }
 
 func (s *udpSubscription) Close() error {
-	s.Unsubscribe()
+	_ = s.Unsubscribe()
 	s.once.Do(func() {
 		s.closed.Store(true)
 		close(s.ch)
