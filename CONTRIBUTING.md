@@ -41,6 +41,7 @@ have the right to contribute under the existing license.
 
 ## Design principles
 
-go-SOMEIP is intentionally pure SOME/IP. It has no bridge packages and no
-dependencies on sibling projects (go-DDS, go-mqtt, etc.). If you need
-cross-protocol adapters, add them to the consuming project.
+go-SOMEIP is the authoritative Go SOME/IP implementation. Bridge packages
+(e.g. `bridge/dds`, `bridge/mqtt`) live inside this repo, following the
+same pattern as go-DDS. Sibling projects that consume go-SOMEIP depend on
+it, not the other way around.

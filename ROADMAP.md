@@ -29,7 +29,7 @@ AUTOSAR spec completeness does not.
 3. Simplicity over completeness
 4. Testability by default — zero-dependency mock transport
 5. Safety as a first-class concern (go-FuSa)
-6. No bridge packages — other projects adapt to go-SOMEIP
+6. Bridges welcome — `bridge/dds`, `bridge/mqtt`, etc. live in this repo
 7. Automotive Ethernet as a primary deployment target
 
 ---
@@ -43,6 +43,8 @@ AUTOSAR spec completeness does not.
 | v0.3.0 | `sd/udp` | SOME/IP-SD over UDP — real service discovery with periodic offer refresh |
 | v0.4.0 | `tp` | SOME/IP-TP — segmented transport for large payloads (>1400 bytes) |
 | v0.5.0 | `e2e` | E2E protection — CRC and counter headers (AUTOSAR E2E Profile 01/05) |
+| v0.6.0 | `bridge/dds` | Bidirectional SOME/IP ↔ DDS bridge (go-DDS) |
+| v0.7.0 | `bridge/mqtt` | Bidirectional SOME/IP ↔ MQTT bridge (go-mqtt) |
 | v1.0.0 | — | Stable API, full test coverage, production-ready |
 
 ---
@@ -81,3 +83,15 @@ AUTOSAR spec completeness does not.
 - [ ] `e2e/`: E2E Profile 01 (CRC-8) and Profile 05 (CRC-32)
 - [ ] Counter-based freshness
 - [ ] Integration with `Server.Emit` and `Service.Call`
+
+### v0.6.0 — DDS Bridge
+
+- [ ] `bridge/dds/`: bidirectional SOME/IP ↔ DDS bridge using go-DDS
+- [ ] Method calls forwarded as DDS RPC; events forwarded as DDS samples
+- [ ] Topic/serviceID mapping configuration
+
+### v0.7.0 — MQTT Bridge
+
+- [ ] `bridge/mqtt/`: bidirectional SOME/IP ↔ MQTT bridge using go-mqtt
+- [ ] Event notifications forwarded to MQTT topics; MQTT → SOME/IP request mapping
+- [ ] QoS and topic prefix configuration

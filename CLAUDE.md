@@ -68,7 +68,7 @@ go test -tags integration -race ./udp/...
 
 ## Design constraints
 
-- No bridge packages — go-SOMEIP is pure SOME/IP. Sibling projects adapt.
+- Bridge packages (`bridge/dds`, `bridge/mqtt`, etc.) live in this repo, like go-DDS.
 - No CGo — pure Go only.
 - All exported types carry `//fusa:req` annotations.
 - License header on every .go file.
