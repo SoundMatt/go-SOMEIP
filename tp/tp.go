@@ -176,11 +176,12 @@ type ReassemblerConfig struct {
 //
 //fusa:req REQ-TP-002
 type Reassembler struct {
-	timeout time.Duration
-	mu      sync.Mutex
-	windows map[assemblyKey]*assemblyWindow
-	ticker  *time.Ticker
-	done    chan struct{}
+	timeout    time.Duration
+	mu         sync.Mutex
+	windows    map[assemblyKey]*assemblyWindow
+	tombstones map[assemblyKey]time.Time // key → tombstone expiry
+	ticker     *time.Ticker
+	done       chan struct{}
 }
 
 // NewReassembler creates a [Reassembler] that evicts stale windows periodically.
@@ -196,10 +197,11 @@ func NewReassembler(cfg ReassemblerConfig) *Reassembler {
 		gcInterval = timeout / 2
 	}
 	r := &Reassembler{
-		timeout: timeout,
-		windows: make(map[assemblyKey]*assemblyWindow),
-		ticker:  time.NewTicker(gcInterval),
-		done:    make(chan struct{}),
+		timeout:    timeout,
+		windows:    make(map[assemblyKey]*assemblyWindow),
+		tombstones: make(map[assemblyKey]time.Time),
+		ticker:     time.NewTicker(gcInterval),
+		done:       make(chan struct{}),
 	}
 	go r.gcLoop()
 	return r
@@ -232,16 +234,22 @@ func (r *Reassembler) Add(seg someip.Message) (*someip.Message, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
+	now := time.Now()
 	win, exists := r.windows[key]
 	if !exists {
+		// Check tombstone: a previous window for this key timed out.
+		if exp, hasTombstone := r.tombstones[key]; hasTombstone && now.Before(exp) {
+			return nil, ErrReassemblyTimeout
+		}
 		win = &assemblyWindow{
 			template:  seg,
 			segments:  make(map[int][]byte),
 			totalSize: -1,
-			expires:   time.Now().Add(r.timeout),
+			expires:   now.Add(r.timeout),
 		}
 		r.windows[key] = win
-	} else if time.Now().After(win.expires) {
+	} else if now.After(win.expires) {
+		r.tombstones[key] = now.Add(2 * r.timeout)
 		delete(r.windows, key)
 		return nil, ErrReassemblyTimeout
 	}
@@ -284,6 +292,7 @@ func (r *Reassembler) Close() {
 	close(r.done)
 	r.mu.Lock()
 	r.windows = make(map[assemblyKey]*assemblyWindow)
+	r.tombstones = make(map[assemblyKey]time.Time)
 	r.mu.Unlock()
 }
 
@@ -295,7 +304,14 @@ func (r *Reassembler) gcLoop() {
 			r.mu.Lock()
 			for key, win := range r.windows {
 				if now.After(win.expires) {
+					// Leave a tombstone so late-arriving segments return ErrReassemblyTimeout.
+					r.tombstones[key] = now.Add(2 * r.timeout)
 					delete(r.windows, key)
+				}
+			}
+			for key, exp := range r.tombstones {
+				if now.After(exp) {
+					delete(r.tombstones, key)
 				}
 			}
 			r.mu.Unlock()
