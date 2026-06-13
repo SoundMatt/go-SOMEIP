@@ -46,10 +46,14 @@ type busKey struct {
 	instanceID someip.InstanceID
 }
 
+//fusa:req REQ-MOCK-001
+
 // NewBus returns an empty in-process bus.
 func NewBus() *Bus {
 	return &Bus{servers: make(map[busKey]*server)}
 }
+
+//fusa:req REQ-MOCK-002
 
 // NewServer creates a [someip.Server] attached to this bus.
 // Returns [someip.ErrClosed] if the bus is closed.
@@ -68,6 +72,8 @@ func (b *Bus) NewServer(serviceID someip.ServiceID, instanceID someip.InstanceID
 	b.servers[key] = s
 	return s, nil
 }
+
+//fusa:req REQ-MOCK-003
 
 // NewService creates a [someip.Service] connected to an existing server on this bus.
 // Returns [someip.ErrUnknownService] if no server is registered for the given
@@ -94,6 +100,7 @@ type server struct {
 	closed     atomic.Bool
 }
 
+//fusa:req REQ-MOCK-004
 func (s *server) RegisterMethod(methodID someip.MethodID, handler someip.MethodHandler) error {
 	if s.closed.Load() {
 		return someip.ErrClosed
@@ -104,6 +111,7 @@ func (s *server) RegisterMethod(methodID someip.MethodID, handler someip.MethodH
 	return nil
 }
 
+//fusa:req REQ-MOCK-005
 func (s *server) Emit(eventID someip.EventID, payload []byte) error {
 	if s.closed.Load() {
 		return someip.ErrClosed
@@ -138,6 +146,7 @@ func (s *server) Emit(eventID someip.EventID, payload []byte) error {
 	return nil
 }
 
+//fusa:req REQ-MOCK-006
 func (s *server) Close() error {
 	if !s.closed.CompareAndSwap(false, true) {
 		return nil
@@ -240,6 +249,7 @@ func (svc *service) nextSession() someip.SessionID {
 	return someip.SessionID(id)
 }
 
+//fusa:req REQ-MOCK-007
 func (svc *service) Call(ctx context.Context, methodID someip.MethodID, payload []byte) (someip.Message, error) {
 	if svc.closed.Load() {
 		return someip.Message{}, someip.ErrClosed
@@ -247,6 +257,7 @@ func (svc *service) Call(ctx context.Context, methodID someip.MethodID, payload 
 	return svc.srv.call(ctx, methodID, 0x0001, svc.nextSession(), payload)
 }
 
+//fusa:req REQ-MOCK-008
 func (svc *service) CallNoReturn(ctx context.Context, methodID someip.MethodID, payload []byte) error {
 	if svc.closed.Load() {
 		return someip.ErrClosed
@@ -282,6 +293,7 @@ func (svc *service) CallNoReturn(ctx context.Context, methodID someip.MethodID, 
 	return nil
 }
 
+//fusa:req REQ-MOCK-009
 func (svc *service) Subscribe(eventID someip.EventID, opts ...someip.SubscribeOption) (someip.Subscription, error) {
 	if svc.closed.Load() {
 		return nil, someip.ErrClosed
@@ -298,6 +310,7 @@ func (svc *service) Subscribe(eventID someip.EventID, opts ...someip.SubscribeOp
 	return sub, nil
 }
 
+//fusa:req REQ-MOCK-010
 func (svc *service) Close() error {
 	svc.closed.Store(true)
 	return nil
@@ -313,15 +326,18 @@ type subscription struct {
 	closed  atomic.Bool
 }
 
+//fusa:req REQ-MOCK-011
 func (sub *subscription) C() <-chan someip.Message {
 	return sub.ch
 }
 
+//fusa:req REQ-MOCK-012
 func (sub *subscription) Unsubscribe() error {
 	sub.srv.removeSub(sub.eventID, sub)
 	return nil
 }
 
+//fusa:req REQ-MOCK-013
 func (sub *subscription) Close() error {
 	_ = sub.Unsubscribe()
 	sub.closeOnce()

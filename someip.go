@@ -29,6 +29,8 @@ import (
 
 // ── Sentinel errors ───────────────────────────────────────────────────────────
 
+//fusa:req REQ-ERR-001
+
 // ErrClosed is returned when an operation is called on a closed entity.
 var ErrClosed = errors.New("someip: entity is closed")
 
