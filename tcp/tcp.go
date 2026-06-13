@@ -76,7 +76,7 @@ type Server struct {
 // NewServer creates and starts a SOME/IP TCP server.
 // The server begins accepting connections immediately; call [Server.Close] to stop it.
 func NewServer(cfg ServerConfig) (*Server, error) {
-	ln, err := net.Listen("tcp4", cfg.Addr)
+	ln, err := (&net.ListenConfig{}).Listen(context.Background(), "tcp4", cfg.Addr)
 	if err != nil {
 		return nil, fmt.Errorf("tcp: listen %q: %w", cfg.Addr, err)
 	}
@@ -245,7 +245,7 @@ func NewService(cfg ServiceConfig) (*Service, error) {
 		pending: make(map[someip.SessionID]chan someip.Message),
 	}
 
-	conn, err := net.DialTimeout("tcp4", cfg.ServerAddr, dialTimeout)
+	conn, err := (&net.Dialer{Timeout: dialTimeout}).DialContext(context.Background(), "tcp4", cfg.ServerAddr)
 	if err != nil {
 		return nil, fmt.Errorf("tcp: dial %q: %w", cfg.ServerAddr, err)
 	}
