@@ -46,6 +46,9 @@ var ErrCounterMismatch = errors.New("e2e: counter mismatch")
 // ErrShortFrame is returned when the protected data is shorter than the E2E header.
 var ErrShortFrame = errors.New("e2e: frame shorter than E2E header")
 
+// ErrInvalidCounter is returned when the counter value is outside the allowed range for the profile.
+var ErrInvalidCounter = errors.New("e2e: counter out of range")
+
 // ── CRC-8/SAE-J1850 (Profile 01) ─────────────────────────────────────────────
 
 // crc8Table holds the pre-computed CRC-8/SAE-J1850 lookup table.
@@ -112,7 +115,7 @@ func NewProfile01(cfg Profile01Config) *Profile01 {
 //fusa:req REQ-E2E-003
 func (p *Profile01) Protect(payload []byte, counter uint8) ([]byte, error) {
 	if counter > 14 {
-		return nil, fmt.Errorf("e2e: Profile01 counter %d out of range [0,14]", counter)
+		return nil, fmt.Errorf("e2e: Profile01 counter %d: %w", counter, ErrInvalidCounter)
 	}
 
 	// Header byte 1 = (DataID[0] & 0xF0) | (counter & 0x0F)

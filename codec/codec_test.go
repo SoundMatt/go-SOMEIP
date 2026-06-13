@@ -32,6 +32,7 @@ var knownGoodFrame = []byte{
 }
 
 func TestDecodeKnownGoodFrame(t *testing.T) {
+	//fusa:test REQ-CODEC-002
 	msg, err := codec.Decode(knownGoodFrame)
 	if err != nil {
 		t.Fatalf("Decode: %v", err)
@@ -66,6 +67,8 @@ func TestDecodeKnownGoodFrame(t *testing.T) {
 }
 
 func TestEncodeDecodeRoundTrip(t *testing.T) {
+	//fusa:test REQ-CODEC-001
+	//fusa:test REQ-CODEC-002
 	original := someip.Message{
 		ServiceID:        0xABCD,
 		MethodID:         0x8001,
@@ -99,6 +102,7 @@ func TestEncodeDecodeRoundTrip(t *testing.T) {
 }
 
 func TestEncodeEmptyPayload(t *testing.T) {
+	//fusa:test REQ-CODEC-001
 	msg := someip.Message{
 		ServiceID:   0x0001,
 		MethodID:    0x0001,
@@ -119,6 +123,7 @@ func TestEncodeEmptyPayload(t *testing.T) {
 }
 
 func TestDecodeShortFrame(t *testing.T) {
+	//fusa:test REQ-CODEC-002
 	_, err := codec.Decode([]byte{0x12, 0x34})
 	if !errors.Is(err, codec.ErrShortFrame) {
 		t.Errorf("expected ErrShortFrame, got %v", err)
@@ -126,6 +131,7 @@ func TestDecodeShortFrame(t *testing.T) {
 }
 
 func TestDecodeLengthMismatch(t *testing.T) {
+	//fusa:test REQ-CODEC-002
 	// Valid header but Length field claims more bytes than present.
 	b := make([]byte, codec.HeaderSize)
 	b[4], b[5], b[6], b[7] = 0x00, 0x00, 0x00, 0x10 // Length = 16 → expects 24-byte frame
@@ -136,6 +142,7 @@ func TestDecodeLengthMismatch(t *testing.T) {
 }
 
 func TestEncodeAppendsToDst(t *testing.T) {
+	//fusa:test REQ-CODEC-001
 	prefix := []byte("HEADER:")
 	dst := make([]byte, len(prefix), len(prefix)+64)
 	copy(dst, prefix)
@@ -152,6 +159,7 @@ func TestEncodeAppendsToDst(t *testing.T) {
 }
 
 func TestEncodeProtocolVersionDefault(t *testing.T) {
+	//fusa:test REQ-CODEC-001
 	msg := someip.Message{ServiceID: 0x0001, MethodID: 0x0001}
 	frame := codec.Encode(nil, msg)
 	got, err := codec.Decode(frame)
