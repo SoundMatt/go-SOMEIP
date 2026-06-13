@@ -1,0 +1,34 @@
+name: go-someip-quickstart
+
+networks:
+  someip-net:
+    driver: bridge
+
+services:
+  server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: server
+    image: ghcr.io/soundmatt/go-someip-server:edge
+    environment:
+      SOMEIP_ADDR: "0.0.0.0:30509"
+    ports:
+      - "30509:30509/udp"
+    networks:
+      - someip-net
+
+  client:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: client
+    image: ghcr.io/soundmatt/go-someip-client:edge
+    environment:
+      SOMEIP_SERVER: "server:30509"
+    depends_on:
+      - server
+    networks:
+      - someip-net
+    # Client exits after ~5 seconds — restart to re-run demo.
+    restart: "no"
