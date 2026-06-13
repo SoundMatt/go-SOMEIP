@@ -24,3 +24,13 @@ linters:
       enable-all: true
       disable:
         - fieldalignment
+  exclusions:
+    rules:
+      # Deferred Close/Unsubscribe calls in tests need not check the error;
+      # the resource is being cleaned up and the error is unactionable.
+      - path: _test\.go
+        text: "is not checked"
+        linters: [errcheck]
+      - path: examples/
+        text: "is not checked"
+        linters: [errcheck]
