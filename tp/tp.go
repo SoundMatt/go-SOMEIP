@@ -73,6 +73,8 @@ var ErrReassemblyTimeout = errors.New("tp: reassembly timeout")
 // [DefaultSegmentSize] is used.
 //
 //fusa:req REQ-TP-001
+//fusa:req REQ-TP-002
+//fusa:req REQ-TP-003
 func Segment(msg someip.Message, segmentSize int) ([]someip.Message, error) {
 	if segmentSize == 0 {
 		segmentSize = DefaultSegmentSize
@@ -131,11 +133,13 @@ func Segment(msg someip.Message, segmentSize int) ([]someip.Message, error) {
 	return segments, nil
 }
 
+//fusa:req REQ-TP-004
 // IsTP reports whether msg carries SOME/IP-TP framing (bit 5 of MessageType set).
 func IsTP(msg someip.Message) bool {
 	return msg.MessageType&tpBit != 0
 }
 
+//fusa:req REQ-TP-005
 // BaseMessageType strips the TP bit from MessageType.
 func BaseMessageType(mt someip.MessageType) someip.MessageType {
 	return mt &^ tpBit
@@ -174,7 +178,7 @@ type ReassemblerConfig struct {
 // Reassembler collects TP segments and emits complete messages.
 // A Reassembler is safe for concurrent use from multiple goroutines.
 //
-//fusa:req REQ-TP-002
+//fusa:req REQ-TP-006
 type Reassembler struct {
 	timeout    time.Duration
 	mu         sync.Mutex
@@ -186,7 +190,7 @@ type Reassembler struct {
 
 // NewReassembler creates a [Reassembler] that evicts stale windows periodically.
 //
-//fusa:req REQ-TP-003
+//fusa:req REQ-TP-007
 func NewReassembler(cfg ReassemblerConfig) *Reassembler {
 	timeout := cfg.Timeout
 	if timeout == 0 {
@@ -213,7 +217,11 @@ func NewReassembler(cfg ReassemblerConfig) *Reassembler {
 // Returns nil, [ErrReassemblyTimeout] if the assembly window has expired.
 // Returns nil, [ErrMalformedSegment] if the segment TP header is malformed.
 //
-//fusa:req REQ-TP-004
+//fusa:req REQ-TP-008
+//fusa:req REQ-TP-009
+//fusa:req REQ-TP-010
+//fusa:req REQ-TP-011
+//fusa:req REQ-TP-012
 func (r *Reassembler) Add(seg someip.Message) (*someip.Message, error) {
 	if !IsTP(seg) {
 		// Non-TP message: pass through directly.
@@ -286,7 +294,7 @@ func (r *Reassembler) Add(seg someip.Message) (*someip.Message, error) {
 
 // Close stops the GC goroutine and discards all pending assembly windows.
 //
-//fusa:req REQ-TP-005
+//fusa:req REQ-TP-013
 func (r *Reassembler) Close() {
 	r.ticker.Stop()
 	close(r.done)

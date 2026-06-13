@@ -30,45 +30,53 @@ import (
 // ── Sentinel errors ───────────────────────────────────────────────────────────
 
 //fusa:req REQ-ERR-001
-
 // ErrClosed is returned when an operation is called on a closed entity.
 var ErrClosed = errors.New("someip: entity is closed")
 
+//fusa:req REQ-ERR-002
 // ErrTimeout is returned when a request does not receive a response in time.
 var ErrTimeout = errors.New("someip: request timed out")
 
+//fusa:req REQ-ERR-003
 // ErrNotReady is returned when the service is not yet available.
 var ErrNotReady = errors.New("someip: service not ready")
 
+//fusa:req REQ-ERR-004
 // ErrUnknownMethod is returned when a method ID is not registered on the server.
 var ErrUnknownMethod = errors.New("someip: unknown method")
 
+//fusa:req REQ-ERR-005
 // ErrUnknownService is returned when the requested service/instance is not found.
 var ErrUnknownService = errors.New("someip: unknown service")
 
+//fusa:req REQ-ERR-006
 // ErrMalformedMessage is returned when a received frame cannot be parsed.
 var ErrMalformedMessage = errors.New("someip: malformed message")
 
 // ── Wire-type aliases ─────────────────────────────────────────────────────────
 
 //fusa:req REQ-TYPES-001
-
 // ServiceID is the 16-bit SOME/IP service identifier.
 type ServiceID uint16
 
+//fusa:req REQ-TYPES-002
 // MethodID is the 16-bit SOME/IP method/event identifier.
 type MethodID uint16
 
+//fusa:req REQ-TYPES-003
 // ClientID is the 16-bit SOME/IP client identifier.
 type ClientID uint16
 
+//fusa:req REQ-TYPES-004
 // SessionID is the 16-bit SOME/IP session identifier, auto-incremented per call.
 type SessionID uint16
 
+//fusa:req REQ-TYPES-006
 // EventID is a MethodID that identifies a SOME/IP event (notification).
 // By AUTOSAR convention event IDs have bit 15 set (0x8000–0xFFFF).
 type EventID = MethodID
 
+//fusa:req REQ-TYPES-005
 // InstanceID is the 16-bit SOME/IP instance identifier.
 type InstanceID uint16
 
@@ -133,8 +141,6 @@ const (
 
 // ── Message ───────────────────────────────────────────────────────────────────
 
-//fusa:req REQ-MSG-001
-//fusa:req REQ-MSG-002
 //fusa:req REQ-MSG-003
 
 // Message is a decoded SOME/IP message.
@@ -163,9 +169,8 @@ type Message struct {
 // ── Handler types ─────────────────────────────────────────────────────────────
 
 //fusa:req REQ-SERVER-001
-
 // MethodHandler is called by a [Server] to process an incoming method request.
-// Returning a non-nil error causes the server to send an Error response.
+// Returning a non-nil error causes the server to send an Error response (REQ-SERVER-003).
 type MethodHandler func(ctx context.Context, req Message) ([]byte, error)
 
 // ── Subscribe options ─────────────────────────────────────────────────────────
@@ -231,8 +236,8 @@ type Service interface {
 	Close() error
 }
 
-//fusa:req REQ-SERVER-001
 //fusa:req REQ-SERVER-002
+//fusa:req REQ-SERVER-003
 
 // Server hosts a SOME/IP service instance.
 // A Server is safe for concurrent use from multiple goroutines.

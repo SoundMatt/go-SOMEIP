@@ -64,6 +64,12 @@ type ServerConfig struct {
 // A Server is safe for concurrent use from multiple goroutines.
 //
 //fusa:req REQ-TCP-001
+//fusa:req REQ-TCP-002
+//fusa:req REQ-TCP-003
+//fusa:req REQ-TCP-004
+//fusa:req REQ-TCP-005
+//fusa:req REQ-TCP-006
+//fusa:req REQ-TCP-007
 type Server struct {
 	cfg      ServerConfig
 	ln       net.Listener
@@ -214,7 +220,13 @@ type ServiceConfig struct {
 // Service is a SOME/IP TCP client.
 // A Service is safe for concurrent use from multiple goroutines.
 //
-//fusa:req REQ-TCP-002
+//fusa:req REQ-TCP-008
+//fusa:req REQ-TCP-009
+//fusa:req REQ-TCP-010
+//fusa:req REQ-TCP-011
+//fusa:req REQ-TCP-012
+//fusa:req REQ-TCP-013
+//fusa:req REQ-TCP-014
 type Service struct {
 	cfg     ServiceConfig
 	timeout time.Duration
@@ -265,8 +277,6 @@ func (svc *Service) nextSession() someip.SessionID {
 }
 
 // Call sends a SOME/IP request and waits for the response.
-//
-//fusa:req REQ-TCP-003
 func (svc *Service) Call(ctx context.Context, methodID someip.MethodID, payload []byte) (someip.Message, error) {
 	if svc.closed.Load() {
 		return someip.Message{}, someip.ErrClosed
