@@ -58,7 +58,7 @@ func TestEventIDIsMethodID(t *testing.T) {
 	//fusa:test REQ-TYPES-006
 	// EventID is a type alias for MethodID; they must be interchangeable.
 	var methodID someip.MethodID = 0x8001
-	var eventID someip.EventID = methodID
+	eventID := someip.EventID(methodID)
 	if eventID != methodID {
 		t.Errorf("EventID != MethodID: got 0x%04x, want 0x%04x", eventID, methodID)
 	}
