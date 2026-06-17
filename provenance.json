@@ -4,12 +4,12 @@
   "tool": "go-FuSa",
   "toolVersion": "0.30.0",
   "language": "go",
-  "generatedAt": "2026-06-17T02:52:19.417588542Z",
+  "generatedAt": "2026-06-17T13:37:08.104241641Z",
   "format": "x-FuSa provenance v1",
   "module": "github.com/SoundMatt/go-SOMEIP",
   "goVersion": "go1.25.11",
   "goos": "linux",
   "goarch": "amd64",
-  "vcsRevision": "f78f7e2396184e1460563afa8690ee203e12d895",
-  "vcsModified": false
+  "vcsRevision": "58040379a92b73a0a3e2ff61949607b01db18de1",
+  "vcsModified": true
 }
