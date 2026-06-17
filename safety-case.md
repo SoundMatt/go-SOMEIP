@@ -1,6 +1,6 @@
 # Safety Case: github.com/SoundMatt/go-SOMEIP
 
-Generated: 2026-06-17T13:37:08Z  
+Generated: 2026-06-17T14:39:05Z  
 Standard: generic
 
 ## Top Claim
