@@ -27,6 +27,7 @@ func makeMsg(payload []byte) someip.Message {
 
 // TestSegment_SmallPayload verifies that payloads within one segment are not TP-framed.
 func TestSegment_SmallPayload(t *testing.T) {
+	//fusa:test REQ-TP-002
 	msg := makeMsg([]byte("hello"))
 	segs, err := tp.Segment(msg, 0)
 	if err != nil {
@@ -45,6 +46,7 @@ func TestSegment_SmallPayload(t *testing.T) {
 
 // TestSegment_ExactFit verifies a payload exactly equal to segmentSize is one non-TP segment.
 func TestSegment_ExactFit(t *testing.T) {
+	//fusa:test REQ-TP-002
 	payload := make([]byte, 32)
 	segs, err := tp.Segment(makeMsg(payload), 32)
 	if err != nil {
@@ -60,6 +62,8 @@ func TestSegment_ExactFit(t *testing.T) {
 
 // TestSegment_MultiSegment verifies large payloads produce multiple TP segments.
 func TestSegment_MultiSegment(t *testing.T) {
+	//fusa:test REQ-TP-001
+	//fusa:test REQ-TP-004
 	payload := make([]byte, 100)
 	for i := range payload {
 		payload[i] = byte(i)
@@ -92,6 +96,7 @@ func TestSegment_MultiSegment(t *testing.T) {
 
 // TestSegment_TooSmallSize verifies ErrSegmentTooLarge for size < 16.
 func TestSegment_TooSmallSize(t *testing.T) {
+	//fusa:test REQ-TP-003
 	_, err := tp.Segment(makeMsg(make([]byte, 100)), 8)
 	if err == nil {
 		t.Error("expected ErrSegmentTooLarge, got nil")
@@ -100,6 +105,12 @@ func TestSegment_TooSmallSize(t *testing.T) {
 
 // TestReassembler_RoundTrip segments a message then reassembles it.
 func TestReassembler_RoundTrip(t *testing.T) {
+	//fusa:test REQ-TP-001
+	//fusa:test REQ-TP-004
+	//fusa:test REQ-TP-005
+	//fusa:test REQ-TP-006
+	//fusa:test REQ-TP-007
+	//fusa:test REQ-TP-010
 	sizes := []int{0, 1, 15, 16, 17, 32, 100, 1000, tp.DefaultSegmentSize - 1, tp.DefaultSegmentSize, tp.DefaultSegmentSize + 1, 8192}
 	r := tp.NewReassembler(tp.ReassemblerConfig{})
 	defer r.Close()
@@ -145,6 +156,7 @@ func TestReassembler_RoundTrip(t *testing.T) {
 
 // TestReassembler_OutOfOrder verifies segments arriving out of order are reassembled correctly.
 func TestReassembler_OutOfOrder(t *testing.T) {
+	//fusa:test REQ-TP-010
 	payload := make([]byte, 96)
 	for i := range payload {
 		payload[i] = byte(i)
@@ -185,6 +197,7 @@ func TestReassembler_OutOfOrder(t *testing.T) {
 
 // TestReassembler_NonTPPassThrough verifies non-TP messages pass through immediately.
 func TestReassembler_NonTPPassThrough(t *testing.T) {
+	//fusa:test REQ-TP-008
 	r := tp.NewReassembler(tp.ReassemblerConfig{})
 	defer r.Close()
 
@@ -203,6 +216,7 @@ func TestReassembler_NonTPPassThrough(t *testing.T) {
 
 // TestReassembler_Timeout verifies that expired assembly windows return ErrReassemblyTimeout.
 func TestReassembler_Timeout(t *testing.T) {
+	//fusa:test REQ-TP-011
 	r := tp.NewReassembler(tp.ReassemblerConfig{
 		Timeout:    50 * time.Millisecond,
 		GCInterval: 10 * time.Millisecond,
@@ -236,6 +250,7 @@ func TestReassembler_Timeout(t *testing.T) {
 
 // TestReassembler_MalformedSegment verifies malformed TP payloads return an error.
 func TestReassembler_MalformedSegment(t *testing.T) {
+	//fusa:test REQ-TP-009
 	r := tp.NewReassembler(tp.ReassemblerConfig{})
 	defer r.Close()
 
@@ -254,6 +269,7 @@ func TestReassembler_MalformedSegment(t *testing.T) {
 
 // TestReassembler_Close verifies Close discards pending windows without panic.
 func TestReassembler_Close(t *testing.T) {
+	//fusa:test REQ-TP-013
 	r := tp.NewReassembler(tp.ReassemblerConfig{})
 
 	payload := make([]byte, 64)
@@ -263,8 +279,32 @@ func TestReassembler_Close(t *testing.T) {
 	r.Close() // must not panic or deadlock
 }
 
+// TestIsTP verifies TP bit detection in MessageType.
+func TestIsTP(t *testing.T) {
+	//fusa:test REQ-TP-004
+	cases := []struct {
+		mt   someip.MessageType
+		want bool
+	}{
+		{someip.MsgTypeRequest, false},
+		{someip.MsgTypeResponse, false},
+		{someip.MsgTypeNotification, false},
+		{someip.MsgTypeTPRequest, true},
+		{someip.MsgTypeTPResponse, true},
+		{someip.MsgTypeTPNotification, true},
+	}
+	for _, tc := range cases {
+		msg := makeMsg(nil)
+		msg.MessageType = tc.mt
+		if got := tp.IsTP(msg); got != tc.want {
+			t.Errorf("IsTP(0x%02x) = %v, want %v", tc.mt, got, tc.want)
+		}
+	}
+}
+
 // TestBaseMessageType verifies stripping the TP bit.
 func TestBaseMessageType(t *testing.T) {
+	//fusa:test REQ-TP-005
 	cases := []struct {
 		in   someip.MessageType
 		want someip.MessageType
@@ -286,6 +326,7 @@ func TestBaseMessageType(t *testing.T) {
 
 // TestSegment_DuplicatesInReassembler verifies duplicate segments are handled safely.
 func TestSegment_DuplicatesInReassembler(t *testing.T) {
+	//fusa:test REQ-TP-012
 	payload := make([]byte, 64)
 	segs, err := tp.Segment(makeMsg(payload), 32)
 	if err != nil {

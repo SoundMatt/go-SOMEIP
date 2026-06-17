@@ -69,6 +69,25 @@ func TestCallUnknownMethod(t *testing.T) {
 	}
 }
 
+func TestHandlerErrorCausesErrorResponse(t *testing.T) {
+	//fusa:test REQ-SERVER-003
+	bus := mock.NewBus()
+	srv, _ := bus.NewServer(0x1234, 0x0001)
+	defer srv.Close()
+
+	_ = srv.RegisterMethod(0x0001, func(_ context.Context, _ someip.Message) ([]byte, error) {
+		return nil, errors.New("handler error")
+	})
+
+	svc, _ := bus.NewService(0x1234, 0x0001)
+	defer svc.Close()
+
+	resp, err := svc.Call(context.Background(), 0x0001, nil)
+	if err == nil && resp.MessageType != someip.MsgTypeError {
+		t.Errorf("expected Error MessageType, got %v", resp.MessageType)
+	}
+}
+
 func TestNewServiceUnknownService(t *testing.T) {
 	//fusa:test REQ-MOCK-002
 	bus := mock.NewBus()

@@ -88,6 +88,8 @@ func TestEchoRoundTrip(t *testing.T) {
 	//fusa:test REQ-TCP-001
 	//fusa:test REQ-TCP-002
 	//fusa:test REQ-TCP-003
+	//fusa:test REQ-TCP-008
+	//fusa:test REQ-TCP-009
 	addr := freeAddr(t)
 	startServer(t, addr)
 	svc := dialService(t, addr)
@@ -107,7 +109,7 @@ func TestEchoRoundTrip(t *testing.T) {
 
 // TestHandlerError verifies the server returns an Error message when the handler fails.
 func TestHandlerError(t *testing.T) {
-	//fusa:test REQ-TCP-003
+	//fusa:test REQ-TCP-005
 	addr := freeAddr(t)
 	startServer(t, addr)
 	svc := dialService(t, addr)
@@ -123,8 +125,7 @@ func TestHandlerError(t *testing.T) {
 
 // TestUnknownMethod verifies the server returns an Error for unregistered methods.
 func TestUnknownMethod(t *testing.T) {
-	//fusa:test REQ-TCP-001
-	//fusa:test REQ-TCP-003
+	//fusa:test REQ-TCP-004
 	addr := freeAddr(t)
 	startServer(t, addr)
 	svc := dialService(t, addr)
@@ -143,7 +144,7 @@ func TestUnknownMethod(t *testing.T) {
 
 // TestConcurrentCalls verifies that concurrent calls are demuxed correctly by SessionID.
 func TestConcurrentCalls(t *testing.T) {
-	//fusa:test REQ-TCP-003
+	//fusa:test REQ-TCP-009
 	addr := freeAddr(t)
 	srv, err := tcp.NewServer(tcp.ServerConfig{Addr: addr, ServiceID: testServiceID})
 	if err != nil {
@@ -191,7 +192,7 @@ func TestConcurrentCalls(t *testing.T) {
 
 // TestCallNoReturn sends fire-and-forget and verifies no error.
 func TestCallNoReturn(t *testing.T) {
-	//fusa:test REQ-TCP-002
+	//fusa:test REQ-TCP-012
 	addr := freeAddr(t)
 	startServer(t, addr)
 	svc := dialService(t, addr)
@@ -203,7 +204,7 @@ func TestCallNoReturn(t *testing.T) {
 
 // TestContextCancel verifies that a cancelled context aborts the call.
 func TestContextCancel(t *testing.T) {
-	//fusa:test REQ-TCP-003
+	//fusa:test REQ-TCP-010
 	addr := freeAddr(t)
 	srv, err := tcp.NewServer(tcp.ServerConfig{Addr: addr, ServiceID: testServiceID})
 	if err != nil {
@@ -234,7 +235,7 @@ func TestContextCancel(t *testing.T) {
 
 // TestTimeout verifies the per-call timeout fires when the server is slow.
 func TestTimeout(t *testing.T) {
-	//fusa:test REQ-TCP-003
+	//fusa:test REQ-TCP-011
 	addr := freeAddr(t)
 	srv, err := tcp.NewServer(tcp.ServerConfig{Addr: addr, ServiceID: testServiceID})
 	if err != nil {
@@ -268,7 +269,7 @@ func TestTimeout(t *testing.T) {
 
 // TestServerClose verifies Close stops the listener and causes new dials to fail.
 func TestServerClose(t *testing.T) {
-	//fusa:test REQ-TCP-001
+	//fusa:test REQ-TCP-007
 	addr := freeAddr(t)
 	srv, err := tcp.NewServer(tcp.ServerConfig{Addr: addr, ServiceID: testServiceID})
 	if err != nil {
@@ -294,8 +295,7 @@ func TestServerClose(t *testing.T) {
 
 // TestServiceClosedCall verifies Call returns ErrClosed after Close.
 func TestServiceClosedCall(t *testing.T) {
-	//fusa:test REQ-TCP-002
-	//fusa:test REQ-TCP-003
+	//fusa:test REQ-TCP-014
 	addr := freeAddr(t)
 	startServer(t, addr)
 	svc := dialService(t, addr)
@@ -311,7 +311,7 @@ func TestServiceClosedCall(t *testing.T) {
 
 // TestEmitNoOp verifies Server.Emit returns nil (TCP has no broadcast path).
 func TestEmitNoOp(t *testing.T) {
-	//fusa:test REQ-TCP-001
+	//fusa:test REQ-TCP-006
 	addr := freeAddr(t)
 	srv := startServer(t, addr)
 	if err := srv.Emit(someip.EventID(0x8001), []byte("event")); err != nil {
@@ -321,7 +321,7 @@ func TestEmitNoOp(t *testing.T) {
 
 // TestSubscribeNotSupported verifies Service.Subscribe returns ErrNotReady.
 func TestSubscribeNotSupported(t *testing.T) {
-	//fusa:test REQ-TCP-002
+	//fusa:test REQ-TCP-013
 	addr := freeAddr(t)
 	startServer(t, addr)
 	svc := dialService(t, addr)
@@ -335,6 +335,7 @@ func TestSubscribeNotSupported(t *testing.T) {
 // TestLargePayload verifies round-trip of a payload larger than a typical UDP MTU.
 func TestLargePayload(t *testing.T) {
 	//fusa:test REQ-TCP-003
+	//fusa:test REQ-TCP-009
 	addr := freeAddr(t)
 	startServer(t, addr)
 	svc := dialService(t, addr)
