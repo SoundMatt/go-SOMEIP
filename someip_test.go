@@ -248,8 +248,15 @@ func TestSOMEIPProtocolVersion(t *testing.T) {
 
 func TestSpecVersion(t *testing.T) {
 	//fusa:test REQ-SPEC-001
-	if someip.SpecVersion != "0.3" {
-		t.Errorf("SpecVersion: got %q, want %q", someip.SpecVersion, "0.3")
+	if someip.SpecVersion != "1.0" {
+		t.Errorf("SpecVersion: got %q, want %q", someip.SpecVersion, "1.0")
+	}
+	// Drift detector: our declared spec version must match the pinned RELAY
+	// module's spec version. If a dependency bump changes relay.SpecVersion,
+	// this fails until SpecVersion is deliberately re-reviewed and updated.
+	if someip.SpecVersion != relay.SpecVersion {
+		t.Errorf("SpecVersion %q != relay.SpecVersion %q — review RELAY spec changes before bumping",
+			someip.SpecVersion, relay.SpecVersion)
 	}
 }
 

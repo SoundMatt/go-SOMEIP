@@ -23,9 +23,9 @@
 //
 // # RELAY conformance
 //
-// This package conforms to RELAY spec v0.2 (SpecVersion). Use [Adapt] to
-// obtain a [relay.Caller] from any [Service]. Use [Message.ToMessage] and
-// [FromMessage] to convert between native and envelope representations.
+// This package conforms to RELAY spec v1.0 (stable); see [SpecVersion]. Use
+// [Adapt] to obtain a [relay.Caller] from any [Service]. Use [Message.ToMessage]
+// and [FromMessage] to convert between native and envelope representations.
 package someip
 
 import (
@@ -42,7 +42,7 @@ import (
 // SpecVersion is the RELAY specification version this package conforms to (spec §17.12).
 //
 //fusa:req REQ-SPEC-001
-const SpecVersion = "0.3"
+const SpecVersion = "1.0"
 
 // SOMEIPProtocolVersion is the protocol version byte placed in every SOME/IP header.
 // Inbound messages with a different value MUST be rejected with [ErrMalformedMessage].
