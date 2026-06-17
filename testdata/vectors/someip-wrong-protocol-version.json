@@ -1,0 +1,17 @@
+{
+    "name": "someip-wrong-protocol-version",
+    "description": "SOME/IP ProtocolVersion must equal 0x01; any other value is rejected",
+    "type": "someip.Message",
+    "kind": "error",
+    "value": {
+        "service_id": 4660,
+        "method_id": 5,
+        "client_id": 1,
+        "session_id": 1,
+        "protocol_version": 2,
+        "interface_version": 1,
+        "message_type": 0,
+        "return_code": 0
+    },
+    "error": "ErrWrongProtocolVersion"
+}

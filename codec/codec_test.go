@@ -179,7 +179,7 @@ func TestDecodeRejectsWrongProtocolVersion(t *testing.T) {
 	frame[4], frame[5], frame[6], frame[7] = 0x00, 0x00, 0x00, 0x08
 	frame[12] = 0x02 // wrong protocol version
 	_, err := codec.Decode(frame)
-	if !errors.Is(err, someip.ErrMalformedMessage) {
-		t.Errorf("wrong ProtocolVersion: want ErrMalformedMessage, got %v", err)
+	if !errors.Is(err, someip.ErrWrongProtocolVersion) {
+		t.Errorf("wrong ProtocolVersion: want ErrWrongProtocolVersion, got %v", err)
 	}
 }

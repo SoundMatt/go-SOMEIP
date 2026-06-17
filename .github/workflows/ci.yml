@@ -164,3 +164,21 @@ jobs:
         run: go install github.com/SoundMatt/go-FuSa/cmd/gofusa@v0.30.0
       - name: gofusa check
         run: gofusa check ./...
+
+  # ── RELAY conformance gate ─────────────────────────────────────────────────
+  # Validates the go-someip CLI version/capabilities/status output against the
+  # RELAY §12 JSON schemas embedded in the relay binary (spec v0.3).
+  relay-conform:
+    name: RELAY conform (spec v0.3)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "1.25"
+      - name: Install relay CLI
+        run: go install github.com/SoundMatt/RELAY/cmd/relay@v0.8.0
+      - name: Build go-someip CLI
+        run: go build -o /tmp/go-someip ./cmd/go-someip
+      - name: relay conform
+        run: relay conform --strict /tmp/go-someip
