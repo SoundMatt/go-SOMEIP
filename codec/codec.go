@@ -108,6 +108,11 @@ func Decode(b []byte) (someip.Message, error) {
 		copy(payload, b[HeaderSize:])
 	}
 
+	if b[12] != someip.SOMEIPProtocolVersion {
+		return someip.Message{}, fmt.Errorf("%w: protocol version 0x%02x, want 0x%02x",
+			someip.ErrMalformedMessage, b[12], someip.SOMEIPProtocolVersion)
+	}
+
 	msg := someip.Message{
 		ServiceID:        someip.ServiceID(binary.BigEndian.Uint16(b[0:2])),
 		MethodID:         someip.MethodID(binary.BigEndian.Uint16(b[2:4])),

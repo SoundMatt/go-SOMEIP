@@ -55,10 +55,10 @@ func TestDecodeKnownGoodFrame(t *testing.T) {
 	if msg.InterfaceVersion != 0x01 {
 		t.Errorf("InterfaceVersion: got 0x%02x, want 0x01", msg.InterfaceVersion)
 	}
-	if msg.MessageType != someip.Request {
+	if msg.MessageType != someip.MsgTypeRequest {
 		t.Errorf("MessageType: got 0x%02x, want Request", msg.MessageType)
 	}
-	if msg.ReturnCode != someip.OK {
+	if msg.ReturnCode != someip.RetOK {
 		t.Errorf("ReturnCode: got 0x%02x, want OK", msg.ReturnCode)
 	}
 	if !bytes.Equal(msg.Payload, []byte("ping")) {
@@ -76,8 +76,8 @@ func TestEncodeDecodeRoundTrip(t *testing.T) {
 		SessionID:        0x00FF,
 		ProtocolVersion:  0x01,
 		InterfaceVersion: 0x02,
-		MessageType:      someip.Notification,
-		ReturnCode:       someip.OK,
+		MessageType:      someip.MsgTypeNotification,
+		ReturnCode:       someip.RetOK,
 		Payload:          []byte{0xDE, 0xAD, 0xBE, 0xEF},
 	}
 
@@ -106,8 +106,8 @@ func TestEncodeEmptyPayload(t *testing.T) {
 	msg := someip.Message{
 		ServiceID:   0x0001,
 		MethodID:    0x0001,
-		MessageType: someip.RequestNoReturn,
-		ReturnCode:  someip.OK,
+		MessageType: someip.MsgTypeRequestNoReturn,
+		ReturnCode:  someip.RetOK,
 	}
 	frame := codec.Encode(nil, msg)
 	if len(frame) != codec.HeaderSize {
@@ -168,5 +168,18 @@ func TestEncodeProtocolVersionDefault(t *testing.T) {
 	}
 	if got.ProtocolVersion != 0x01 {
 		t.Errorf("default ProtocolVersion: got 0x%02x, want 0x01", got.ProtocolVersion)
+	}
+}
+
+func TestDecodeRejectsWrongProtocolVersion(t *testing.T) {
+	//fusa:test REQ-CODEC-002
+	//fusa:test REQ-PROTO-001
+	frame := make([]byte, codec.HeaderSize)
+	// Set Length field to minimum (8).
+	frame[4], frame[5], frame[6], frame[7] = 0x00, 0x00, 0x00, 0x08
+	frame[12] = 0x02 // wrong protocol version
+	_, err := codec.Decode(frame)
+	if !errors.Is(err, someip.ErrMalformedMessage) {
+		t.Errorf("wrong ProtocolVersion: want ErrMalformedMessage, got %v", err)
 	}
 }

@@ -47,7 +47,7 @@ func TestCallEcho(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Call: %v", err)
 	}
-	if resp.MessageType != someip.Response {
+	if resp.MessageType != someip.MsgTypeResponse {
 		t.Errorf("MessageType: got 0x%02x, want Response", resp.MessageType)
 	}
 	if !bytes.Equal(resp.Payload, []byte("hello")) {
@@ -132,7 +132,7 @@ func TestEventSubscribeEmit(t *testing.T) {
 		if !bytes.Equal(msg.Payload, want) {
 			t.Errorf("event payload: got %q, want %q", msg.Payload, want)
 		}
-		if msg.MessageType != someip.Notification {
+		if msg.MessageType != someip.MsgTypeNotification {
 			t.Errorf("MessageType: got 0x%02x, want Notification", msg.MessageType)
 		}
 	case <-time.After(time.Second):
