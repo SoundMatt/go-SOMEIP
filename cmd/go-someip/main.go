@@ -25,7 +25,7 @@ const toolName = "go-someip"
 
 // binVersion is the semantic version of this binary. Overridable via
 // -ldflags "-X main.binVersion=X.Y.Z" at build time.
-var binVersion = "0.7.0"
+var binVersion = "1.0.0"
 
 func main() {
 	if len(os.Args) < 2 {
