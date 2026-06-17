@@ -7,12 +7,12 @@
     },
     {
       "id": "REQ-ADAPT-002",
-      "text": "Message.ToMessage() shall return a relay.Message with Protocol=SOMEIP, ID=\"serviceID/methodID\" (decimal), Payload copied, and Meta fields someip.msg_type, someip.return_code, someip.interface_version populated per RELAY spec \u00a715.7.6.",
+      "text": "Message.ToMessage() shall return a relay.Message with Protocol=SOMEIP, ID=\"serviceID/methodID\" (decimal), Payload copied, and a lossless Meta map populated with someip.client_id, someip.session_id, someip.msg_type (numeric), someip.msg_type_name (label), someip.return_code, and someip.interface_version per RELAY spec v0.3 \u00a715.7.6.",
       "asil": "B"
     },
     {
       "id": "REQ-ADAPT-003",
-      "text": "FromMessage(msg relay.Message) shall parse msg.ID as \"serviceID/methodID\" decimal pair and return the corresponding Message with ProtocolVersion=SOMEIPProtocolVersion; if the ID is malformed the function shall return ErrMalformedMessage.",
+      "text": "FromMessage(msg relay.Message) shall parse msg.ID as \"serviceID/methodID\" decimal pair and restore ClientID, SessionID, MessageType, ReturnCode, and InterfaceVersion from Meta (ignoring someip.msg_type_name) with ProtocolVersion=SOMEIPProtocolVersion, yielding a lossless round-trip per RELAY spec v0.3 \u00a715.7.6; if the ID is malformed the function shall return ErrMalformedMessage.",
       "asil": "B"
     },
     {
@@ -118,6 +118,11 @@
     {
       "id": "REQ-ERR-007",
       "text": "The package shall define ErrPayloadTooLarge as a non-nil, sentinel error wrapping relay.ErrPayloadTooLarge, returned when a payload exceeds the protocol maximum.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-ERR-008",
+      "text": "The package shall define ErrWrongProtocolVersion as a non-nil standalone sentinel error (not wrapping a mandatory relay sentinel), returned when a SOME/IP message carries a ProtocolVersion other than SOMEIPProtocolVersion (0x01).",
       "asil": "B"
     },
     {
@@ -249,7 +254,12 @@
     },
     {
       "id": "REQ-PROTO-001",
-      "text": "The package shall define SOMEIPProtocolVersion as the constant uint8 value 0x01; the codec shall reject inbound frames whose ProtocolVersion field differs from this value with ErrMalformedMessage.",
+      "text": "The package shall define SOMEIPProtocolVersion as the constant uint8 value 0x01; the codec shall reject inbound frames whose ProtocolVersion field differs from this value with ErrWrongProtocolVersion.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-PROTO-002",
+      "text": "The package shall provide Message.Validate, which returns ErrWrongProtocolVersion when the message ProtocolVersion is not SOMEIPProtocolVersion and nil otherwise.",
       "asil": "B"
     },
     {
@@ -406,7 +416,7 @@
     },
     {
       "id": "REQ-SPEC-001",
-      "text": "The package shall export SpecVersion = \"0.2\" declaring conformance to RELAY specification v0.2.",
+      "text": "The package shall export SpecVersion = \"0.3\" declaring conformance to RELAY specification v0.3.",
       "asil": "B"
     },
     {

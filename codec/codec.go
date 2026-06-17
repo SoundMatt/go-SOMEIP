@@ -109,7 +109,7 @@ func Decode(b []byte) (someip.Message, error) {
 
 	if b[12] != someip.SOMEIPProtocolVersion {
 		return someip.Message{}, fmt.Errorf("%w: protocol version 0x%02x, want 0x%02x",
-			someip.ErrMalformedMessage, b[12], someip.SOMEIPProtocolVersion)
+			someip.ErrWrongProtocolVersion, b[12], someip.SOMEIPProtocolVersion)
 	}
 
 	msg := someip.Message{

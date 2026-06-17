@@ -5,7 +5,8 @@
 
 // Command go-someip is the RELAY-conformant CLI for the go-SOMEIP library
 // (RELAY spec §11, §12). It exposes version, capabilities, and status commands
-// as required by the RELAY conformance contract.
+// whose JSON output validates against the §12 schemas (verified by
+// `relay conform`).
 package main
 
 import (
@@ -13,9 +14,18 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime"
 
+	relay "github.com/SoundMatt/RELAY"
 	someip "github.com/SoundMatt/go-SOMEIP"
 )
+
+// toolName is the binary name reported in every CLI document.
+const toolName = "go-someip"
+
+// binVersion is the semantic version of this binary. Overridable via
+// -ldflags "-X main.binVersion=X.Y.Z" at build time.
+var binVersion = "0.7.0"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -41,49 +51,83 @@ func usage() {
 	fmt.Fprintln(os.Stderr, "Commands: version, capabilities, status")
 }
 
+func writeJSON(v any) {
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	_ = enc.Encode(v)
+}
+
+// versionDoc is the version document per RELAY spec §12.1 (cli-version.json).
+type versionDoc struct {
+	Tool        string `json:"tool"`
+	Protocol    string `json:"protocol"`
+	ProtocolInt int    `json:"protocol_int"`
+	Version     string `json:"version"`
+	SpecVersion string `json:"spec_version"`
+	Language    string `json:"language"`
+	Runtime     string `json:"runtime"`
+}
+
 func runVersion(args []string) {
 	fs := flag.NewFlagSet("version", flag.ExitOnError)
 	format := fs.String("format", "text", "output format: text or json")
 	_ = fs.Parse(args)
 
 	if *format == "json" {
-		out := map[string]string{
-			"spec_version": someip.SpecVersion,
-			"protocol":     "SOMEIP",
-		}
-		_ = json.NewEncoder(os.Stdout).Encode(out)
+		writeJSON(versionDoc{
+			Tool:        toolName,
+			Protocol:    relay.SOMEIP.String(),
+			ProtocolInt: int(relay.SOMEIP),
+			Version:     binVersion,
+			SpecVersion: someip.SpecVersion,
+			Language:    "go",
+			Runtime:     runtime.Version(),
+		})
 		return
 	}
-	fmt.Printf("go-someip  protocol=SOMEIP  spec=%s\n", someip.SpecVersion)
+	fmt.Printf("%s  protocol=%s  version=%s  spec=%s  runtime=%s\n",
+		toolName, relay.SOMEIP, binVersion, someip.SpecVersion, runtime.Version())
 }
 
-// capabilitiesDoc is the capabilities document per RELAY spec §12.2.
+// capabilitiesDoc is the capabilities document per RELAY spec §12.2
+// (cli-capabilities.json).
 type capabilitiesDoc struct {
-	Protocol           string   `json:"protocol"`
+	Kind               string   `json:"kind"`
+	Tool               string   `json:"tool"`
+	Version            string   `json:"version"`
 	SpecVersion        string   `json:"spec_version"`
-	Adapt              bool     `json:"adapt"`
+	Commands           []string `json:"commands"`
 	Transports         []string `json:"transports"`
+	Features           []string `json:"features"`
+	Interfaces         []string `json:"interfaces"`
 	OptionalInterfaces []string `json:"optional_interfaces"`
+	Adapt              bool     `json:"adapt"`
 }
 
 func runCapabilities() {
-	doc := capabilitiesDoc{
-		Protocol:           "SOMEIP",
+	writeJSON(capabilitiesDoc{
+		Kind:               "capabilities",
+		Tool:               toolName,
+		Version:            binVersion,
 		SpecVersion:        someip.SpecVersion,
-		Adapt:              true,
+		Commands:           []string{"version", "capabilities", "status"},
 		Transports:         []string{"mock", "udp", "tcp"},
+		Features:           []string{"sd", "tp", "e2e"},
+		Interfaces:         []string{"Node", "Caller"},
 		OptionalInterfaces: []string{},
-	}
-	enc := json.NewEncoder(os.Stdout)
-	enc.SetIndent("", "  ")
-	_ = enc.Encode(doc)
+		Adapt:              true,
+	})
 }
 
-// statusDoc is the status document per RELAY spec §11.
+// statusDoc is the status document per RELAY spec §12.3 (cli-status.json).
 type statusDoc struct {
-	Protocol    string `json:"protocol"`
-	SpecVersion string `json:"spec_version"`
-	Status      string `json:"status"`
+	Tool      string         `json:"tool"`
+	Protocol  string         `json:"protocol"`
+	Version   string         `json:"version"`
+	Healthy   bool           `json:"healthy"`
+	Connected bool           `json:"connected"`
+	Endpoint  string         `json:"endpoint"`
+	Details   map[string]any `json:"details"`
 }
 
 func runStatus(args []string) {
@@ -92,15 +136,17 @@ func runStatus(args []string) {
 	_ = fs.Parse(args)
 
 	if *format == "json" {
-		doc := statusDoc{
-			Protocol:    "SOMEIP",
-			SpecVersion: someip.SpecVersion,
-			Status:      "ok",
-		}
-		enc := json.NewEncoder(os.Stdout)
-		enc.SetIndent("", "  ")
-		_ = enc.Encode(doc)
+		writeJSON(statusDoc{
+			Tool:      toolName,
+			Protocol:  relay.SOMEIP.String(),
+			Version:   binVersion,
+			Healthy:   true,
+			Connected: false,
+			Endpoint:  "",
+			Details:   map[string]any{"spec_version": someip.SpecVersion},
+		})
 		return
 	}
-	fmt.Printf("protocol=SOMEIP  spec=%s  status=ok\n", someip.SpecVersion)
+	fmt.Printf("%s  protocol=%s  version=%s  healthy=true  connected=false\n",
+		toolName, relay.SOMEIP, binVersion)
 }

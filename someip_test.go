@@ -195,6 +195,22 @@ func TestErrMalformedMessage(t *testing.T) {
 	}
 }
 
+func TestErrWrongProtocolVersion(t *testing.T) {
+	//fusa:test REQ-ERR-008
+	if someip.ErrWrongProtocolVersion == nil {
+		t.Error("ErrWrongProtocolVersion must not be nil")
+	}
+	// A message with a bad protocol version fails Validate with this sentinel,
+	// and the sentinel is distinct from ErrMalformedMessage.
+	err := someip.Message{ProtocolVersion: 0x02}.Validate()
+	if !errors.Is(err, someip.ErrWrongProtocolVersion) {
+		t.Errorf("Validate(protoVer=2): want ErrWrongProtocolVersion, got %v", err)
+	}
+	if errors.Is(err, someip.ErrMalformedMessage) {
+		t.Error("ErrWrongProtocolVersion must be distinct from ErrMalformedMessage")
+	}
+}
+
 func TestSentinelErrorsAreDistinct(t *testing.T) {
 	//fusa:test REQ-ERR-001
 	//fusa:test REQ-ERR-002
@@ -232,8 +248,8 @@ func TestSOMEIPProtocolVersion(t *testing.T) {
 
 func TestSpecVersion(t *testing.T) {
 	//fusa:test REQ-SPEC-001
-	if someip.SpecVersion != "0.2" {
-		t.Errorf("SpecVersion: got %q, want %q", someip.SpecVersion, "0.2")
+	if someip.SpecVersion != "0.3" {
+		t.Errorf("SpecVersion: got %q, want %q", someip.SpecVersion, "0.3")
 	}
 }
 
@@ -271,6 +287,8 @@ func TestToMessage(t *testing.T) {
 	m := someip.Message{
 		ServiceID:        0x1234,
 		MethodID:         0x0001,
+		ClientID:         5,
+		SessionID:        10,
 		InterfaceVersion: 2,
 		MessageType:      someip.MsgTypeRequest,
 		ReturnCode:       someip.RetOK,
@@ -283,8 +301,22 @@ func TestToMessage(t *testing.T) {
 	if string(rm.Payload) != string(m.Payload) {
 		t.Error("ToMessage Payload mismatch")
 	}
-	if rm.Meta["someip.msg_type"] != "request" {
-		t.Errorf("ToMessage msg_type: got %q, want %q", rm.Meta["someip.msg_type"], "request")
+	// v0.3: someip.msg_type is the NUMERIC type; msg_type_name is the label.
+	want := map[string]string{
+		"someip.client_id":         "5",
+		"someip.session_id":        "10",
+		"someip.msg_type":          "0",
+		"someip.msg_type_name":     "request",
+		"someip.return_code":       "0",
+		"someip.interface_version": "2",
+	}
+	for k, v := range want {
+		if rm.Meta[k] != v {
+			t.Errorf("ToMessage Meta[%q]: got %q, want %q", k, rm.Meta[k], v)
+		}
+	}
+	if len(rm.Meta) != len(want) {
+		t.Errorf("ToMessage Meta key count: got %d, want %d (%v)", len(rm.Meta), len(want), rm.Meta)
 	}
 }
 
@@ -293,19 +325,83 @@ func TestFromMessage(t *testing.T) {
 	rm := relay.Message{
 		ID:      "4660/1",
 		Payload: []byte{0xBE, 0xEF},
+		Meta: map[string]string{
+			"someip.client_id":         "5",
+			"someip.session_id":        "10",
+			"someip.msg_type":          "128", // MsgTypeResponse (0x80)
+			"someip.msg_type_name":     "ignored-diagnostic-label",
+			"someip.return_code":       "1",
+			"someip.interface_version": "2",
+		},
 	}
 	m, err := someip.FromMessage(rm)
 	if err != nil {
 		t.Fatalf("FromMessage: unexpected error: %v", err)
 	}
-	if m.ServiceID != 0x1234 {
-		t.Errorf("FromMessage ServiceID: got 0x%04x, want 0x1234", m.ServiceID)
+	if m.ServiceID != 0x1234 || m.MethodID != 0x0001 {
+		t.Errorf("FromMessage IDs: got 0x%04x/0x%04x, want 0x1234/0x0001", m.ServiceID, m.MethodID)
 	}
-	if m.MethodID != 0x0001 {
-		t.Errorf("FromMessage MethodID: got 0x%04x, want 0x0001", m.MethodID)
+	if m.ClientID != 5 || m.SessionID != 10 {
+		t.Errorf("FromMessage client/session: got %d/%d, want 5/10", m.ClientID, m.SessionID)
+	}
+	if m.MessageType != someip.MsgTypeResponse {
+		t.Errorf("FromMessage MessageType: got 0x%02x, want 0x80", m.MessageType)
+	}
+	if m.ReturnCode != someip.RetNotOK {
+		t.Errorf("FromMessage ReturnCode: got 0x%02x, want 0x01", m.ReturnCode)
+	}
+	if m.InterfaceVersion != 2 {
+		t.Errorf("FromMessage InterfaceVersion: got %d, want 2", m.InterfaceVersion)
 	}
 	if m.ProtocolVersion != someip.SOMEIPProtocolVersion {
 		t.Errorf("FromMessage ProtocolVersion: got %d, want %d", m.ProtocolVersion, someip.SOMEIPProtocolVersion)
+	}
+}
+
+// TestMessageRoundTripLossless verifies the v0.3 losslessness guarantee
+// (hazard H-002): every header field survives Message → relay.Message → Message.
+func TestMessageRoundTripLossless(t *testing.T) {
+	//fusa:test REQ-ADAPT-002
+	//fusa:test REQ-ADAPT-003
+	orig := someip.Message{
+		ServiceID:        0xABCD,
+		MethodID:         0x8001,
+		ClientID:         0x0042,
+		SessionID:        0x00FF,
+		ProtocolVersion:  someip.SOMEIPProtocolVersion,
+		InterfaceVersion: 3,
+		MessageType:      someip.MsgTypeNotification,
+		ReturnCode:       someip.RetNotReachable,
+		Payload:          []byte("telemetry"),
+	}
+	got, err := someip.FromMessage(orig.ToMessage())
+	if err != nil {
+		t.Fatalf("round-trip FromMessage: %v", err)
+	}
+	if got.ServiceID != orig.ServiceID || got.MethodID != orig.MethodID ||
+		got.ClientID != orig.ClientID || got.SessionID != orig.SessionID ||
+		got.ProtocolVersion != orig.ProtocolVersion || got.InterfaceVersion != orig.InterfaceVersion ||
+		got.MessageType != orig.MessageType || got.ReturnCode != orig.ReturnCode ||
+		string(got.Payload) != string(orig.Payload) {
+		t.Errorf("round-trip not lossless:\n orig=%+v\n got =%+v", orig, got)
+	}
+}
+
+func TestMessageTypeString(t *testing.T) {
+	//fusa:test REQ-MSG-001
+	cases := map[someip.MessageType]string{
+		someip.MsgTypeRequest:         "request",
+		someip.MsgTypeRequestNoReturn: "request_no_return",
+		someip.MsgTypeNotification:    "notification",
+		someip.MsgTypeResponse:        "response",
+		someip.MsgTypeError:           "error",
+		someip.MsgTypeTPRequest:       "tp_request",
+		someip.MessageType(0x7F):      "127", // unknown → decimal
+	}
+	for mt, want := range cases {
+		if got := mt.String(); got != want {
+			t.Errorf("MessageType(0x%02x).String(): got %q, want %q", uint8(mt), got, want)
+		}
 	}
 }
 

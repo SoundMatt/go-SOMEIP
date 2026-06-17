@@ -1,0 +1,35 @@
+{
+    "name": "someip-message",
+    "description": "SOME/IP request message",
+    "type": "someip.Message",
+    "value": {
+        "service_id": 4660,
+        "method_id": 5,
+        "client_id": 1,
+        "session_id": 10,
+        "protocol_version": 1,
+        "interface_version": 2,
+        "message_type": 0,
+        "return_code": 0,
+        "payload": "Ym9keQ=="
+    },
+    "message": {
+        "protocol": 6,
+        "version": {
+            "major": 0,
+            "minor": 0,
+            "patch": 0
+        },
+        "id": "4660/5",
+        "payload": "Ym9keQ==",
+        "timestamp": "0001-01-01T00:00:00Z",
+        "meta": {
+            "someip.client_id": "1",
+            "someip.interface_version": "2",
+            "someip.msg_type": "0",
+            "someip.msg_type_name": "request",
+            "someip.return_code": "0",
+            "someip.session_id": "10"
+        }
+    }
+}

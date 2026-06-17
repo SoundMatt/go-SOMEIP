@@ -30,6 +30,7 @@ package someip
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -41,7 +42,7 @@ import (
 // SpecVersion is the RELAY specification version this package conforms to (spec §17.12).
 //
 //fusa:req REQ-SPEC-001
-const SpecVersion = "0.2"
+const SpecVersion = "0.3"
 
 // SOMEIPProtocolVersion is the protocol version byte placed in every SOME/IP header.
 // Inbound messages with a different value MUST be rejected with [ErrMalformedMessage].
@@ -78,6 +79,13 @@ var ErrUnknownService = fmt.Errorf("someip: unknown service: %w", relay.ErrNotCo
 
 //fusa:req REQ-ERR-006
 var ErrMalformedMessage = fmt.Errorf("someip: malformed message: %w", relay.ErrPayloadTooLarge)
+
+//fusa:req REQ-ERR-008
+// ErrWrongProtocolVersion is returned when a SOME/IP message carries a
+// ProtocolVersion other than [SOMEIPProtocolVersion] (0x01). It is a standalone
+// protocol-specific sentinel (RELAY spec v0.3 §15.6) and does not wrap a
+// mandatory relay sentinel.
+var ErrWrongProtocolVersion = errors.New("someip: wrong protocol version")
 
 // ── Wire-type definitions ─────────────────────────────────────────────────────
 
@@ -192,7 +200,26 @@ type Message struct {
 	Payload []byte `json:"payload,omitempty"`
 }
 
+// Validate checks SOME/IP invariants on a decoded message. It returns
+// [ErrWrongProtocolVersion] if ProtocolVersion is not [SOMEIPProtocolVersion]
+// (RELAY spec v0.3 §15.6). It is the message-level counterpart to the
+// protocol-version check performed by codec.Decode.
+//
+//fusa:req REQ-PROTO-002
+func (m Message) Validate() error {
+	if m.ProtocolVersion != SOMEIPProtocolVersion {
+		return fmt.Errorf("%w: got 0x%02x, want 0x%02x", ErrWrongProtocolVersion, m.ProtocolVersion, SOMEIPProtocolVersion)
+	}
+	return nil
+}
+
 // ToMessage converts m to the universal relay.Message envelope (RELAY spec §15.7.6).
+//
+// The conversion is lossless (spec v0.3, hazard H-002): every SOME/IP header
+// field is carried either in the ID ("serviceID/methodID") or in Meta.
+// "someip.msg_type" carries the numeric MessageType for exact round-trip
+// fidelity; "someip.msg_type_name" carries the human-readable label for
+// diagnostics only and is ignored by [FromMessage].
 //
 //fusa:req REQ-ADAPT-002
 func (m Message) ToMessage() relay.Message {
@@ -202,9 +229,12 @@ func (m Message) ToMessage() relay.Message {
 		Payload:   m.Payload,
 		Timestamp: time.Now(),
 		Meta: map[string]string{
-			"someip.msg_type":          msgTypeName(m.MessageType),
-			"someip.return_code":       strconv.Itoa(int(m.ReturnCode)),
-			"someip.interface_version": strconv.Itoa(int(m.InterfaceVersion)),
+			"someip.client_id":         strconv.FormatUint(uint64(m.ClientID), 10),
+			"someip.session_id":        strconv.FormatUint(uint64(m.SessionID), 10),
+			"someip.msg_type":          strconv.FormatUint(uint64(m.MessageType), 10),
+			"someip.msg_type_name":     m.MessageType.String(),
+			"someip.return_code":       strconv.FormatUint(uint64(m.ReturnCode), 10),
+			"someip.interface_version": strconv.FormatUint(uint64(m.InterfaceVersion), 10),
 		},
 	}
 }
@@ -212,6 +242,10 @@ func (m Message) ToMessage() relay.Message {
 // FromMessage converts a relay.Message envelope back to a native Message
 // (RELAY spec §15.7.6). The ID field MUST be "serviceID/methodID" in decimal.
 // Returns ErrMalformedMessage if the ID is malformed.
+//
+// The conversion is lossless (spec v0.3): ClientID, SessionID, MessageType,
+// ReturnCode, and InterfaceVersion are restored from Meta. Missing Meta keys
+// default to zero; "someip.msg_type_name" is diagnostic and ignored.
 //
 //fusa:req REQ-ADAPT-003
 func FromMessage(msg relay.Message) (Message, error) {
@@ -227,15 +261,49 @@ func FromMessage(msg relay.Message) (Message, error) {
 	if err != nil {
 		return Message{}, fmt.Errorf("%w: invalid method ID in %q", ErrMalformedMessage, msg.ID)
 	}
-	return Message{
+	m := Message{
 		ServiceID:       ServiceID(svcID),
 		MethodID:        MethodID(methodID),
 		Payload:         msg.Payload,
 		ProtocolVersion: SOMEIPProtocolVersion,
-	}, nil
+	}
+	if v := metaUint(msg.Meta, "someip.client_id", 16); v != nil {
+		m.ClientID = ClientID(*v)
+	}
+	if v := metaUint(msg.Meta, "someip.session_id", 16); v != nil {
+		m.SessionID = SessionID(*v)
+	}
+	if v := metaUint(msg.Meta, "someip.msg_type", 8); v != nil {
+		m.MessageType = MessageType(*v)
+	}
+	if v := metaUint(msg.Meta, "someip.return_code", 8); v != nil {
+		m.ReturnCode = ReturnCode(*v)
+	}
+	if v := metaUint(msg.Meta, "someip.interface_version", 8); v != nil {
+		m.InterfaceVersion = uint8(*v)
+	}
+	return m, nil
 }
 
-func msgTypeName(mt MessageType) string {
+// metaUint parses Meta[key] as an unsigned integer of the given bit size.
+// Returns nil when the key is absent or empty so callers leave the field at
+// its zero value; a malformed value is treated as absent.
+func metaUint(meta map[string]string, key string, bits int) *uint64 {
+	s, ok := meta[key]
+	if !ok || s == "" {
+		return nil
+	}
+	v, err := strconv.ParseUint(s, 10, bits)
+	if err != nil {
+		return nil
+	}
+	return &v
+}
+
+// String returns the human-readable label for the SOME/IP message type
+// (e.g. "request"). Unknown values render as their decimal number. The label
+// is diagnostic only; the numeric MessageType is authoritative on the wire.
+func (mt MessageType) String() string {
 	switch mt {
 	case MsgTypeRequest:
 		return "request"
@@ -247,8 +315,18 @@ func msgTypeName(mt MessageType) string {
 		return "response"
 	case MsgTypeError:
 		return "error"
+	case MsgTypeTPRequest:
+		return "tp_request"
+	case MsgTypeTPRequestNoReturn:
+		return "tp_request_no_return"
+	case MsgTypeTPNotification:
+		return "tp_notification"
+	case MsgTypeTPResponse:
+		return "tp_response"
+	case MsgTypeTPError:
+		return "tp_error"
 	default:
-		return strconv.Itoa(int(mt))
+		return strconv.FormatUint(uint64(mt), 10)
 	}
 }
 
@@ -369,8 +447,9 @@ type Subscription interface {
 // Adapt wraps s as a [relay.Caller], enabling protocol-agnostic application code
 // (RELAY spec §10.3). Use [Message.ToMessage] / [FromMessage] for message conversion.
 //
-// Note: relay.Node.Subscribe on the returned adapter returns [ErrNotConnected];
-// SOME/IP event subscriptions require an EventID — use [Service.Subscribe] directly.
+// The returned adapter's Subscribe reads the [relay.WithEventID] option to
+// determine which SOME/IP event group to subscribe to (spec v0.3, REQ-RELAY-051);
+// it returns [ErrNotConnected] if no EventID is supplied.
 func Adapt(s Service) relay.Caller {
 	return &serviceAdapter{s: s}
 }
@@ -396,17 +475,34 @@ func (a *serviceAdapter) Send(ctx context.Context, msg relay.Message) error {
 	if err != nil {
 		return err
 	}
-	if msg.Meta["someip.msg_type"] == "request_no_return" {
+	if m.MessageType == MsgTypeRequestNoReturn {
 		return a.s.CallNoReturn(ctx, m.MethodID, m.Payload)
 	}
 	_, err = a.s.Call(ctx, m.MethodID, m.Payload)
 	return err
 }
 
-// Subscribe returns ErrNotConnected — SOMEIP event subscriptions require an EventID.
-// Use [Service.Subscribe] to subscribe to a specific event by EventID.
-func (a *serviceAdapter) Subscribe(_ ...relay.SubscriberOption) (<-chan relay.Message, error) {
-	return nil, ErrNotConnected
+// Subscribe subscribes to the SOME/IP event group named by [relay.WithEventID]
+// (spec v0.3, REQ-RELAY-051) and returns a channel of converted relay.Messages.
+// Returns [ErrNotConnected] if no EventID was supplied. Channel-depth and
+// back-pressure options are forwarded to the underlying [Service.Subscribe].
+func (a *serviceAdapter) Subscribe(opts ...relay.SubscriberOption) (<-chan relay.Message, error) {
+	cfg := relay.ApplySubscriberOpts(opts)
+	if cfg.EventID == 0 {
+		return nil, fmt.Errorf("%w: Subscribe requires relay.WithEventID for SOME/IP", ErrNotConnected)
+	}
+	sub, err := a.s.Subscribe(EventID(cfg.EventID), opts...)
+	if err != nil {
+		return nil, err
+	}
+	out := make(chan relay.Message, cfg.ChanDepth(64))
+	go func() {
+		defer close(out)
+		for m := range sub.C() {
+			out <- m.ToMessage()
+		}
+	}()
+	return out, nil
 }
 
 func (a *serviceAdapter) Close() error { return a.s.Close() }
