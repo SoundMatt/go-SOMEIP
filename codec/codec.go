@@ -69,11 +69,10 @@ func Encode(dst []byte, msg someip.Message) []byte {
 	binary.BigEndian.PutUint16(b[8:10], uint16(msg.ClientID))
 	binary.BigEndian.PutUint16(b[10:12], uint16(msg.SessionID))
 
-	proto := msg.ProtocolVersion
-	if proto == 0 {
-		proto = ProtocolVersion
-	}
-	b[12] = proto
+	// SOME/IP mandates ProtocolVersion 0x01 on the wire (REQ-PROTO-001).
+	// Always emit the canonical version so Encode output is always decodable,
+	// regardless of any value left in msg.ProtocolVersion.
+	b[12] = ProtocolVersion
 	b[13] = msg.InterfaceVersion
 	b[14] = uint8(msg.MessageType)
 	b[15] = uint8(msg.ReturnCode)
