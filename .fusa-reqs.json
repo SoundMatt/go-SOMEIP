@@ -1,170 +1,24 @@
 {
   "requirements": [
     {
-      "id": "REQ-TYPES-001",
-      "title": "ServiceID named type",
-      "text": "The package shall define ServiceID as a named type with underlying type uint16, representing the 16-bit SOME/IP service identifier per AUTOSAR PRS_SOMEIPProtocol §4.1.1; its numeric range shall be 0x0000–0xFFFF.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
+      "id": "REQ-ADAPT-001",
+      "text": "The package shall export Adapt(s Service) relay.Caller, wrapping s as a protocol-agnostic relay.Caller per RELAY spec \u00a710.3; Adapt shall not block.",
+      "asil": "B"
     },
     {
-      "id": "REQ-TYPES-002",
-      "title": "MethodID named type",
-      "text": "The package shall define MethodID as a named type with underlying type uint16, representing the 16-bit SOME/IP method/event identifier per AUTOSAR PRS_SOMEIPProtocol §4.1.1; its numeric range shall be 0x0000–0xFFFF.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
+      "id": "REQ-ADAPT-002",
+      "text": "Message.ToMessage() shall return a relay.Message with Protocol=SOMEIP, ID=\"serviceID/methodID\" (decimal), Payload copied, and Meta fields someip.msg_type, someip.return_code, someip.interface_version populated per RELAY spec \u00a715.7.6.",
+      "asil": "B"
     },
     {
-      "id": "REQ-TYPES-003",
-      "title": "ClientID named type",
-      "text": "The package shall define ClientID as a named type with underlying type uint16, representing the 16-bit SOME/IP client identifier per AUTOSAR PRS_SOMEIPProtocol §4.1.1; its numeric range shall be 0x0000–0xFFFF.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TYPES-004",
-      "title": "SessionID named type",
-      "text": "The package shall define SessionID as a named type with underlying type uint16, representing the 16-bit SOME/IP session identifier per AUTOSAR PRS_SOMEIPProtocol §4.1.1; its numeric range shall be 0x0000–0xFFFF.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TYPES-005",
-      "title": "InstanceID named type",
-      "text": "The package shall define InstanceID as a named type with underlying type uint16, representing the 16-bit SOME/IP instance identifier per AUTOSAR PRS_SOMEIPProtocol §4.1.1; its numeric range shall be 0x0000–0xFFFF.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TYPES-006",
-      "title": "EventID named type alias",
-      "text": "The package shall define EventID as a type alias for MethodID; by AUTOSAR convention event identifiers have bit 15 set (range 0x8000–0xFFFF), though the type itself imposes no range restriction.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-MSG-001",
-      "title": "SOME/IP MessageType constants",
-      "text": "The package shall define the MessageType enumeration with values Request (0x00), RequestNoReturn (0x01), Notification (0x02), Response (0x80), Error (0x81), and their SOME/IP-TP variants (bit 5 set): TPRequest (0x20), TPRequestNoReturn (0x21), TPNotification (0x22), TPResponse (0xA0), TPError (0xA1), per AUTOSAR PRS_SOMEIPProtocol Table 4-4.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-MSG-002",
-      "title": "SOME/IP ReturnCode constants",
-      "text": "The package shall define the ReturnCode enumeration with values OK (0x00), NotOK (0x01), UnknownService (0x02), UnknownMethod (0x03), NotReady (0x04), NotReachable (0x05), Timeout (0x06), WrongProtocolVersion (0x07), WrongInterfaceVersion (0x08), MalformedMessage (0x09), and WrongMessageType (0x0A) per AUTOSAR PRS_SOMEIPProtocol Table 4-6.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-MSG-003",
-      "title": "SOME/IP Message struct",
-      "text": "The package shall define a Message struct carrying all SOME/IP header fields (ServiceID, MethodID, ClientID, SessionID, ProtocolVersion, InterfaceVersion, MessageType, ReturnCode) and a Payload byte slice containing the application payload only, with no SOME/IP header bytes.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-ERR-001",
-      "title": "ErrClosed sentinel error",
-      "text": "The package shall define ErrClosed as a non-nil, sentinel error value comparable via errors.Is, returned whenever an operation is attempted on a closed Service, Server, or Subscription.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-ERR-002",
-      "title": "ErrTimeout sentinel error",
-      "text": "The package shall define ErrTimeout as a non-nil, sentinel error value comparable via errors.Is, returned when a Service.Call does not receive a response within the configured deadline.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-ERR-003",
-      "title": "ErrNotReady sentinel error",
-      "text": "The package shall define ErrNotReady as a non-nil, sentinel error value comparable via errors.Is, returned when an operation is called before the service is initialised or when a feature is not supported by the transport.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-ERR-004",
-      "title": "ErrUnknownMethod sentinel error",
-      "text": "The package shall define ErrUnknownMethod as a non-nil, sentinel error value comparable via errors.Is, returned when a method ID is invoked that has no registered handler on the server.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-ERR-005",
-      "title": "ErrUnknownService sentinel error",
-      "text": "The package shall define ErrUnknownService as a non-nil, sentinel error value comparable via errors.Is, returned when the requested service/instance cannot be found on the transport.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-ERR-006",
-      "title": "ErrMalformedMessage sentinel error",
-      "text": "The package shall define ErrMalformedMessage as a non-nil, sentinel error value comparable via errors.Is, returned when a received wire frame cannot be decoded into a valid Message.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-SERVER-001",
-      "title": "MethodHandler function type",
-      "text": "The package shall define MethodHandler as the type func(ctx context.Context, req Message) ([]byte, error), representing a server-side handler invoked for each incoming method request.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-SERVER-002",
-      "title": "Server interface",
-      "text": "The package shall define Server as an interface with three methods: RegisterMethod(methodID MethodID, handler MethodHandler) error, Emit(eventID EventID, payload []byte) error, and Close() error; all implementations shall be safe for concurrent use.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-SERVER-003",
-      "title": "Handler error causes Error response",
-      "text": "When a MethodHandler returns a non-nil error the transport shall send a SOME/IP Error message (MessageType=0x81) in place of the normal Response, preserving the original ClientID and SessionID for correlation.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-SERVICE-001",
-      "title": "Service.Call — request/response invocation",
-      "text": "Service.Call shall send a SOME/IP Request message for methodID with the given payload, block until a matching Response or Error is received, and return the response message; it shall return ErrTimeout if no response arrives within the configured deadline and ErrClosed if the service is closed.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-SERVICE-002",
-      "title": "Service.CallNoReturn — fire-and-forget invocation",
-      "text": "Service.CallNoReturn shall send a SOME/IP RequestNoReturn message for methodID with the given payload and return without waiting for a response; it shall return ErrClosed if the service is closed.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-SERVICE-003",
-      "title": "Service.Subscribe — event subscription",
-      "text": "Service.Subscribe shall create a Subscription for the given eventID, returning a Subscription whose C() channel delivers subsequent Notification messages for that event; it shall return ErrClosed if the service is closed.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-SUB-001",
-      "title": "SubscribeConfig and SubscribeOption",
-      "text": "The package shall define SubscribeConfig with a ChannelDepth field controlling delivery channel capacity, SubscribeOption as a functional option type, WithChannelDepth as a constructor, and ApplySubscribeOpts to merge options; zero ChannelDepth shall resolve to a transport-specific default.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-SUB-002",
-      "title": "Subscription interface",
-      "text": "The Subscription interface shall provide C() <-chan Message returning the event delivery channel, Unsubscribe() error removing the subscription without closing the channel, and Close() error unsubscribing and closing the channel; all methods shall be safe for concurrent use and idempotent.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
+      "id": "REQ-ADAPT-003",
+      "text": "FromMessage(msg relay.Message) shall parse msg.ID as \"serviceID/methodID\" decimal pair and return the corresponding Message with ProtocolVersion=SOMEIPProtocolVersion; if the ID is malformed the function shall return ErrMalformedMessage.",
+      "asil": "B"
     },
     {
       "id": "REQ-CODEC-001",
       "title": "SOME/IP frame encoding",
-      "text": "codec.Encode shall serialise a Message into a SOME/IP wire frame per AUTOSAR PRS_SOMEIPProtocol §4.1.1: a 16-byte header (ServiceID, MethodID, Length, ClientID, SessionID, ProtocolVersion, InterfaceVersion, MessageType, ReturnCode) followed by the Payload bytes; the Length field shall equal 8 + len(Payload).",
+      "text": "codec.Encode shall serialise a Message into a SOME/IP wire frame per AUTOSAR PRS_SOMEIPProtocol \u00a74.1.1: a 16-byte header (ServiceID, MethodID, Length, ClientID, SessionID, ProtocolVersion, InterfaceVersion, MessageType, ReturnCode) followed by the Payload bytes; the Length field shall equal 8 + len(Payload).",
       "standard": "ISO 26262",
       "level": "ASIL-B"
     },
@@ -174,6 +28,97 @@
       "text": "codec.Decode shall parse a byte slice into a Message, verifying the frame is at least HeaderSize bytes long and that the Length field is consistent with the actual frame length; it shall return ErrMalformedMessage for frames that do not satisfy these constraints.",
       "standard": "ISO 26262",
       "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-E2E-001",
+      "title": "E2E Profile01 type",
+      "text": "e2e.Profile01 shall implement AUTOSAR E2E Protection Profile 01 per AUTOSAR PRS_E2EProtocol \u00a76.3, using CRC-8/SAE-J1850 (polynomial 0x1D, init 0xFF, XOR-out 0xFF) with a 2-byte header: byte 0 = CRC, byte 1 = (DataID[0] & 0xF0) | (counter & 0x0F).",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-E2E-002",
+      "title": "e2e.NewProfile01 constructor",
+      "text": "e2e.NewProfile01 shall return a Profile01 configured with the given 16-bit DataID; the DataID shall be folded into the CRC computation for all Protect and Check operations to detect message substitution.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-E2E-003",
+      "title": "Profile01.Protect \u2014 E2E header injection",
+      "text": "Profile01.Protect shall prepend a 2-byte E2E header to payload and return the protected frame; the CRC shall cover DataID[0], DataID[1], header byte 1, and all payload bytes; counter must be in [0,14] \u2014 value 15 is reserved by AUTOSAR and shall return an error.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-E2E-004",
+      "title": "Profile01.Check \u2014 E2E verification",
+      "text": "Profile01.Check shall verify the 2-byte header in frame: it shall recompute the CRC over DataID bytes and payload and compare with the received CRC byte, returning ErrCRCMismatch on mismatch; it shall compare the counter nibble with expectedCounter & 0x0F, returning ErrCounterMismatch on mismatch; it shall return ErrShortFrame when len(frame) < 2.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-E2E-005",
+      "title": "E2E Profile05 type",
+      "text": "e2e.Profile05 shall implement AUTOSAR E2E Protection Profile 05 per AUTOSAR PRS_E2EProtocol \u00a76.7, using CRC-32/Ethernet (reflected polynomial 0xEDB88320, init 0xFFFFFFFF, XOR-out 0xFFFFFFFF) with an 8-byte header: bytes 0\u20133 = CRC-32 LE, byte 4 = counter (0\u2013255), bytes 5\u20137 = reserved (0x00).",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-E2E-006",
+      "title": "e2e.NewProfile05 constructor",
+      "text": "e2e.NewProfile05 shall return a Profile05 configured with the given 8-bit DataID; the DataID shall be prepended to the CRC input to detect message substitution.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-E2E-007",
+      "title": "Profile05.Protect \u2014 E2E header injection",
+      "text": "Profile05.Protect shall prepend an 8-byte E2E header to payload and return the protected frame; the CRC-32 shall cover DataID, header bytes 4\u20137 (counter + reserved), and all payload bytes; bytes 5\u20137 of the header shall be 0x00 (reserved).",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-E2E-008",
+      "title": "Profile05.Check \u2014 E2E verification",
+      "text": "Profile05.Check shall verify the 8-byte header in frame: it shall recompute the CRC-32 over DataID, counter byte, reserved bytes, and payload and compare with the received CRC-32 (little-endian), returning ErrCRCMismatch on mismatch; it shall compare the counter byte with expectedCounter, returning ErrCounterMismatch on mismatch; it shall return ErrShortFrame when len(frame) < 8.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-ERR-001",
+      "text": "The package shall define ErrClosed as a non-nil sentinel error wrapping relay.ErrClosed, returned when an operation is called on a closed entity.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-ERR-002",
+      "text": "The package shall define ErrTimeout as a non-nil sentinel error wrapping relay.ErrTimeout, returned when a request does not receive a response in time.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-ERR-003",
+      "text": "The package shall define ErrNotConnected as a non-nil sentinel error wrapping relay.ErrNotConnected, returned when an operation is attempted before a connection is established or after the transport drops.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-ERR-004",
+      "text": "The package shall define ErrUnknownMethod as a non-nil sentinel error wrapping relay.ErrNotConnected, returned when a method ID is not registered on the server.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-ERR-005",
+      "text": "The package shall define ErrUnknownService as a non-nil sentinel error wrapping relay.ErrNotConnected, returned when the requested service/instance is not found.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-ERR-006",
+      "text": "The package shall define ErrMalformedMessage as a non-nil sentinel error wrapping relay.ErrPayloadTooLarge, returned when a received frame cannot be parsed.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-ERR-007",
+      "text": "The package shall define ErrPayloadTooLarge as a non-nil, sentinel error wrapping relay.ErrPayloadTooLarge, returned when a payload exceeds the protocol maximum.",
+      "asil": "B"
     },
     {
       "id": "REQ-MOCK-001",
@@ -267,22 +212,63 @@
       "level": "ASIL-B"
     },
     {
+      "id": "REQ-MSG-001",
+      "title": "SOME/IP MessageType constants",
+      "text": "The package shall define the MessageType enumeration with values Request (0x00), RequestNoReturn (0x01), Notification (0x02), Response (0x80), Error (0x81), and their SOME/IP-TP variants (bit 5 set): TPRequest (0x20), TPRequestNoReturn (0x21), TPNotification (0x22), TPResponse (0xA0), TPError (0xA1), per AUTOSAR PRS_SOMEIPProtocol Table 4-4.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-MSG-002",
+      "title": "SOME/IP ReturnCode constants",
+      "text": "The package shall define the ReturnCode enumeration with values OK (0x00), NotOK (0x01), UnknownService (0x02), UnknownMethod (0x03), NotReady (0x04), NotReachable (0x05), Timeout (0x06), WrongProtocolVersion (0x07), WrongInterfaceVersion (0x08), MalformedMessage (0x09), and WrongMessageType (0x0A) per AUTOSAR PRS_SOMEIPProtocol Table 4-6.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-MSG-003",
+      "title": "SOME/IP Message struct",
+      "text": "The package shall define a Message struct carrying all SOME/IP header fields (ServiceID, MethodID, ClientID, SessionID, ProtocolVersion, InterfaceVersion, MessageType, ReturnCode) and a Payload byte slice containing the application payload only, with no SOME/IP header bytes.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-OPT-001",
+      "text": "The package shall define HealthProvider as an optional interface with method Health() Health, where Health carries a HealthStatus and optional Details string per RELAY spec \u00a79.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-OPT-002",
+      "text": "The package shall define MetricsProvider as an optional interface with method Metrics() Metrics, where Metrics carries runtime counters per RELAY spec \u00a79.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-OPT-003",
+      "text": "The package shall define Drainer as an optional interface with method CloseWithDrain(ctx context.Context) error, providing graceful-shutdown semantics per RELAY spec \u00a79.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-PROTO-001",
+      "text": "The package shall define SOMEIPProtocolVersion as the constant uint8 value 0x01; the codec shall reject inbound frames whose ProtocolVersion field differs from this value with ErrMalformedMessage.",
+      "asil": "B"
+    },
+    {
       "id": "REQ-SD-001",
       "title": "SOME/IP-SD Entry struct",
-      "text": "sd.Entry shall represent a single SOME/IP-SD directory entry per AUTOSAR PRS_SOMEIPServiceDiscovery §4.1.2.2, carrying Type, Index1, Index2, NumOpts1, NumOpts2, ServiceID, InstanceID, MajorVersion, TTL, MinorVersion (Offer/Find), and EventgroupID (Subscribe/SubscribeAck).",
+      "text": "sd.Entry shall represent a single SOME/IP-SD directory entry per AUTOSAR PRS_SOMEIPServiceDiscovery \u00a74.1.2.2, carrying Type, Index1, Index2, NumOpts1, NumOpts2, ServiceID, InstanceID, MajorVersion, TTL, MinorVersion (Offer/Find), and EventgroupID (Subscribe/SubscribeAck).",
       "standard": "ISO 26262",
       "level": "ASIL-B"
     },
     {
       "id": "REQ-SD-002",
-      "title": "sd.EncodeEntry — entry serialisation",
+      "title": "sd.EncodeEntry \u2014 entry serialisation",
       "text": "sd.EncodeEntry shall serialise an Entry into exactly EntrySize (16) bytes appended to dst, encoding ServiceID and InstanceID as big-endian uint16, TTL as 3-byte big-endian, and MinorVersion or EventgroupID in the lower 4 bytes according to the entry Type field.",
       "standard": "ISO 26262",
       "level": "ASIL-B"
     },
     {
       "id": "REQ-SD-003",
-      "title": "sd.DecodeEntry — entry deserialisation",
+      "title": "sd.DecodeEntry \u2014 entry deserialisation",
       "text": "sd.DecodeEntry shall parse the first EntrySize bytes of b into an Entry; it shall return ErrShortEntry when len(b) < EntrySize and ErrUnknownEntryType when the Type byte is not one of Find (0x00), Offer (0x01), Subscribe (0x06), or SubscribeAck (0x07).",
       "standard": "ISO 26262",
       "level": "ASIL-B"
@@ -290,7 +276,7 @@
     {
       "id": "REQ-SD-004",
       "title": "SOME/IP-SD IPv4EndpointOption",
-      "text": "sd.IPv4EndpointOption shall represent a SOME/IP-SD IPv4 endpoint option per AUTOSAR PRS_SOMEIPServiceDiscovery §4.1.2.3, carrying an IPv4 address (net.IP), Protocol (0x11=UDP or 0x06=TCP), and Port; EncodeIPv4Option and DecodeIPv4Option shall serialise and parse the 12-byte on-wire form.",
+      "text": "sd.IPv4EndpointOption shall represent a SOME/IP-SD IPv4 endpoint option per AUTOSAR PRS_SOMEIPServiceDiscovery \u00a74.1.2.3, carrying an IPv4 address (net.IP), Protocol (0x11=UDP or 0x06=TCP), and Port; EncodeIPv4Option and DecodeIPv4Option shall serialise and parse the 12-byte on-wire form.",
       "standard": "ISO 26262",
       "level": "ASIL-B"
     },
@@ -317,14 +303,14 @@
     },
     {
       "id": "REQ-SDUDP-001",
-      "title": "sdudp.encodeSDFrame — SD wire frame builder",
+      "title": "sdudp.encodeSDFrame \u2014 SD wire frame builder",
       "text": "encodeSDFrame shall construct a complete SOME/IP-SD wire frame: a SOME/IP header with ServiceID=0xFFFF and MethodID=0x8100, followed by the SD payload (Flags byte, 3 reserved bytes, 4-byte Entries Length, encoded entry, 4-byte Options Length, optional IPv4 endpoint option), appended to dst.",
       "standard": "ISO 26262",
       "level": "ASIL-B"
     },
     {
       "id": "REQ-SDUDP-002",
-      "title": "sdudp.decodeSDPayload — SD payload parser",
+      "title": "sdudp.decodeSDPayload \u2014 SD payload parser",
       "text": "decodeSDPayload shall parse the SD payload from a SOME/IP-SD frame body: it shall read the Flags byte, Entries Length, all SD entries (each 16 bytes), and validate that the declared lengths are consistent with the actual slice length, returning ErrMalformedMessage on any inconsistency.",
       "standard": "ISO 26262",
       "level": "ASIL-B"
@@ -379,6 +365,294 @@
       "level": "ASIL-B"
     },
     {
+      "id": "REQ-SERVER-001",
+      "title": "MethodHandler and Server interface",
+      "text": "The package shall define MethodHandler as func(ctx context.Context, req Message) ([]byte, error) and Server as an interface with methods RegisterMethod, Emit, and Close; a non-nil error returned by a MethodHandler shall cause the server to send an Error response to the caller.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-SERVER-002",
+      "title": "Server interface completeness",
+      "text": "The Server interface shall include RegisterMethod(methodID MethodID, handler MethodHandler) error to register a handler, Emit(eventID EventID, payload []byte) error to publish notifications to all current subscribers, and Close() error to release all resources; all methods shall be safe for concurrent use.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-SERVER-003",
+      "text": "When a MethodHandler returns a non-nil error, the transport shall send an Error MessageType response to the caller with ReturnCode RetNotOK.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-SERVICE-001",
+      "title": "Service.Call \u2014 request/response method invocation",
+      "text": "Service.Call shall send a SOME/IP Request message for methodID with the given payload, block until a Response or Error is received, and return ErrTimeout if no response arrives within the configured deadline or ErrClosed if the service is closed.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-SERVICE-002",
+      "title": "Service.CallNoReturn \u2014 fire-and-forget invocation",
+      "text": "Service.CallNoReturn shall send a SOME/IP RequestNoReturn message for methodID with the given payload and return without waiting for a response; it shall return ErrClosed if the service is closed.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-SERVICE-003",
+      "title": "Service.Subscribe \u2014 event subscription",
+      "text": "Service.Subscribe shall create a Subscription for the given eventID, returning a channel on which subsequent Notification messages for that event are delivered; it shall return ErrClosed if the service is closed.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-SPEC-001",
+      "text": "The package shall export SpecVersion = \"0.2\" declaring conformance to RELAY specification v0.2.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-SUB-001",
+      "title": "SubscribeConfig and SubscribeOption",
+      "text": "The package shall export SubscriberConfig, SubscriberOption, ApplySubscriberOpts, and WithChannelDepth as type aliases and wrappers for the corresponding RELAY spec \u00a714.1 types, with ChanDepth returning the configured depth or the supplied default when zero.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-SUB-002",
+      "title": "Subscription interface",
+      "text": "The Subscription interface shall provide C() <-chan Message returning the event delivery channel, Unsubscribe() error removing the subscription without closing the channel, and Close() error unsubscribing and closing the channel; all methods shall be safe for concurrent use and idempotent.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-SUB-003",
+      "text": "The package shall export BackPressurePolicy as a type alias for relay.BackPressurePolicy with constants DropNewest, DropOldest, and Block.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-SUB-004",
+      "text": "The package shall export WithBackPressure as a SubscriberOption constructor that sets the BackPressure policy on a SubscriberConfig.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-TCP-001",
+      "title": "tcp.Server type and constructor",
+      "text": "tcp.NewServer shall listen on a TCP socket at cfg.Addr, accept inbound connections in a loop, and dispatch each connection to a serveConn goroutine that reads length-framed SOME/IP messages and dispatches them to registered handlers; the server shall be safe for concurrent use.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-002",
+      "title": "tcp.Service type and constructor",
+      "text": "tcp.NewService shall establish a TCP connection to cfg.ServerAddr with the configured dial timeout, and return a Service capable of sending SOME/IP Request and RequestNoReturn frames over that connection.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-003",
+      "title": "tcp.Service.Call",
+      "text": "tcp.Service.Call shall send a SOME/IP Request frame over the TCP connection, register a pending channel keyed by SessionID, and block until the matching Response or Error arrives; it shall return ErrTimeout on deadline expiry, ErrClosed if the service is closed, or ctx.Err() on context cancellation.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-004",
+      "title": "tcp.Server unknown method response",
+      "text": "tcp.Server shall respond with a SOME/IP Error frame carrying ReturnCode=UnknownMethod when a Request arrives for a methodID that has no registered handler.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-005",
+      "title": "tcp.Server handler-error response",
+      "text": "tcp.Server shall respond with a SOME/IP Error frame (MessageType=0x81) when the invoked MethodHandler returns a non-nil error, preserving the original ClientID and SessionID for correlation.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-006",
+      "title": "tcp.Server.Emit \u2014 no-op for TCP",
+      "text": "tcp.Server.Emit shall return nil without sending any frame; TCP has no multicast delivery path, so event emission is not supported by the TCP transport.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-007",
+      "title": "tcp.Server.Close",
+      "text": "tcp.Server.Close shall close the TCP listener, stopping the accept loop; subsequent calls shall be no-ops returning nil.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-008",
+      "title": "tcp.NewService constructor",
+      "text": "tcp.NewService shall establish a TCP connection to cfg.ServerAddr within the configured dial timeout, start a read goroutine, and return a Service; it shall return an error if the connection cannot be established.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-009",
+      "title": "tcp.Service.Call \u2014 request/response with SessionID demux",
+      "text": "tcp.Service.Call shall send a SOME/IP Request over the TCP connection with an auto-incremented SessionID, register a pending channel keyed by SessionID, and return the matching Response or Error when it arrives; concurrent calls shall be demuxed correctly by SessionID.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-010",
+      "title": "tcp.Service.Call \u2014 context cancellation",
+      "text": "tcp.Service.Call shall return ctx.Err() (context.Canceled or context.DeadlineExceeded) when the supplied context is cancelled or its deadline expires before a response is received.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-011",
+      "title": "tcp.Service.Call \u2014 timeout",
+      "text": "tcp.Service.Call shall return ErrTimeout when the configured per-service timeout expires before a response is received.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-012",
+      "title": "tcp.Service.CallNoReturn",
+      "text": "tcp.Service.CallNoReturn shall send a SOME/IP RequestNoReturn frame over the TCP connection and return immediately without waiting for a response; it shall return ErrClosed if the service is closed.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-013",
+      "title": "tcp.Service.Subscribe \u2014 not supported",
+      "text": "tcp.Service.Subscribe shall return ErrNotReady; TCP transport does not support event subscription in this implementation.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TCP-014",
+      "title": "tcp.Service.Close",
+      "text": "tcp.Service.Close shall close the TCP connection; any pending Call shall return ErrClosed; subsequent Close calls shall be no-ops; the service shall be safe for concurrent use.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-001",
+      "title": "tp.Segment \u2014 SOME/IP-TP segmentation",
+      "text": "tp.Segment shall split msg.Payload into one or more TP-framed messages per AUTOSAR PRS_SOMEIPServiceDiscovery \u00a77.1.7; each segment shall prepend a 4-byte TP header encoding the payload byte offset in 16-byte units (bits 31:4) and the More flag (bit 0); payloads fitting within segmentSize shall be returned as-is without TP framing; segmentSize < 16 shall return ErrSegmentTooLarge.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-002",
+      "title": "tp.Reassembler type",
+      "text": "tp.Reassembler shall collect SOME/IP-TP segments keyed by (ServiceID, MethodID, SessionID), tracking received byte ranges and emitting the complete reassembled message once all segments have arrived; it shall be safe for concurrent use from multiple goroutines.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-003",
+      "title": "tp.NewReassembler constructor",
+      "text": "tp.NewReassembler shall create a Reassembler with the configured Timeout (default 5 s) and GCInterval (default Timeout/2), starting a background gcLoop goroutine that evicts expired assembly windows.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-004",
+      "title": "tp.Reassembler.Add \u2014 segment ingestion",
+      "text": "tp.Reassembler.Add shall process one TP segment: non-TP messages shall pass through immediately; segments with len(Payload) < 4 shall return ErrMalformedSegment; when all segments for a key have arrived the complete message shall be returned with the TP bit cleared; adding a segment to an expired window shall return ErrReassemblyTimeout; duplicate segments shall be ignored.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-005",
+      "title": "tp.Reassembler.Close",
+      "text": "tp.Reassembler.Close shall stop the GC ticker, signal the gcLoop to exit, and discard all pending assembly windows; subsequent calls to Add shall not panic; Close shall be idempotent.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-006",
+      "title": "tp.Reassembler type",
+      "text": "tp.Reassembler shall collect SOME/IP-TP segments keyed by (ServiceID, MethodID, SessionID), tracking received byte ranges and emitting the complete reassembled message once all segments have arrived; it shall be safe for concurrent use from multiple goroutines.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-007",
+      "title": "tp.NewReassembler constructor",
+      "text": "tp.NewReassembler shall create a Reassembler with the configured Timeout (default 5 s) and GCInterval (default Timeout/2), starting a background gcLoop goroutine that evicts expired assembly windows.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-008",
+      "title": "tp.Reassembler.Add \u2014 non-TP pass-through",
+      "text": "tp.Reassembler.Add shall return the input message immediately (without buffering) when the message does not have the TP bit set.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-009",
+      "title": "tp.Reassembler.Add \u2014 ErrMalformedSegment",
+      "text": "tp.Reassembler.Add shall return ErrMalformedSegment when the TP-flagged message payload is shorter than the 4-byte TP header.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-010",
+      "title": "tp.Reassembler.Add \u2014 segment collection and reassembly",
+      "text": "tp.Reassembler.Add shall buffer TP segments keyed by (ServiceID, MethodID, SessionID) and return the complete reassembled message (with TP bit cleared) when all byte ranges have been received and contiguous; out-of-order arrival shall be handled correctly.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-011",
+      "title": "tp.Reassembler.Add \u2014 ErrReassemblyTimeout",
+      "text": "tp.Reassembler.Add shall return ErrReassemblyTimeout when a segment arrives for a (ServiceID, MethodID, SessionID) key whose assembly window has expired; this shall hold whether the expiry is detected inline or via the tombstone left by the background gcLoop.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-012",
+      "title": "tp.Reassembler.Add \u2014 duplicate segment handling",
+      "text": "tp.Reassembler.Add shall silently ignore duplicate segments (same byte offset for the same key) and shall complete reassembly correctly when non-duplicate segments complete the window.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TP-013",
+      "title": "tp.Reassembler.Close",
+      "text": "tp.Reassembler.Close shall stop the GC ticker, signal the gcLoop to exit, and discard all pending assembly windows and tombstones; Close shall be callable at most once without panic.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-TYPES-001",
+      "text": "The package shall define ServiceID as a named uint16 type representing the 16-bit SOME/IP service identifier.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-TYPES-002",
+      "text": "The package shall define MethodID as a named uint16 type representing the 16-bit SOME/IP method/event identifier.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-TYPES-003",
+      "text": "The package shall define ClientID as a named uint16 type representing the 16-bit SOME/IP client identifier.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-TYPES-004",
+      "text": "The package shall define SessionID as a named uint16 type representing the 16-bit SOME/IP session identifier.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-TYPES-005",
+      "text": "The package shall define InstanceID as a named uint16 type representing the 16-bit SOME/IP instance identifier.",
+      "asil": "B"
+    },
+    {
+      "id": "REQ-TYPES-006",
+      "text": "The package shall define EventID as a type alias for MethodID, interchangeable with MethodID in all contexts.",
+      "asil": "B"
+    },
+    {
       "id": "REQ-UDP-001",
       "title": "udp.NewServer constructor",
       "text": "udp.NewServer shall bind a UDP socket at cfg.Addr, start a readLoop goroutine, and return a Server ready to receive SOME/IP frames; it shall return an error if the address cannot be resolved or the socket cannot be bound.",
@@ -415,7 +689,7 @@
     },
     {
       "id": "REQ-UDP-006",
-      "title": "udp.Service.Call — request/response",
+      "title": "udp.Service.Call \u2014 request/response",
       "text": "udp.Service.Call shall send a SOME/IP Request with an auto-incremented SessionID, register a pending channel, and block until the matching Response or Error arrives; it shall return ErrTimeout if no response arrives within the configured deadline, ErrClosed if the service is closed, or ctx.Err() if the context is cancelled.",
       "standard": "ISO 26262",
       "level": "ASIL-B"
@@ -459,251 +733,6 @@
       "id": "REQ-UDP-012",
       "title": "udp subscription.Close",
       "text": "udp subscription.Close shall call Unsubscribe and then close the delivery channel exactly once, using sync.Once to guarantee idempotent closure; subsequent calls shall be no-ops.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-001",
-      "title": "tcp.NewServer constructor",
-      "text": "tcp.NewServer shall listen on a TCP socket at cfg.Addr, start an accept loop, and return a Server ready to receive connections; it shall return an error if the address cannot be resolved or the listener cannot be created.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-002",
-      "title": "tcp.Server.RegisterMethod",
-      "text": "tcp.Server.RegisterMethod shall register handler for methodID, replacing any previous handler for the same ID; it shall return ErrClosed when the server is closed.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-003",
-      "title": "tcp.Server method dispatch",
-      "text": "tcp.Server shall dispatch each inbound SOME/IP Request to the registered MethodHandler for its methodID over the per-connection serveConn goroutine; the response shall be written back on the same TCP connection.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-004",
-      "title": "tcp.Server unknown method response",
-      "text": "tcp.Server shall respond with a SOME/IP Error frame carrying ReturnCode=UnknownMethod when a Request arrives for a methodID that has no registered handler.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-005",
-      "title": "tcp.Server handler-error response",
-      "text": "tcp.Server shall respond with a SOME/IP Error frame (MessageType=0x81) when the invoked MethodHandler returns a non-nil error, preserving the original ClientID and SessionID for correlation.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-006",
-      "title": "tcp.Server.Emit — no-op for TCP",
-      "text": "tcp.Server.Emit shall return nil without sending any frame; TCP has no multicast delivery path, so event emission is not supported by the TCP transport.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-007",
-      "title": "tcp.Server.Close",
-      "text": "tcp.Server.Close shall close the TCP listener, stopping the accept loop; subsequent calls shall be no-ops returning nil.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-008",
-      "title": "tcp.NewService constructor",
-      "text": "tcp.NewService shall establish a TCP connection to cfg.ServerAddr within the configured dial timeout, start a read goroutine, and return a Service; it shall return an error if the connection cannot be established.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-009",
-      "title": "tcp.Service.Call — request/response with SessionID demux",
-      "text": "tcp.Service.Call shall send a SOME/IP Request over the TCP connection with an auto-incremented SessionID, register a pending channel keyed by SessionID, and return the matching Response or Error when it arrives; concurrent calls shall be demuxed correctly by SessionID.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-010",
-      "title": "tcp.Service.Call — context cancellation",
-      "text": "tcp.Service.Call shall return ctx.Err() (context.Canceled or context.DeadlineExceeded) when the supplied context is cancelled or its deadline expires before a response is received.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-011",
-      "title": "tcp.Service.Call — timeout",
-      "text": "tcp.Service.Call shall return ErrTimeout when the configured per-service timeout expires before a response is received.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-012",
-      "title": "tcp.Service.CallNoReturn",
-      "text": "tcp.Service.CallNoReturn shall send a SOME/IP RequestNoReturn frame over the TCP connection and return immediately without waiting for a response; it shall return ErrClosed if the service is closed.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-013",
-      "title": "tcp.Service.Subscribe — not supported",
-      "text": "tcp.Service.Subscribe shall return ErrNotReady; TCP transport does not support event subscription in this implementation.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TCP-014",
-      "title": "tcp.Service.Close",
-      "text": "tcp.Service.Close shall close the TCP connection; any pending Call shall return ErrClosed; subsequent Close calls shall be no-ops; the service shall be safe for concurrent use.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-E2E-001",
-      "title": "E2E Profile01 type",
-      "text": "e2e.Profile01 shall implement AUTOSAR E2E Protection Profile 01 per AUTOSAR PRS_E2EProtocol §6.3, using CRC-8/SAE-J1850 (polynomial 0x1D, init 0xFF, XOR-out 0xFF) with a 2-byte header: byte 0 = CRC, byte 1 = (DataID[0] & 0xF0) | (counter & 0x0F).",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-E2E-002",
-      "title": "e2e.NewProfile01 constructor",
-      "text": "e2e.NewProfile01 shall return a Profile01 configured with the given 16-bit DataID; the DataID shall be folded into the CRC computation for all Protect and Check operations to detect message substitution.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-E2E-003",
-      "title": "Profile01.Protect — E2E header injection",
-      "text": "Profile01.Protect shall prepend a 2-byte E2E header to payload and return the protected frame; the CRC shall cover DataID[0], DataID[1], header byte 1, and all payload bytes; counter must be in [0,14] — value 15 is reserved by AUTOSAR and shall return ErrInvalidCounter.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-E2E-004",
-      "title": "Profile01.Check — E2E verification",
-      "text": "Profile01.Check shall verify the 2-byte header in frame: it shall recompute the CRC over DataID bytes and payload and compare with the received CRC byte, returning ErrCRCMismatch on mismatch; it shall compare the counter nibble with expectedCounter & 0x0F, returning ErrCounterMismatch on mismatch; it shall return ErrShortFrame when len(frame) < 2.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-E2E-005",
-      "title": "E2E Profile05 type",
-      "text": "e2e.Profile05 shall implement AUTOSAR E2E Protection Profile 05 per AUTOSAR PRS_E2EProtocol §6.7, using CRC-32/Ethernet (reflected polynomial 0xEDB88320, init 0xFFFFFFFF, XOR-out 0xFFFFFFFF) with an 8-byte header: bytes 0–3 = CRC-32 LE, byte 4 = counter (0–255), bytes 5–7 = reserved (0x00).",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-E2E-006",
-      "title": "e2e.NewProfile05 constructor",
-      "text": "e2e.NewProfile05 shall return a Profile05 configured with the given 8-bit DataID; the DataID shall be prepended to the CRC input to detect message substitution.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-E2E-007",
-      "title": "Profile05.Protect — E2E header injection",
-      "text": "Profile05.Protect shall prepend an 8-byte E2E header to payload and return the protected frame; the CRC-32 shall cover DataID, header bytes 4–7 (counter + reserved), and all payload bytes; bytes 5–7 of the header shall be 0x00 (reserved).",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-E2E-008",
-      "title": "Profile05.Check — E2E verification",
-      "text": "Profile05.Check shall verify the 8-byte header in frame: it shall recompute the CRC-32 over DataID, counter byte, reserved bytes, and payload and compare with the received CRC-32 (little-endian), returning ErrCRCMismatch on mismatch; it shall compare the counter byte with expectedCounter, returning ErrCounterMismatch on mismatch; it shall return ErrShortFrame when len(frame) < 8.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-001",
-      "title": "tp.Segment — TP frame construction",
-      "text": "tp.Segment shall split msg.Payload into TP-framed messages per AUTOSAR PRS_SOMEIPProtocol §7.1.7; each segment shall prepend a 4-byte TP header encoding the payload byte offset in 16-byte units (bits 31:4) and the More flag (bit 0); the MessageType shall have bit 5 set (TP bit).",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-002",
-      "title": "tp.Segment — pass-through for small payloads",
-      "text": "tp.Segment shall return the input message unmodified (without TP framing) when len(msg.Payload) <= segmentSize; the returned slice shall contain exactly one element.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-003",
-      "title": "tp.Segment — ErrSegmentTooLarge",
-      "text": "tp.Segment shall return ErrSegmentTooLarge when segmentSize < 16; segment sizes below 16 bytes cannot encode a valid TP offset in 16-byte units.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-004",
-      "title": "tp.IsTP — TP bit detection",
-      "text": "tp.IsTP shall return true when bit 5 (0x20) of msg.MessageType is set, indicating SOME/IP-TP framing, and false otherwise.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-005",
-      "title": "tp.BaseMessageType — TP bit stripping",
-      "text": "tp.BaseMessageType shall return the MessageType with bit 5 (the TP bit) cleared, mapping TP variants back to their base message types (e.g. TPRequest→Request, TPResponse→Response).",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-006",
-      "title": "tp.Reassembler type",
-      "text": "tp.Reassembler shall collect SOME/IP-TP segments keyed by (ServiceID, MethodID, SessionID), tracking received byte ranges and emitting the complete reassembled message once all segments have arrived; it shall be safe for concurrent use from multiple goroutines.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-007",
-      "title": "tp.NewReassembler constructor",
-      "text": "tp.NewReassembler shall create a Reassembler with the configured Timeout (default 5 s) and GCInterval (default Timeout/2), starting a background gcLoop goroutine that evicts expired assembly windows.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-008",
-      "title": "tp.Reassembler.Add — non-TP pass-through",
-      "text": "tp.Reassembler.Add shall return the input message immediately (without buffering) when the message does not have the TP bit set.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-009",
-      "title": "tp.Reassembler.Add — ErrMalformedSegment",
-      "text": "tp.Reassembler.Add shall return ErrMalformedSegment when the TP-flagged message payload is shorter than the 4-byte TP header.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-010",
-      "title": "tp.Reassembler.Add — segment collection and reassembly",
-      "text": "tp.Reassembler.Add shall buffer TP segments keyed by (ServiceID, MethodID, SessionID) and return the complete reassembled message (with TP bit cleared) when all byte ranges have been received and contiguous; out-of-order arrival shall be handled correctly.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-011",
-      "title": "tp.Reassembler.Add — ErrReassemblyTimeout",
-      "text": "tp.Reassembler.Add shall return ErrReassemblyTimeout when a segment arrives for a (ServiceID, MethodID, SessionID) key whose assembly window has expired; this shall hold whether the expiry is detected inline or via the tombstone left by the background gcLoop.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-012",
-      "title": "tp.Reassembler.Add — duplicate segment handling",
-      "text": "tp.Reassembler.Add shall silently ignore duplicate segments (same byte offset for the same key) and shall complete reassembly correctly when non-duplicate segments complete the window.",
-      "standard": "ISO 26262",
-      "level": "ASIL-B"
-    },
-    {
-      "id": "REQ-TP-013",
-      "title": "tp.Reassembler.Close",
-      "text": "tp.Reassembler.Close shall stop the GC ticker, signal the gcLoop to exit, and discard all pending assembly windows and tombstones; Close shall be callable at most once without panic.",
       "standard": "ISO 26262",
       "level": "ASIL-B"
     }

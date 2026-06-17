@@ -51,7 +51,7 @@ func TestUDPCallEcho(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Call: %v", err)
 	}
-	if resp.MessageType != someip.Response {
+	if resp.MessageType != someip.MsgTypeResponse {
 		t.Errorf("MessageType: got 0x%02x, want Response", resp.MessageType)
 	}
 	if !bytes.Equal(resp.Payload, []byte("ping")) {
@@ -84,10 +84,10 @@ func TestUDPCallUnknownMethod(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Call: %v", err)
 	}
-	if resp.MessageType != someip.Error {
+	if resp.MessageType != someip.MsgTypeError {
 		t.Errorf("MessageType: got 0x%02x, want Error", resp.MessageType)
 	}
-	if resp.ReturnCode != someip.UnknownMethod {
+	if resp.ReturnCode != someip.RetUnknownMethod {
 		t.Errorf("ReturnCode: got 0x%02x, want UnknownMethod", resp.ReturnCode)
 	}
 }

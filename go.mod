@@ -1,3 +1,5 @@
 module github.com/SoundMatt/go-SOMEIP
 
 go 1.25.0
+
+require github.com/SoundMatt/RELAY v0.2.0

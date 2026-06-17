@@ -119,8 +119,8 @@ func (s *Server) Emit(eventID someip.EventID, payload []byte) error {
 		MethodID:         someip.MethodID(eventID),
 		ProtocolVersion:  0x01,
 		InterfaceVersion: s.cfg.InterfaceVersion,
-		MessageType:      someip.Notification,
-		ReturnCode:       someip.OK,
+		MessageType:      someip.MsgTypeNotification,
+		ReturnCode:       someip.RetOK,
 		Payload:          payload,
 	}
 	frame := codec.Encode(nil, msg)
@@ -183,7 +183,7 @@ func (s *Server) handleFrame(frame []byte, addr *net.UDPAddr) {
 	handler, ok := s.handlers[msg.MethodID]
 	s.mu.RUnlock()
 
-	if msg.MessageType == someip.RequestNoReturn {
+	if msg.MessageType == someip.MsgTypeRequestNoReturn {
 		if ok {
 			go func() { _, _ = handler(context.Background(), msg) }()
 		}
@@ -198,8 +198,8 @@ func (s *Server) handleFrame(frame []byte, addr *net.UDPAddr) {
 			SessionID:        msg.SessionID,
 			ProtocolVersion:  0x01,
 			InterfaceVersion: s.cfg.InterfaceVersion,
-			MessageType:      someip.Error,
-			ReturnCode:       someip.UnknownMethod,
+			MessageType:      someip.MsgTypeError,
+			ReturnCode:       someip.RetUnknownMethod,
 		}
 		frame := codec.Encode(nil, resp)
 		_, _ = s.conn.WriteToUDP(frame, addr)
@@ -216,11 +216,11 @@ func (s *Server) handleFrame(frame []byte, addr *net.UDPAddr) {
 		InterfaceVersion: s.cfg.InterfaceVersion,
 	}
 	if handlerErr != nil {
-		resp.MessageType = someip.Error
-		resp.ReturnCode = someip.NotOK
+		resp.MessageType = someip.MsgTypeError
+		resp.ReturnCode = someip.RetNotOK
 	} else {
-		resp.MessageType = someip.Response
-		resp.ReturnCode = someip.OK
+		resp.MessageType = someip.MsgTypeResponse
+		resp.ReturnCode = someip.RetOK
 		resp.Payload = respPayload
 	}
 	frame2 := codec.Encode(nil, resp)
@@ -322,8 +322,8 @@ func (svc *Service) Call(ctx context.Context, methodID someip.MethodID, payload 
 		MethodID:    methodID,
 		SessionID:   sessionID,
 		ClientID:    0x0001,
-		MessageType: someip.Request,
-		ReturnCode:  someip.OK,
+		MessageType: someip.MsgTypeRequest,
+		ReturnCode:  someip.RetOK,
 		Payload:     payload,
 	}
 	frame := codec.Encode(nil, req)
@@ -356,8 +356,8 @@ func (svc *Service) CallNoReturn(ctx context.Context, methodID someip.MethodID, 
 		MethodID:    methodID,
 		SessionID:   svc.nextSession(),
 		ClientID:    0x0001,
-		MessageType: someip.RequestNoReturn,
-		ReturnCode:  someip.OK,
+		MessageType: someip.MsgTypeRequestNoReturn,
+		ReturnCode:  someip.RetOK,
 		Payload:     payload,
 	}
 	frame := codec.Encode(nil, req)
@@ -370,11 +370,11 @@ func (svc *Service) CallNoReturn(ctx context.Context, methodID someip.MethodID, 
 // Subscribe creates a subscription for event notifications.
 // UDP subscriptions receive notifications emitted by the server to this
 // service's local UDP address.
-func (svc *Service) Subscribe(eventID someip.EventID, opts ...someip.SubscribeOption) (someip.Subscription, error) {
+func (svc *Service) Subscribe(eventID someip.EventID, opts ...someip.SubscriberOption) (someip.Subscription, error) {
 	if svc.closed.Load() {
 		return nil, someip.ErrClosed
 	}
-	cfg := someip.ApplySubscribeOpts(opts)
+	cfg := someip.ApplySubscriberOpts(opts)
 	ch := make(chan someip.Message, cfg.ChanDepth(64))
 
 	for {
@@ -431,7 +431,7 @@ func (svc *Service) dispatchFrame(frame []byte) {
 	}
 
 	switch msg.MessageType {
-	case someip.Notification:
+	case someip.MsgTypeNotification:
 		if val, ok := svc.subs.Load(msg.MethodID); ok {
 			if chans, ok := val.([]chan someip.Message); ok {
 				for _, ch := range chans {
@@ -442,7 +442,7 @@ func (svc *Service) dispatchFrame(frame []byte) {
 				}
 			}
 		}
-	case someip.Response, someip.Error:
+	case someip.MsgTypeResponse, someip.MsgTypeError:
 		svc.mu.Lock()
 		ch, ok := svc.pending[msg.SessionID]
 		svc.mu.Unlock()

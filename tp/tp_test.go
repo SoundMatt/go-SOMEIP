@@ -19,8 +19,8 @@ func makeMsg(payload []byte) someip.Message {
 		MethodID:        0x0001,
 		SessionID:       0x0001,
 		ProtocolVersion: 0x01,
-		MessageType:     someip.Request,
-		ReturnCode:      someip.OK,
+		MessageType:     someip.MsgTypeRequest,
+		ReturnCode:      someip.RetOK,
 		Payload:         payload,
 	}
 }
@@ -258,7 +258,7 @@ func TestReassembler_MalformedSegment(t *testing.T) {
 		ServiceID:   0x1234,
 		MethodID:    0x0001,
 		SessionID:   0x0001,
-		MessageType: someip.TPRequest,
+		MessageType: someip.MsgTypeTPRequest,
 		Payload:     []byte{0x00}, // too short for TP header
 	}
 	_, err := r.Add(bad)
@@ -286,12 +286,12 @@ func TestIsTP(t *testing.T) {
 		mt   someip.MessageType
 		want bool
 	}{
-		{someip.Request, false},
-		{someip.Response, false},
-		{someip.Notification, false},
-		{someip.TPRequest, true},
-		{someip.TPResponse, true},
-		{someip.TPNotification, true},
+		{someip.MsgTypeRequest, false},
+		{someip.MsgTypeResponse, false},
+		{someip.MsgTypeNotification, false},
+		{someip.MsgTypeTPRequest, true},
+		{someip.MsgTypeTPResponse, true},
+		{someip.MsgTypeTPNotification, true},
 	}
 	for _, tc := range cases {
 		msg := makeMsg(nil)
@@ -309,12 +309,12 @@ func TestBaseMessageType(t *testing.T) {
 		in   someip.MessageType
 		want someip.MessageType
 	}{
-		{someip.TPRequest, someip.Request},
-		{someip.TPRequestNoReturn, someip.RequestNoReturn},
-		{someip.TPNotification, someip.Notification},
-		{someip.TPResponse, someip.Response},
-		{someip.TPError, someip.Error},
-		{someip.Request, someip.Request}, // non-TP unchanged
+		{someip.MsgTypeTPRequest, someip.MsgTypeRequest},
+		{someip.MsgTypeTPRequestNoReturn, someip.MsgTypeRequestNoReturn},
+		{someip.MsgTypeTPNotification, someip.MsgTypeNotification},
+		{someip.MsgTypeTPResponse, someip.MsgTypeResponse},
+		{someip.MsgTypeTPError, someip.MsgTypeError},
+		{someip.MsgTypeRequest, someip.MsgTypeRequest}, // non-TP unchanged
 	}
 	for _, tc := range cases {
 		got := tp.BaseMessageType(tc.in)

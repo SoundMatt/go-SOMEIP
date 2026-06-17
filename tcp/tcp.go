@@ -20,7 +20,7 @@
 //
 // A [Service] maintains a single persistent TCP connection to a remote server.
 // Concurrent calls to [Service.Call] are multiplexed over that connection by
-// SessionID. If the connection drops, calls return [someip.ErrNotReady].
+// SessionID. If the connection drops, calls return [someip.ErrNotConnected].
 //
 // # Integration tests
 //
@@ -159,7 +159,7 @@ func (s *Server) serveConn(conn net.Conn) {
 }
 
 func (s *Server) handleMessage(conn net.Conn, msg someip.Message) {
-	if msg.MessageType == someip.RequestNoReturn {
+	if msg.MessageType == someip.MsgTypeRequestNoReturn {
 		s.mu.RLock()
 		handler, ok := s.handlers[msg.MethodID]
 		s.mu.RUnlock()
@@ -183,19 +183,19 @@ func (s *Server) handleMessage(conn net.Conn, msg someip.Message) {
 	}
 
 	if !ok {
-		resp.MessageType = someip.Error
-		resp.ReturnCode = someip.UnknownMethod
+		resp.MessageType = someip.MsgTypeError
+		resp.ReturnCode = someip.RetUnknownMethod
 		_, _ = conn.Write(codec.Encode(nil, resp))
 		return
 	}
 
 	payload, handlerErr := handler(context.Background(), msg)
 	if handlerErr != nil {
-		resp.MessageType = someip.Error
-		resp.ReturnCode = someip.NotOK
+		resp.MessageType = someip.MsgTypeError
+		resp.ReturnCode = someip.RetNotOK
 	} else {
-		resp.MessageType = someip.Response
-		resp.ReturnCode = someip.OK
+		resp.MessageType = someip.MsgTypeResponse
+		resp.ReturnCode = someip.RetOK
 		resp.Payload = payload
 	}
 	_, _ = conn.Write(codec.Encode(nil, resp))
@@ -297,7 +297,7 @@ func (svc *Service) Call(ctx context.Context, methodID someip.MethodID, payload 
 	}()
 
 	if conn == nil {
-		return someip.Message{}, someip.ErrNotReady
+		return someip.Message{}, someip.ErrNotConnected
 	}
 
 	req := someip.Message{
@@ -305,8 +305,8 @@ func (svc *Service) Call(ctx context.Context, methodID someip.MethodID, payload 
 		MethodID:    methodID,
 		SessionID:   sessionID,
 		ClientID:    0x0001,
-		MessageType: someip.Request,
-		ReturnCode:  someip.OK,
+		MessageType: someip.MsgTypeRequest,
+		ReturnCode:  someip.RetOK,
 		Payload:     payload,
 	}
 	if _, err := conn.Write(codec.Encode(nil, req)); err != nil {
@@ -335,15 +335,15 @@ func (svc *Service) CallNoReturn(_ context.Context, methodID someip.MethodID, pa
 	conn := svc.conn
 	svc.mu.Unlock()
 	if conn == nil {
-		return someip.ErrNotReady
+		return someip.ErrNotConnected
 	}
 	req := someip.Message{
 		ServiceID:   svc.cfg.ServiceID,
 		MethodID:    methodID,
 		SessionID:   svc.nextSession(),
 		ClientID:    0x0001,
-		MessageType: someip.RequestNoReturn,
-		ReturnCode:  someip.OK,
+		MessageType: someip.MsgTypeRequestNoReturn,
+		ReturnCode:  someip.RetOK,
 		Payload:     payload,
 	}
 	_, err := conn.Write(codec.Encode(nil, req))
@@ -351,9 +351,9 @@ func (svc *Service) CallNoReturn(_ context.Context, methodID someip.MethodID, pa
 }
 
 // Subscribe is not supported directly over TCP (use SD + UDP for event subscriptions).
-// Returns [someip.ErrNotReady].
-func (svc *Service) Subscribe(_ someip.EventID, _ ...someip.SubscribeOption) (someip.Subscription, error) {
-	return nil, someip.ErrNotReady
+// Returns [someip.ErrNotConnected].
+func (svc *Service) Subscribe(_ someip.EventID, _ ...someip.SubscriberOption) (someip.Subscription, error) {
+	return nil, someip.ErrNotConnected
 }
 
 // Close disconnects the service.

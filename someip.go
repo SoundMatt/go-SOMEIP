@@ -20,40 +20,66 @@
 //
 // All three expose constructors that satisfy the [Service] and [Server]
 // interfaces defined in this package.
+//
+// # RELAY conformance
+//
+// This package conforms to RELAY spec v0.2 (SpecVersion). Use [Adapt] to
+// obtain a [relay.Caller] from any [Service]. Use [Message.ToMessage] and
+// [FromMessage] to convert between native and envelope representations.
 package someip
 
 import (
 	"context"
-	"errors"
+	"fmt"
+	"strconv"
+	"strings"
+	"time"
+
+	relay "github.com/SoundMatt/RELAY"
 )
 
+// SpecVersion is the RELAY specification version this package conforms to (spec §17.12).
+//
+//fusa:req REQ-SPEC-001
+const SpecVersion = "0.2"
+
+// SOMEIPProtocolVersion is the protocol version byte placed in every SOME/IP header.
+// Inbound messages with a different value MUST be rejected with [ErrMalformedMessage].
+//
+//fusa:req REQ-PROTO-001
+const SOMEIPProtocolVersion uint8 = 0x01
+
 // ── Sentinel errors ───────────────────────────────────────────────────────────
+//
+// The four mandatory RELAY sentinels are wrapped so that errors.Is(err, relay.ErrXxx)
+// returns true for any error returned by this package (RELAY spec §5.2).
 
 //fusa:req REQ-ERR-001
-// ErrClosed is returned when an operation is called on a closed entity.
-var ErrClosed = errors.New("someip: entity is closed")
+var ErrClosed = fmt.Errorf("someip: closed: %w", relay.ErrClosed)
 
 //fusa:req REQ-ERR-002
-// ErrTimeout is returned when a request does not receive a response in time.
-var ErrTimeout = errors.New("someip: request timed out")
+var ErrTimeout = fmt.Errorf("someip: timeout: %w", relay.ErrTimeout)
 
 //fusa:req REQ-ERR-003
-// ErrNotReady is returned when the service is not yet available.
-var ErrNotReady = errors.New("someip: service not ready")
+// ErrNotConnected is returned when an operation is attempted before a connection
+// is established, or after the underlying transport has dropped.
+var ErrNotConnected = fmt.Errorf("someip: not connected: %w", relay.ErrNotConnected)
+
+//fusa:req REQ-ERR-007
+var ErrPayloadTooLarge = fmt.Errorf("someip: payload too large: %w", relay.ErrPayloadTooLarge)
+
+// Protocol-specific errors (RELAY spec §5.4). Each wraps the closest mandatory sentinel.
 
 //fusa:req REQ-ERR-004
-// ErrUnknownMethod is returned when a method ID is not registered on the server.
-var ErrUnknownMethod = errors.New("someip: unknown method")
+var ErrUnknownMethod = fmt.Errorf("someip: unknown method: %w", relay.ErrNotConnected)
 
 //fusa:req REQ-ERR-005
-// ErrUnknownService is returned when the requested service/instance is not found.
-var ErrUnknownService = errors.New("someip: unknown service")
+var ErrUnknownService = fmt.Errorf("someip: unknown service: %w", relay.ErrNotConnected)
 
 //fusa:req REQ-ERR-006
-// ErrMalformedMessage is returned when a received frame cannot be parsed.
-var ErrMalformedMessage = errors.New("someip: malformed message")
+var ErrMalformedMessage = fmt.Errorf("someip: malformed message: %w", relay.ErrPayloadTooLarge)
 
-// ── Wire-type aliases ─────────────────────────────────────────────────────────
+// ── Wire-type definitions ─────────────────────────────────────────────────────
 
 //fusa:req REQ-TYPES-001
 // ServiceID is the 16-bit SOME/IP service identifier.
@@ -80,7 +106,7 @@ type EventID = MethodID
 // InstanceID is the 16-bit SOME/IP instance identifier.
 type InstanceID uint16
 
-// ── Message type ─────────────────────────────────────────────────────────────
+// ── MessageType ───────────────────────────────────────────────────────────────
 
 //fusa:req REQ-MSG-001
 
@@ -88,26 +114,26 @@ type InstanceID uint16
 type MessageType uint8
 
 const (
-	// Request is a method call expecting a response (0x00).
-	Request MessageType = 0x00
-	// RequestNoReturn is a fire-and-forget method call (0x01).
-	RequestNoReturn MessageType = 0x01
-	// Notification is an event or field notification (0x02).
-	Notification MessageType = 0x02
-	// Response is a successful reply to a Request (0x80).
-	Response MessageType = 0x80
-	// Error is an error reply to a Request (0x81).
-	Error MessageType = 0x81
+	// MsgTypeRequest is a method call expecting a response (0x00).
+	MsgTypeRequest MessageType = 0x00
+	// MsgTypeRequestNoReturn is a fire-and-forget method call (0x01).
+	MsgTypeRequestNoReturn MessageType = 0x01
+	// MsgTypeNotification is an event or field notification (0x02).
+	MsgTypeNotification MessageType = 0x02
+	// MsgTypeResponse is a successful reply to a MsgTypeRequest (0x80).
+	MsgTypeResponse MessageType = 0x80
+	// MsgTypeError is an error reply to a MsgTypeRequest (0x81).
+	MsgTypeError MessageType = 0x81
 
 	// TP variants carry SOME/IP-TP segmented payloads.
-	TPRequest          MessageType = 0x20
-	TPRequestNoReturn  MessageType = 0x21
-	TPNotification     MessageType = 0x22
-	TPResponse         MessageType = 0xa0
-	TPError            MessageType = 0xa1
+	MsgTypeTPRequest         MessageType = 0x20
+	MsgTypeTPRequestNoReturn MessageType = 0x21
+	MsgTypeTPNotification    MessageType = 0x22
+	MsgTypeTPResponse        MessageType = 0xa0
+	MsgTypeTPError           MessageType = 0xa1
 )
 
-// ── Return code ───────────────────────────────────────────────────────────────
+// ── ReturnCode ────────────────────────────────────────────────────────────────
 
 //fusa:req REQ-MSG-002
 
@@ -115,28 +141,28 @@ const (
 type ReturnCode uint8
 
 const (
-	// OK indicates successful processing (E_OK).
-	OK ReturnCode = 0x00
-	// NotOK indicates a generic error (E_NOT_OK).
-	NotOK ReturnCode = 0x01
-	// UnknownService indicates the requested service is unknown (E_UNKNOWN_SERVICE).
-	UnknownService ReturnCode = 0x02
-	// UnknownMethod indicates the requested method is unknown (E_UNKNOWN_METHOD).
-	UnknownMethod ReturnCode = 0x03
-	// NotReady indicates the service is not yet initialised (E_NOT_READY).
-	NotReady ReturnCode = 0x04
-	// NotReachable indicates the service cannot be contacted (E_NOT_REACHABLE).
-	NotReachable ReturnCode = 0x05
-	// Timeout indicates a timeout occurred on the server side (E_TIMEOUT).
-	Timeout ReturnCode = 0x06
-	// WrongProtocolVersion indicates a protocol version mismatch (E_WRONG_PROTOCOL_VERSION).
-	WrongProtocolVersion ReturnCode = 0x07
-	// WrongInterfaceVersion indicates an interface version mismatch (E_WRONG_INTERFACE_VERSION).
-	WrongInterfaceVersion ReturnCode = 0x08
-	// MalformedMessage indicates a deserialisation error (E_MALFORMED_MESSAGE).
-	MalformedMessage ReturnCode = 0x09
-	// WrongMessageType indicates an unexpected message type (E_WRONG_MESSAGE_TYPE).
-	WrongMessageType ReturnCode = 0x0a
+	// RetOK indicates successful processing (E_OK).
+	RetOK ReturnCode = 0x00
+	// RetNotOK indicates a generic error (E_NOT_OK).
+	RetNotOK ReturnCode = 0x01
+	// RetUnknownService indicates the requested service is unknown (E_UNKNOWN_SERVICE).
+	RetUnknownService ReturnCode = 0x02
+	// RetUnknownMethod indicates the requested method is unknown (E_UNKNOWN_METHOD).
+	RetUnknownMethod ReturnCode = 0x03
+	// RetNotReady indicates the service is not yet initialised (E_NOT_READY).
+	RetNotReady ReturnCode = 0x04
+	// RetNotReachable indicates the service cannot be contacted (E_NOT_REACHABLE).
+	RetNotReachable ReturnCode = 0x05
+	// RetTimeout indicates a timeout occurred on the server side (E_TIMEOUT).
+	RetTimeout ReturnCode = 0x06
+	// RetWrongProtocolVersion indicates a protocol version mismatch (E_WRONG_PROTOCOL_VERSION).
+	RetWrongProtocolVersion ReturnCode = 0x07
+	// RetWrongInterfaceVersion indicates an interface version mismatch (E_WRONG_INTERFACE_VERSION).
+	RetWrongInterfaceVersion ReturnCode = 0x08
+	// RetMalformedMessage indicates a deserialisation error (E_MALFORMED_MESSAGE).
+	RetMalformedMessage ReturnCode = 0x09
+	// RetWrongMessageType indicates an unexpected message type (E_WRONG_MESSAGE_TYPE).
+	RetWrongMessageType ReturnCode = 0x0a
 )
 
 // ── Message ───────────────────────────────────────────────────────────────────
@@ -147,23 +173,83 @@ const (
 // The Payload field contains only the application payload (no header bytes).
 type Message struct {
 	// ServiceID identifies the target service.
-	ServiceID ServiceID
+	ServiceID ServiceID `json:"service_id"`
 	// MethodID identifies the method or event within the service.
-	MethodID MethodID
+	MethodID MethodID `json:"method_id"`
 	// ClientID identifies the originating client. Zero for server-initiated messages.
-	ClientID ClientID
+	ClientID ClientID `json:"client_id"`
 	// SessionID is the per-client request counter used for request/response correlation.
-	SessionID SessionID
-	// ProtocolVersion is the SOME/IP protocol version; always 0x01 on the wire.
-	ProtocolVersion uint8
+	SessionID SessionID `json:"session_id"`
+	// ProtocolVersion is the SOME/IP protocol version; MUST be SOMEIPProtocolVersion (0x01).
+	ProtocolVersion uint8 `json:"protocol_version"`
 	// InterfaceVersion is the major version of the service interface.
-	InterfaceVersion uint8
-	// MessageType classifies the message (Request, Response, Notification, etc.).
-	MessageType MessageType
-	// ReturnCode carries the processing result (OK, NotOK, etc.).
-	ReturnCode ReturnCode
+	InterfaceVersion uint8 `json:"interface_version"`
+	// MessageType classifies the message (MsgTypeRequest, MsgTypeResponse, etc.).
+	MessageType MessageType `json:"message_type"`
+	// ReturnCode carries the processing result (RetOK, RetNotOK, etc.).
+	ReturnCode ReturnCode `json:"return_code"`
 	// Payload is the raw application payload bytes.
-	Payload []byte
+	Payload []byte `json:"payload,omitempty"`
+}
+
+// ToMessage converts m to the universal relay.Message envelope (RELAY spec §15.7.6).
+//
+//fusa:req REQ-ADAPT-002
+func (m Message) ToMessage() relay.Message {
+	return relay.Message{
+		Protocol:  relay.SOMEIP,
+		ID:        fmt.Sprintf("%d/%d", uint16(m.ServiceID), uint16(m.MethodID)),
+		Payload:   m.Payload,
+		Timestamp: time.Now(),
+		Meta: map[string]string{
+			"someip.msg_type":          msgTypeName(m.MessageType),
+			"someip.return_code":       strconv.Itoa(int(m.ReturnCode)),
+			"someip.interface_version": strconv.Itoa(int(m.InterfaceVersion)),
+		},
+	}
+}
+
+// FromMessage converts a relay.Message envelope back to a native Message
+// (RELAY spec §15.7.6). The ID field MUST be "serviceID/methodID" in decimal.
+// Returns ErrMalformedMessage if the ID is malformed.
+//
+//fusa:req REQ-ADAPT-003
+func FromMessage(msg relay.Message) (Message, error) {
+	parts := strings.SplitN(msg.ID, "/", 2)
+	if len(parts) != 2 {
+		return Message{}, fmt.Errorf("%w: invalid SOMEIP ID %q", ErrMalformedMessage, msg.ID)
+	}
+	svcID, err := strconv.ParseUint(parts[0], 10, 16)
+	if err != nil {
+		return Message{}, fmt.Errorf("%w: invalid service ID in %q", ErrMalformedMessage, msg.ID)
+	}
+	methodID, err := strconv.ParseUint(parts[1], 10, 16)
+	if err != nil {
+		return Message{}, fmt.Errorf("%w: invalid method ID in %q", ErrMalformedMessage, msg.ID)
+	}
+	return Message{
+		ServiceID:       ServiceID(svcID),
+		MethodID:        MethodID(methodID),
+		Payload:         msg.Payload,
+		ProtocolVersion: SOMEIPProtocolVersion,
+	}, nil
+}
+
+func msgTypeName(mt MessageType) string {
+	switch mt {
+	case MsgTypeRequest:
+		return "request"
+	case MsgTypeRequestNoReturn:
+		return "request_no_return"
+	case MsgTypeNotification:
+		return "notification"
+	case MsgTypeResponse:
+		return "response"
+	case MsgTypeError:
+		return "error"
+	default:
+		return strconv.Itoa(int(mt))
+	}
 }
 
 // ── Handler types ─────────────────────────────────────────────────────────────
@@ -173,40 +259,44 @@ type Message struct {
 // Returning a non-nil error causes the server to send an Error response (REQ-SERVER-003).
 type MethodHandler func(ctx context.Context, req Message) ([]byte, error)
 
-// ── Subscribe options ─────────────────────────────────────────────────────────
+// ── Subscriber helpers (RELAY spec §14.1) ─────────────────────────────────────
+//
+// These re-export the canonical RELAY subscriber types so callers can use either
+// someip.SubscriberConfig or relay.SubscriberConfig interchangeably.
 
 //fusa:req REQ-SUB-001
 
-// SubscribeConfig holds per-subscription options.
-type SubscribeConfig struct {
-	// ChannelDepth is the capacity of the subscription's delivery channel.
-	// 0 means the implementation default (64).
-	ChannelDepth int
-}
+// SubscriberConfig holds per-subscription options.
+type SubscriberConfig = relay.SubscriberConfig
 
-// SubscribeOption configures a subscription at creation time.
-type SubscribeOption func(*SubscribeConfig)
+// SubscriberOption configures a subscription at creation time.
+type SubscriberOption = relay.SubscriberOption
+
+//fusa:req REQ-SUB-003
+// BackPressurePolicy controls what happens when a subscription channel is full.
+type BackPressurePolicy = relay.BackPressurePolicy
+
+const (
+	DropNewest = relay.DropNewest // drop the arriving sample (default)
+	DropOldest = relay.DropOldest // drop the oldest buffered sample
+	Block      = relay.Block      // block until space is available
+)
 
 // WithChannelDepth sets the capacity of the event delivery channel.
-func WithChannelDepth(n int) SubscribeOption {
-	return func(c *SubscribeConfig) { c.ChannelDepth = n }
-}
+//
+//fusa:req REQ-SUB-001
+func WithChannelDepth(n int) SubscriberOption { return relay.WithChannelDepth(n) }
 
-// ApplySubscribeOpts merges a slice of SubscribeOption into a SubscribeConfig.
-func ApplySubscribeOpts(opts []SubscribeOption) SubscribeConfig {
-	var c SubscribeConfig
-	for _, o := range opts {
-		o(&c)
-	}
-	return c
-}
+// WithBackPressure sets the back-pressure policy applied when the channel is full.
+//
+//fusa:req REQ-SUB-004
+func WithBackPressure(p BackPressurePolicy) SubscriberOption { return relay.WithBackPressure(p) }
 
-// ChanDepth returns the resolved channel depth.
-func (c SubscribeConfig) ChanDepth(defaultDepth int) int {
-	if c.ChannelDepth > 0 {
-		return c.ChannelDepth
-	}
-	return defaultDepth
+// ApplySubscriberOpts merges a slice of SubscriberOption into a SubscriberConfig.
+//
+//fusa:req REQ-SUB-001
+func ApplySubscriberOpts(opts []SubscriberOption) SubscriberConfig {
+	return relay.ApplySubscriberOpts(opts)
 }
 
 // ── Interfaces ────────────────────────────────────────────────────────────────
@@ -224,13 +314,13 @@ type Service interface {
 	// target is not reachable.
 	Call(ctx context.Context, methodID MethodID, payload []byte) (Message, error)
 
-	// CallNoReturn sends a fire-and-forget request (RequestNoReturn).
+	// CallNoReturn sends a fire-and-forget request (MsgTypeRequestNoReturn).
 	// No response is expected; the method returns as soon as the frame is sent.
 	CallNoReturn(ctx context.Context, methodID MethodID, payload []byte) error
 
 	// Subscribe creates a [Subscription] for event eventID.
 	// Returns [ErrClosed] if the service is closed.
-	Subscribe(eventID EventID, opts ...SubscribeOption) (Subscription, error)
+	Subscribe(eventID EventID, opts ...SubscriberOption) (Subscription, error)
 
 	// Close releases all resources held by the service.
 	Close() error
@@ -270,4 +360,101 @@ type Subscription interface {
 
 	// Close unsubscribes and closes the message channel.
 	Close() error
+}
+
+// ── RELAY application interface (spec §10.3) ─────────────────────────────────
+
+//fusa:req REQ-ADAPT-001
+
+// Adapt wraps s as a [relay.Caller], enabling protocol-agnostic application code
+// (RELAY spec §10.3). Use [Message.ToMessage] / [FromMessage] for message conversion.
+//
+// Note: relay.Node.Subscribe on the returned adapter returns [ErrNotConnected];
+// SOME/IP event subscriptions require an EventID — use [Service.Subscribe] directly.
+func Adapt(s Service) relay.Caller {
+	return &serviceAdapter{s: s}
+}
+
+type serviceAdapter struct{ s Service }
+
+func (a *serviceAdapter) Protocol() relay.Protocol { return relay.SOMEIP }
+
+func (a *serviceAdapter) Call(ctx context.Context, req relay.Message) (relay.Message, error) {
+	m, err := FromMessage(req)
+	if err != nil {
+		return relay.Message{}, err
+	}
+	resp, err := a.s.Call(ctx, m.MethodID, m.Payload)
+	if err != nil {
+		return relay.Message{}, err
+	}
+	return resp.ToMessage(), nil
+}
+
+func (a *serviceAdapter) Send(ctx context.Context, msg relay.Message) error {
+	m, err := FromMessage(msg)
+	if err != nil {
+		return err
+	}
+	if msg.Meta["someip.msg_type"] == "request_no_return" {
+		return a.s.CallNoReturn(ctx, m.MethodID, m.Payload)
+	}
+	_, err = a.s.Call(ctx, m.MethodID, m.Payload)
+	return err
+}
+
+// Subscribe returns ErrNotConnected — SOMEIP event subscriptions require an EventID.
+// Use [Service.Subscribe] to subscribe to a specific event by EventID.
+func (a *serviceAdapter) Subscribe(_ ...relay.SubscriberOption) (<-chan relay.Message, error) {
+	return nil, ErrNotConnected
+}
+
+func (a *serviceAdapter) Close() error { return a.s.Close() }
+
+// ── Optional interfaces (RELAY spec §9) ───────────────────────────────────────
+//
+// Implementations that satisfy these interfaces MUST use these exact signatures.
+// Declare satisfied interfaces in the capabilities output (cmd/go-someip).
+
+// HealthStatus represents the operational health of a node.
+type HealthStatus int
+
+const (
+	HealthOK       HealthStatus = 0
+	HealthDegraded HealthStatus = 1
+	HealthDown     HealthStatus = 2
+)
+
+// Health carries health status and optional diagnostic detail.
+type Health struct {
+	Status  HealthStatus `json:"status"`
+	Details string       `json:"details,omitempty"`
+}
+
+//fusa:req REQ-OPT-001
+// HealthProvider is the optional health interface (RELAY spec §9).
+type HealthProvider interface {
+	Health() Health
+}
+
+// Metrics carries runtime counters for observability.
+type Metrics struct {
+	WriteCount     uint64 `json:"write_count"`
+	DeliverCount   uint64 `json:"deliver_count"`
+	DropCount      uint64 `json:"drop_count"`
+	BytesWritten   uint64 `json:"bytes_written"`
+	BytesDelivered uint64 `json:"bytes_delivered"`
+	ErrorCount     uint64 `json:"error_count"`
+}
+
+//fusa:req REQ-OPT-002
+// MetricsProvider is the optional metrics interface (RELAY spec §9).
+type MetricsProvider interface {
+	Metrics() Metrics
+}
+
+//fusa:req REQ-OPT-003
+// Drainer is the optional graceful-shutdown interface (RELAY spec §9).
+type Drainer interface {
+	CloseWithDrain(ctx context.Context) error
 }

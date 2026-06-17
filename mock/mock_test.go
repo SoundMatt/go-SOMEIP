@@ -47,7 +47,7 @@ func TestCallEcho(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Call: %v", err)
 	}
-	if resp.MessageType != someip.Response {
+	if resp.MessageType != someip.MsgTypeResponse {
 		t.Errorf("MessageType: got 0x%02x, want Response", resp.MessageType)
 	}
 	if !bytes.Equal(resp.Payload, []byte("hello")) {
@@ -83,7 +83,7 @@ func TestHandlerErrorCausesErrorResponse(t *testing.T) {
 	defer svc.Close()
 
 	resp, err := svc.Call(context.Background(), 0x0001, nil)
-	if err == nil && resp.MessageType != someip.Error {
+	if err == nil && resp.MessageType != someip.MsgTypeError {
 		t.Errorf("expected Error MessageType, got %v", resp.MessageType)
 	}
 }
@@ -151,7 +151,7 @@ func TestEventSubscribeEmit(t *testing.T) {
 		if !bytes.Equal(msg.Payload, want) {
 			t.Errorf("event payload: got %q, want %q", msg.Payload, want)
 		}
-		if msg.MessageType != someip.Notification {
+		if msg.MessageType != someip.MsgTypeNotification {
 			t.Errorf("MessageType: got 0x%02x, want Notification", msg.MessageType)
 		}
 	case <-time.After(time.Second):

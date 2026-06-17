@@ -102,7 +102,7 @@ func TestEchoRoundTrip(t *testing.T) {
 	if string(resp.Payload) != string(want) {
 		t.Errorf("payload = %q, want %q", resp.Payload, want)
 	}
-	if resp.MessageType != someip.Response {
+	if resp.MessageType != someip.MsgTypeResponse {
 		t.Errorf("MessageType = %v, want Response", resp.MessageType)
 	}
 }
@@ -118,7 +118,7 @@ func TestHandlerError(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Call: %v", err)
 	}
-	if resp.MessageType != someip.Error {
+	if resp.MessageType != someip.MsgTypeError {
 		t.Errorf("MessageType = %v, want Error", resp.MessageType)
 	}
 }
@@ -134,10 +134,10 @@ func TestUnknownMethod(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Call: %v", err)
 	}
-	if resp.MessageType != someip.Error {
+	if resp.MessageType != someip.MsgTypeError {
 		t.Errorf("MessageType = %v, want Error", resp.MessageType)
 	}
-	if resp.ReturnCode != someip.UnknownMethod {
+	if resp.ReturnCode != someip.RetUnknownMethod {
 		t.Errorf("ReturnCode = %v, want UnknownMethod", resp.ReturnCode)
 	}
 }
@@ -327,7 +327,7 @@ func TestSubscribeNotSupported(t *testing.T) {
 	svc := dialService(t, addr)
 
 	_, err := svc.Subscribe(someip.EventID(0x8001))
-	if !errors.Is(err, someip.ErrNotReady) {
+	if !errors.Is(err, someip.ErrNotConnected) {
 		t.Errorf("Subscribe err = %v, want ErrNotReady", err)
 	}
 }

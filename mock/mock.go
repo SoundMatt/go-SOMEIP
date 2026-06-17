@@ -128,8 +128,8 @@ func (s *server) Emit(eventID someip.EventID, payload []byte) error {
 		ServiceID:       s.key.serviceID,
 		MethodID:        someip.MethodID(eventID),
 		ProtocolVersion: 0x01,
-		MessageType:     someip.Notification,
-		ReturnCode:      someip.OK,
+		MessageType:     someip.MsgTypeNotification,
+		ReturnCode:      someip.RetOK,
 		Payload:         payload,
 	}
 
@@ -185,8 +185,8 @@ func (s *server) call(ctx context.Context, methodID someip.MethodID, clientID so
 		ClientID:        clientID,
 		SessionID:       sessionID,
 		ProtocolVersion: 0x01,
-		MessageType:     someip.Request,
-		ReturnCode:      someip.OK,
+		MessageType:     someip.MsgTypeRequest,
+		ReturnCode:      someip.RetOK,
 		Payload:         payload,
 	}
 
@@ -198,8 +198,8 @@ func (s *server) call(ctx context.Context, methodID someip.MethodID, clientID so
 			ClientID:        clientID,
 			SessionID:       sessionID,
 			ProtocolVersion: 0x01,
-			MessageType:     someip.Error,
-			ReturnCode:      someip.NotOK,
+			MessageType:     someip.MsgTypeError,
+			ReturnCode:      someip.RetNotOK,
 		}, err
 	}
 
@@ -209,8 +209,8 @@ func (s *server) call(ctx context.Context, methodID someip.MethodID, clientID so
 		ClientID:        clientID,
 		SessionID:       sessionID,
 		ProtocolVersion: 0x01,
-		MessageType:     someip.Response,
-		ReturnCode:      someip.OK,
+		MessageType:     someip.MsgTypeResponse,
+		ReturnCode:      someip.RetOK,
 		Payload:         respPayload,
 	}, nil
 }
@@ -279,8 +279,8 @@ func (svc *service) CallNoReturn(ctx context.Context, methodID someip.MethodID, 
 		ClientID:        0x0001,
 		SessionID:       svc.nextSession(),
 		ProtocolVersion: 0x01,
-		MessageType:     someip.RequestNoReturn,
-		ReturnCode:      someip.OK,
+		MessageType:     someip.MsgTypeRequestNoReturn,
+		ReturnCode:      someip.RetOK,
 		Payload:         payload,
 	}
 
@@ -294,11 +294,11 @@ func (svc *service) CallNoReturn(ctx context.Context, methodID someip.MethodID, 
 }
 
 //fusa:req REQ-MOCK-009
-func (svc *service) Subscribe(eventID someip.EventID, opts ...someip.SubscribeOption) (someip.Subscription, error) {
+func (svc *service) Subscribe(eventID someip.EventID, opts ...someip.SubscriberOption) (someip.Subscription, error) {
 	if svc.closed.Load() {
 		return nil, someip.ErrClosed
 	}
-	cfg := someip.ApplySubscribeOpts(opts)
+	cfg := someip.ApplySubscriberOpts(opts)
 	depth := cfg.ChanDepth(defaultChanDepth)
 
 	sub := &subscription{

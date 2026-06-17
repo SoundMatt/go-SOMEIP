@@ -93,8 +93,8 @@ func encodeSDFrame(dst []byte, flags uint8, entry sd.Entry, opt *sd.IPv4Endpoint
 		ServiceID:       sd.SDServiceID,
 		MethodID:        sd.SDMethodID,
 		ProtocolVersion: 0x01,
-		MessageType:     someip.Notification,
-		ReturnCode:      someip.OK,
+		MessageType:     someip.MsgTypeNotification,
+		ReturnCode:      someip.RetOK,
 		Payload:         payload,
 	}
 	return codec.Encode(dst, msg)
