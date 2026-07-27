@@ -1,0 +1,99 @@
+{
+  "project": "go-SOMEIP",
+  "standard": "ISO 26262",
+  "notes": "This HARA is a library-level self-assessment for github.com/SoundMatt/go-SOMEIP, an ASIL-B (see .fusa.json) SOME/IP protocol implementation. Severity/Exposure/Controllability are estimated for a representative automotive zonal-Ethernet integration; a library alone is not an item, so an integrating system MUST re-derive its own item-level HARA rather than adopt these ratings directly. ASIL values here are a conservative ceiling used to scope this library's own safety requirements and mitigations (RELAY spec x-FuSa lifecycle, spec §20.4).",
+  "operationalSituations": [
+    {
+      "id": "OS-001",
+      "description": "Normal operation: reliable local Ethernet segment, conformant peers, nominal load."
+    },
+    {
+      "id": "OS-002",
+      "description": "Degraded network: packet loss, reordering, or duplication on UDP; a slow or unresponsive peer."
+    },
+    {
+      "id": "OS-003",
+      "description": "Concurrent application usage: multiple goroutines calling Subscribe/Unsubscribe/Call/Emit on the same Service/Server/Subscription simultaneously, as the package's own concurrency-safety doc comments promise."
+    }
+  ],
+  "hazards": [
+    {
+      "id": "H-001",
+      "description": "A malformed or wrong-protocol-version SOME/IP frame (truncated, inconsistent Length field, or non-0x01 ProtocolVersion) is silently accepted and processed as if valid, causing the application to act on corrupted or attacker-influenced data.",
+      "situations": ["OS-001", "OS-002"],
+      "risk": {
+        "severity": "S2",
+        "exposure": "E3",
+        "controllability": "C2",
+        "asil": "ASIL-B"
+      },
+      "safetyGoals": ["SG-001"]
+    },
+    {
+      "id": "H-002",
+      "description": "The native Message ↔ relay.Message conversion (Message.ToMessage / FromMessage) silently drops or corrupts header semantics (ClientID, SessionID, MessageType, ReturnCode, InterfaceVersion) when a message is bridged through RELAY tooling (relay crossbar, relay interop, convert), causing the receiving application to act on incorrect message semantics without any error being raised.",
+      "situations": ["OS-001"],
+      "risk": {
+        "severity": "S2",
+        "exposure": "E3",
+        "controllability": "C2",
+        "asil": "ASIL-B"
+      },
+      "safetyGoals": ["SG-002"]
+    },
+    {
+      "id": "H-003",
+      "description": "An event subscription (udp.Service.Subscribe) silently fails to register with the server, or concurrent Subscribe/Unsubscribe calls corrupt shared subscriber state (data race / send-on-closed-channel), so that safety-relevant event notifications never reach the subscribing application without any error being surfaced (go-SOMEIP#47, go-SOMEIP#48).",
+      "situations": ["OS-001", "OS-002", "OS-003"],
+      "risk": {
+        "severity": "S2",
+        "exposure": "E2",
+        "controllability": "C2",
+        "asil": "ASIL-A"
+      },
+      "safetyGoals": ["SG-003"]
+    },
+    {
+      "id": "H-004",
+      "description": "A SOME/IP request that should receive a timely response never completes (unreachable server, dropped datagram, or a hung handler) and the calling goroutine blocks indefinitely instead of failing over to a safe state within a bounded time.",
+      "situations": ["OS-002"],
+      "risk": {
+        "severity": "S2",
+        "exposure": "E2",
+        "controllability": "C2",
+        "asil": "ASIL-A"
+      },
+      "safetyGoals": ["SG-004"]
+    }
+  ],
+  "safetyGoals": [
+    {
+      "id": "SG-001",
+      "description": "Reject any inbound frame that is structurally malformed or carries an unsupported ProtocolVersion before it reaches application code.",
+      "hazards": ["H-001"],
+      "asil": "ASIL-B",
+      "safeState": "codec.Decode returns ErrShortFrame/ErrLengthMismatch and Message.Validate returns ErrWrongProtocolVersion; the caller never sees a Message built from the malformed bytes."
+    },
+    {
+      "id": "SG-002",
+      "description": "Message.ToMessage/FromMessage MUST be a lossless round trip for every mandatory SOME/IP header field.",
+      "hazards": ["H-002"],
+      "asil": "ASIL-B",
+      "safeState": "Every header field not carried in the ID is restored byte-for-byte from Meta; verified by TestMessageRoundTripLossless and by relay interop (which requires byte-identical relay.Message output for the shared golden vector)."
+    },
+    {
+      "id": "SG-003",
+      "description": "Subscribe MUST register the subscriber with the server (or fail loudly) before returning success, and concurrent Subscribe/Unsubscribe/dispatch MUST NOT race or panic.",
+      "hazards": ["H-003"],
+      "asil": "ASIL-A",
+      "safeState": "Service.Subscribe sends a Subscribe entry and returns an error if it cannot be sent; Server.RegisterSubscriber/UnregisterSubscriber and the mutex-protected copy-on-write subscriber list make dispatchFrame, Subscribe, and Unsubscribe mutually exclusive; verified under -race by TestUDPSubscribeEmit, TestUDPUnsubscribeStopsDelivery, and TestUDPSubscribeUnsubscribeRace."
+    },
+    {
+      "id": "SG-004",
+      "description": "Every blocking call MUST have a bounded, caller-controlled deadline.",
+      "hazards": ["H-004"],
+      "asil": "ASIL-A",
+      "safeState": "Service.Call returns ErrTimeout once ServiceConfig.Timeout (default 5s) elapses, or ctx.Err() if the caller's context is cancelled; the caller is never blocked indefinitely."
+    }
+  ]
+}

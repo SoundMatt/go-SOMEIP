@@ -133,14 +133,16 @@ func Segment(msg someip.Message, segmentSize int) ([]someip.Message, error) {
 	return segments, nil
 }
 
-//fusa:req REQ-TP-004
 // IsTP reports whether msg carries SOME/IP-TP framing (bit 5 of MessageType set).
+//
+//fusa:req REQ-TP-004
 func IsTP(msg someip.Message) bool {
 	return msg.MessageType&tpBit != 0
 }
 
-//fusa:req REQ-TP-005
 // BaseMessageType strips the TP bit from MessageType.
+//
+//fusa:req REQ-TP-005
 func BaseMessageType(mt someip.MessageType) someip.MessageType {
 	return mt &^ tpBit
 }

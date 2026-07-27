@@ -23,9 +23,9 @@
 //
 // # RELAY conformance
 //
-// This package conforms to RELAY spec v1.0 (stable); see [SpecVersion]. Use
-// [Adapt] to obtain a [relay.Caller] from any [Service]. Use [Message.ToMessage]
-// and [FromMessage] to convert between native and envelope representations.
+// This package conforms to RELAY spec v1.11 (stable); see [SpecVersion]. The
+// RELAY adapter — [Adapt], [Message.ToMessage], and [FromMessage] — lives in
+// adapt.go per spec §13.7.1's cross-language module taxonomy.
 package someip
 
 import (
@@ -33,8 +33,6 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-	"strings"
-	"time"
 
 	relay "github.com/SoundMatt/RELAY"
 )
@@ -42,7 +40,7 @@ import (
 // SpecVersion is the RELAY specification version this package conforms to (spec §17.12).
 //
 //fusa:req REQ-SPEC-001
-const SpecVersion = "1.0"
+const SpecVersion = "1.11"
 
 // SOMEIPProtocolVersion is the protocol version byte placed in every SOME/IP header.
 // Inbound messages with a different value MUST be rejected with [ErrMalformedMessage].
@@ -61,9 +59,10 @@ var ErrClosed = fmt.Errorf("someip: closed: %w", relay.ErrClosed)
 //fusa:req REQ-ERR-002
 var ErrTimeout = fmt.Errorf("someip: timeout: %w", relay.ErrTimeout)
 
-//fusa:req REQ-ERR-003
 // ErrNotConnected is returned when an operation is attempted before a connection
 // is established, or after the underlying transport has dropped.
+//
+//fusa:req REQ-ERR-003
 var ErrNotConnected = fmt.Errorf("someip: not connected: %w", relay.ErrNotConnected)
 
 //fusa:req REQ-ERR-007
@@ -80,38 +79,45 @@ var ErrUnknownService = fmt.Errorf("someip: unknown service: %w", relay.ErrNotCo
 //fusa:req REQ-ERR-006
 var ErrMalformedMessage = fmt.Errorf("someip: malformed message: %w", relay.ErrPayloadTooLarge)
 
-//fusa:req REQ-ERR-008
 // ErrWrongProtocolVersion is returned when a SOME/IP message carries a
 // ProtocolVersion other than [SOMEIPProtocolVersion] (0x01). It is a standalone
 // protocol-specific sentinel (RELAY spec v0.3 §15.6) and does not wrap a
 // mandatory relay sentinel.
+//
+//fusa:req REQ-ERR-008
 var ErrWrongProtocolVersion = errors.New("someip: wrong protocol version")
 
 // ── Wire-type definitions ─────────────────────────────────────────────────────
 
-//fusa:req REQ-TYPES-001
 // ServiceID is the 16-bit SOME/IP service identifier.
+//
+//fusa:req REQ-TYPES-001
 type ServiceID uint16
 
-//fusa:req REQ-TYPES-002
 // MethodID is the 16-bit SOME/IP method/event identifier.
+//
+//fusa:req REQ-TYPES-002
 type MethodID uint16
 
-//fusa:req REQ-TYPES-003
 // ClientID is the 16-bit SOME/IP client identifier.
+//
+//fusa:req REQ-TYPES-003
 type ClientID uint16
 
-//fusa:req REQ-TYPES-004
 // SessionID is the 16-bit SOME/IP session identifier, auto-incremented per call.
+//
+//fusa:req REQ-TYPES-004
 type SessionID uint16
 
-//fusa:req REQ-TYPES-006
 // EventID is a MethodID that identifies a SOME/IP event (notification).
 // By AUTOSAR convention event IDs have bit 15 set (0x8000–0xFFFF).
+//
+//fusa:req REQ-TYPES-006
 type EventID = MethodID
 
-//fusa:req REQ-TYPES-005
 // InstanceID is the 16-bit SOME/IP instance identifier.
+//
+//fusa:req REQ-TYPES-005
 type InstanceID uint16
 
 // ── MessageType ───────────────────────────────────────────────────────────────
@@ -213,93 +219,6 @@ func (m Message) Validate() error {
 	return nil
 }
 
-// ToMessage converts m to the universal relay.Message envelope (RELAY spec §15.7.6).
-//
-// The conversion is lossless (spec v0.3, hazard H-002): every SOME/IP header
-// field is carried either in the ID ("serviceID/methodID") or in Meta.
-// "someip.msg_type" carries the numeric MessageType for exact round-trip
-// fidelity; "someip.msg_type_name" carries the human-readable label for
-// diagnostics only and is ignored by [FromMessage].
-//
-//fusa:req REQ-ADAPT-002
-func (m Message) ToMessage() relay.Message {
-	return relay.Message{
-		Protocol:  relay.SOMEIP,
-		ID:        fmt.Sprintf("%d/%d", uint16(m.ServiceID), uint16(m.MethodID)),
-		Payload:   m.Payload,
-		Timestamp: time.Now(),
-		Meta: map[string]string{
-			"someip.client_id":         strconv.FormatUint(uint64(m.ClientID), 10),
-			"someip.session_id":        strconv.FormatUint(uint64(m.SessionID), 10),
-			"someip.msg_type":          strconv.FormatUint(uint64(m.MessageType), 10),
-			"someip.msg_type_name":     m.MessageType.String(),
-			"someip.return_code":       strconv.FormatUint(uint64(m.ReturnCode), 10),
-			"someip.interface_version": strconv.FormatUint(uint64(m.InterfaceVersion), 10),
-		},
-	}
-}
-
-// FromMessage converts a relay.Message envelope back to a native Message
-// (RELAY spec §15.7.6). The ID field MUST be "serviceID/methodID" in decimal.
-// Returns ErrMalformedMessage if the ID is malformed.
-//
-// The conversion is lossless (spec v0.3): ClientID, SessionID, MessageType,
-// ReturnCode, and InterfaceVersion are restored from Meta. Missing Meta keys
-// default to zero; "someip.msg_type_name" is diagnostic and ignored.
-//
-//fusa:req REQ-ADAPT-003
-func FromMessage(msg relay.Message) (Message, error) {
-	parts := strings.SplitN(msg.ID, "/", 2)
-	if len(parts) != 2 {
-		return Message{}, fmt.Errorf("%w: invalid SOMEIP ID %q", ErrMalformedMessage, msg.ID)
-	}
-	svcID, err := strconv.ParseUint(parts[0], 10, 16)
-	if err != nil {
-		return Message{}, fmt.Errorf("%w: invalid service ID in %q", ErrMalformedMessage, msg.ID)
-	}
-	methodID, err := strconv.ParseUint(parts[1], 10, 16)
-	if err != nil {
-		return Message{}, fmt.Errorf("%w: invalid method ID in %q", ErrMalformedMessage, msg.ID)
-	}
-	m := Message{
-		ServiceID:       ServiceID(svcID),
-		MethodID:        MethodID(methodID),
-		Payload:         msg.Payload,
-		ProtocolVersion: SOMEIPProtocolVersion,
-	}
-	if v := metaUint(msg.Meta, "someip.client_id", 16); v != nil {
-		m.ClientID = ClientID(*v)
-	}
-	if v := metaUint(msg.Meta, "someip.session_id", 16); v != nil {
-		m.SessionID = SessionID(*v)
-	}
-	if v := metaUint(msg.Meta, "someip.msg_type", 8); v != nil {
-		m.MessageType = MessageType(*v)
-	}
-	if v := metaUint(msg.Meta, "someip.return_code", 8); v != nil {
-		m.ReturnCode = ReturnCode(*v)
-	}
-	if v := metaUint(msg.Meta, "someip.interface_version", 8); v != nil {
-		m.InterfaceVersion = uint8(*v)
-	}
-	return m, nil
-}
-
-// metaUint parses Meta[key] as an unsigned integer of the given bit size.
-// Returns nil when the key is absent or empty so callers leave the field at
-// its zero value; a malformed value is treated as absent.
-func metaUint(meta map[string]string, key string, bits int) *uint64 {
-	s, ok := meta[key]
-	if !ok || s == "" {
-		return nil
-	}
-	v, err := strconv.ParseUint(s, 10, bits)
-	if err != nil {
-		return nil
-	}
-	return &v
-}
-
 // String returns the human-readable label for the SOME/IP message type
 // (e.g. "request"). Unknown values render as their decimal number. The label
 // is diagnostic only; the numeric MessageType is authoritative on the wire.
@@ -332,9 +251,10 @@ func (mt MessageType) String() string {
 
 // ── Handler types ─────────────────────────────────────────────────────────────
 
-//fusa:req REQ-SERVER-001
 // MethodHandler is called by a [Server] to process an incoming method request.
 // Returning a non-nil error causes the server to send an Error response (REQ-SERVER-003).
+//
+//fusa:req REQ-SERVER-001
 type MethodHandler func(ctx context.Context, req Message) ([]byte, error)
 
 // ── Subscriber helpers (RELAY spec §14.1) ─────────────────────────────────────
@@ -350,8 +270,9 @@ type SubscriberConfig = relay.SubscriberConfig
 // SubscriberOption configures a subscription at creation time.
 type SubscriberOption = relay.SubscriberOption
 
-//fusa:req REQ-SUB-003
 // BackPressurePolicy controls what happens when a subscription channel is full.
+//
+//fusa:req REQ-SUB-003
 type BackPressurePolicy = relay.BackPressurePolicy
 
 const (
@@ -440,73 +361,6 @@ type Subscription interface {
 	Close() error
 }
 
-// ── RELAY application interface (spec §10.3) ─────────────────────────────────
-
-//fusa:req REQ-ADAPT-001
-
-// Adapt wraps s as a [relay.Caller], enabling protocol-agnostic application code
-// (RELAY spec §10.3). Use [Message.ToMessage] / [FromMessage] for message conversion.
-//
-// The returned adapter's Subscribe reads the [relay.WithEventID] option to
-// determine which SOME/IP event group to subscribe to (spec v0.3, REQ-RELAY-051);
-// it returns [ErrNotConnected] if no EventID is supplied.
-func Adapt(s Service) relay.Caller {
-	return &serviceAdapter{s: s}
-}
-
-type serviceAdapter struct{ s Service }
-
-func (a *serviceAdapter) Protocol() relay.Protocol { return relay.SOMEIP }
-
-func (a *serviceAdapter) Call(ctx context.Context, req relay.Message) (relay.Message, error) {
-	m, err := FromMessage(req)
-	if err != nil {
-		return relay.Message{}, err
-	}
-	resp, err := a.s.Call(ctx, m.MethodID, m.Payload)
-	if err != nil {
-		return relay.Message{}, err
-	}
-	return resp.ToMessage(), nil
-}
-
-func (a *serviceAdapter) Send(ctx context.Context, msg relay.Message) error {
-	m, err := FromMessage(msg)
-	if err != nil {
-		return err
-	}
-	if m.MessageType == MsgTypeRequestNoReturn {
-		return a.s.CallNoReturn(ctx, m.MethodID, m.Payload)
-	}
-	_, err = a.s.Call(ctx, m.MethodID, m.Payload)
-	return err
-}
-
-// Subscribe subscribes to the SOME/IP event group named by [relay.WithEventID]
-// (spec v0.3, REQ-RELAY-051) and returns a channel of converted relay.Messages.
-// Returns [ErrNotConnected] if no EventID was supplied. Channel-depth and
-// back-pressure options are forwarded to the underlying [Service.Subscribe].
-func (a *serviceAdapter) Subscribe(opts ...relay.SubscriberOption) (<-chan relay.Message, error) {
-	cfg := relay.ApplySubscriberOpts(opts)
-	if cfg.EventID == 0 {
-		return nil, fmt.Errorf("%w: Subscribe requires relay.WithEventID for SOME/IP", ErrNotConnected)
-	}
-	sub, err := a.s.Subscribe(EventID(cfg.EventID), opts...)
-	if err != nil {
-		return nil, err
-	}
-	out := make(chan relay.Message, cfg.ChanDepth(64))
-	go func() {
-		defer close(out)
-		for m := range sub.C() {
-			out <- m.ToMessage()
-		}
-	}()
-	return out, nil
-}
-
-func (a *serviceAdapter) Close() error { return a.s.Close() }
-
 // ── Optional interfaces (RELAY spec §9) ───────────────────────────────────────
 //
 // Implementations that satisfy these interfaces MUST use these exact signatures.
@@ -527,8 +381,9 @@ type Health struct {
 	Details string       `json:"details,omitempty"`
 }
 
-//fusa:req REQ-OPT-001
 // HealthProvider is the optional health interface (RELAY spec §9).
+//
+//fusa:req REQ-OPT-001
 type HealthProvider interface {
 	Health() Health
 }
@@ -543,14 +398,16 @@ type Metrics struct {
 	ErrorCount     uint64 `json:"error_count"`
 }
 
-//fusa:req REQ-OPT-002
 // MetricsProvider is the optional metrics interface (RELAY spec §9).
+//
+//fusa:req REQ-OPT-002
 type MetricsProvider interface {
 	Metrics() Metrics
 }
 
-//fusa:req REQ-OPT-003
 // Drainer is the optional graceful-shutdown interface (RELAY spec §9).
+//
+//fusa:req REQ-OPT-003
 type Drainer interface {
 	CloseWithDrain(ctx context.Context) error
 }

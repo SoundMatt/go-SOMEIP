@@ -29,6 +29,7 @@ package udp
 
 import (
 	"context"
+	"encoding/binary"
 	"fmt"
 	"net"
 	"sync"
@@ -37,6 +38,7 @@ import (
 
 	someip "github.com/SoundMatt/go-SOMEIP"
 	"github.com/SoundMatt/go-SOMEIP/codec"
+	"github.com/SoundMatt/go-SOMEIP/sd"
 )
 
 const (
@@ -139,6 +141,48 @@ func (s *Server) Emit(eventID someip.EventID, payload []byte) error {
 	return nil
 }
 
+//fusa:req REQ-UDP-013
+
+// RegisterSubscriber records addr as a subscriber for eventID so that future
+// [Server.Emit] calls deliver to it. This is the wiring point for an external
+// SOME/IP-SD daemon (see the sd/udp package): pass its DaemonConfig.OnSubscribe
+// handler a closure that calls RegisterSubscriber with the entry's EventgroupID
+// and the sender's address. It is also called automatically when a Subscribe
+// entry arrives directly on the data socket (see [Service.Subscribe]).
+// Duplicate registrations for the same eventID/addr pair are no-ops.
+func (s *Server) RegisterSubscriber(eventID someip.EventID, addr net.Addr) error {
+	if s.closed.Load() {
+		return someip.ErrClosed
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for _, existing := range s.subs[eventID] {
+		if existing.String() == addr.String() {
+			return nil
+		}
+	}
+	s.subs[eventID] = append(s.subs[eventID], addr)
+	return nil
+}
+
+//fusa:req REQ-UDP-014
+
+// UnregisterSubscriber removes addr from eventID's subscriber list. It is a
+// no-op if addr was not registered.
+func (s *Server) UnregisterSubscriber(eventID someip.EventID, addr net.Addr) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	existing := s.subs[eventID]
+	filtered := make([]net.Addr, 0, len(existing))
+	for _, a := range existing {
+		if a.String() != addr.String() {
+			filtered = append(filtered, a)
+		}
+	}
+	s.subs[eventID] = filtered
+	return nil
+}
+
 //fusa:req REQ-UDP-004
 
 // Close stops the server and releases the UDP socket.
@@ -176,6 +220,11 @@ func (s *Server) readLoop() {
 func (s *Server) handleFrame(frame []byte, addr *net.UDPAddr) {
 	msg, err := codec.Decode(frame)
 	if err != nil {
+		return
+	}
+
+	if msg.ServiceID == sd.SDServiceID && msg.MethodID == sd.SDMethodID {
+		s.handleSubscribeFrame(msg, addr)
 		return
 	}
 
@@ -227,6 +276,93 @@ func (s *Server) handleFrame(frame []byte, addr *net.UDPAddr) {
 	_, _ = s.conn.WriteToUDP(frame2, addr)
 }
 
+// handleSubscribeFrame processes a SOME/IP-SD Subscribe/Unsubscribe entry
+// received directly on the data socket (see encodeSDEntryFrame), registers or
+// unregisters addr as a subscriber, and replies with a SubscribeAck.
+func (s *Server) handleSubscribeFrame(msg someip.Message, addr *net.UDPAddr) {
+	entry, ok := decodeSubscribeEntry(msg.Payload)
+	if !ok {
+		return
+	}
+	eventID := someip.EventID(entry.EventgroupID)
+	if entry.TTL == 0 {
+		_ = s.UnregisterSubscriber(eventID, addr)
+	} else {
+		_ = s.RegisterSubscriber(eventID, addr)
+	}
+	ack := encodeSDEntryFrame(sd.EntryTypeSubscribeAck, s.cfg.ServiceID, s.cfg.InstanceID, eventID, entry.TTL)
+	_, _ = s.conn.WriteToUDP(ack, addr)
+}
+
+// ── SOME/IP-SD subscribe wiring ─────────────────────────────────────────────
+//
+// Server and Service exchange a minimal point-to-point SOME/IP-SD
+// Subscribe/SubscribeAck handshake directly over the data socket, so that
+// [Service.Subscribe] actually registers the caller's address with the
+// [Server] before returning and [Server.Emit] has subscribers to deliver to.
+// Applications that also run a full sd/udp.Daemon (multicast offers/finds)
+// can additionally wire its OnSubscribe handler to [Server.RegisterSubscriber]
+// for eventgroup subscriptions announced there instead of directly here.
+//
+// This Server does not expire subscriptions by TTL; TTL is carried on the
+// wire for protocol compatibility only. A TTL of zero unsubscribes.
+
+// sdPayloadHeaderSize is the Flags(1)+Reserved(3)+EntriesLength(4) prefix of
+// a SOME/IP-SD payload, before the entries themselves.
+const sdPayloadHeaderSize = 4 + 4
+
+// encodeSDEntryFrame builds a complete SOME/IP-SD wire frame (SOME/IP header
+// + SD payload) carrying a single entry of entryType for eventID, with no
+// options. See sd.Entry / codec.Encode for the wire layouts.
+func encodeSDEntryFrame(entryType uint8, serviceID someip.ServiceID, instanceID someip.InstanceID, eventID someip.EventID, ttl uint32) []byte {
+	entry := sd.Entry{
+		Type:         entryType,
+		ServiceID:    serviceID,
+		InstanceID:   instanceID,
+		MajorVersion: 0xFF,
+		TTL:          ttl,
+		EventgroupID: uint16(eventID),
+	}
+	entryBuf := sd.EncodeEntry(nil, entry)
+
+	payload := make([]byte, 0, sdPayloadHeaderSize+len(entryBuf)+4)
+	payload = append(payload, 0x00, 0x00, 0x00, 0x00) // Flags + Reserved
+	payload = binary.BigEndian.AppendUint32(payload, uint32(len(entryBuf)))
+	payload = append(payload, entryBuf...)
+	payload = binary.BigEndian.AppendUint32(payload, 0) // no options
+
+	msg := someip.Message{
+		ServiceID:       sd.SDServiceID,
+		MethodID:        sd.SDMethodID,
+		ProtocolVersion: someip.SOMEIPProtocolVersion,
+		MessageType:     someip.MsgTypeNotification,
+		ReturnCode:      someip.RetOK,
+		Payload:         payload,
+	}
+	return codec.Encode(nil, msg)
+}
+
+// decodeSubscribeEntry extracts a Subscribe/SubscribeAck entry from a SD
+// payload built by encodeSDEntryFrame. ok is false if the payload is too
+// short or malformed.
+func decodeSubscribeEntry(payload []byte) (entry sd.Entry, ok bool) {
+	if len(payload) < sdPayloadHeaderSize {
+		return sd.Entry{}, false
+	}
+	entriesLen := int(binary.BigEndian.Uint32(payload[4:8]))
+	if entriesLen < sd.EntrySize || sdPayloadHeaderSize+sd.EntrySize > len(payload) {
+		return sd.Entry{}, false
+	}
+	e, err := sd.DecodeEntry(payload[sdPayloadHeaderSize:])
+	if err != nil {
+		return sd.Entry{}, false
+	}
+	if e.Type != sd.EntryTypeSubscribe && e.Type != sd.EntryTypeSubscribeAck {
+		return sd.Entry{}, false
+	}
+	return e, true
+}
+
 // ── Service ───────────────────────────────────────────────────────────────────
 
 // ServiceConfig configures a UDP [Service].
@@ -244,18 +380,25 @@ type ServiceConfig struct {
 // Service is a SOME/IP UDP client.
 // A Service is safe for concurrent use from multiple goroutines.
 type Service struct {
-	cfg       ServiceConfig
-	conn      *net.UDPConn
+	cfg        ServiceConfig
+	conn       *net.UDPConn
 	serverAddr *net.UDPAddr
-	timeout   time.Duration
+	timeout    time.Duration
 
 	mu        sync.Mutex
 	sessionID uint16
 	pending   map[someip.SessionID]chan someip.Message
 
-	subs      sync.Map // EventID → []chan someip.Message
-	closed    atomic.Bool
-	wg        sync.WaitGroup
+	// subs is guarded by mu (not a sync.Map): sync.Map.CompareAndSwap
+	// requires a comparable value type, and []chan someip.Message is not
+	// comparable — a slice-valued sync.Map panics under concurrent
+	// Subscribe calls for the same eventID. Every mutation below replaces
+	// the slice with a fresh backing array (copy-on-write) so dispatchFrame
+	// can safely range over a snapshot taken under mu without it being
+	// mutated in place by a concurrent Subscribe/Unsubscribe.
+	subs   map[someip.EventID][]chan someip.Message
+	closed atomic.Bool
+	wg     sync.WaitGroup
 }
 
 //fusa:req REQ-UDP-005
@@ -282,6 +425,7 @@ func NewService(cfg ServiceConfig) (*Service, error) {
 		serverAddr: serverAddr,
 		timeout:    timeout,
 		pending:    make(map[someip.SessionID]chan someip.Message),
+		subs:       make(map[someip.EventID][]chan someip.Message),
 	}
 	svc.wg.Add(1)
 	go svc.readLoop()
@@ -365,9 +509,19 @@ func (svc *Service) CallNoReturn(ctx context.Context, methodID someip.MethodID, 
 	return err
 }
 
+// subscribeTTL is the TTL (seconds) carried on outbound Subscribe entries.
+// This Service/Server pair does not expire subscriptions by TTL — call
+// [Subscription.Unsubscribe] to remove one — so the value is informational,
+// carried for wire compatibility with real SOME/IP-SD peers only.
+const subscribeTTL = 3600
+
 //fusa:req REQ-UDP-008
 
-// Subscribe creates a subscription for event notifications.
+// Subscribe creates a subscription for event notifications and registers
+// this service's local address with the server so that [Server.Emit] will
+// deliver to it (RELAY spec §8.6). It returns an error, without creating the
+// subscription, if the registration request cannot be sent.
+//
 // UDP subscriptions receive notifications emitted by the server to this
 // service's local UDP address.
 func (svc *Service) Subscribe(eventID someip.EventID, opts ...someip.SubscriberOption) (someip.Subscription, error) {
@@ -377,18 +531,19 @@ func (svc *Service) Subscribe(eventID someip.EventID, opts ...someip.SubscriberO
 	cfg := someip.ApplySubscriberOpts(opts)
 	ch := make(chan someip.Message, cfg.ChanDepth(64))
 
-	for {
-		actual, loaded := svc.subs.LoadOrStore(eventID, []chan someip.Message{ch})
-		if !loaded {
-			break
-		}
-		old, ok := actual.([]chan someip.Message)
-		if !ok {
-			break
-		}
-		if svc.subs.CompareAndSwap(eventID, actual, append(old, ch)) {
-			break
-		}
+	svc.mu.Lock()
+	old := svc.subs[eventID]
+	grown := make([]chan someip.Message, len(old)+1)
+	copy(grown, old)
+	grown[len(old)] = ch
+	svc.subs[eventID] = grown
+	svc.mu.Unlock()
+
+	frame := encodeSDEntryFrame(sd.EntryTypeSubscribe, svc.cfg.ServiceID, svc.cfg.InstanceID, eventID, subscribeTTL)
+	if _, err := svc.conn.WriteToUDP(frame, svc.serverAddr); err != nil {
+		sub := &udpSubscription{svc: svc, eventID: eventID, ch: ch}
+		_ = sub.Unsubscribe()
+		return nil, fmt.Errorf("udp: send subscribe: %w", err)
 	}
 
 	sub := &udpSubscription{svc: svc, eventID: eventID, ch: ch}
@@ -430,18 +585,29 @@ func (svc *Service) dispatchFrame(frame []byte) {
 		return
 	}
 
+	if msg.ServiceID == sd.SDServiceID && msg.MethodID == sd.SDMethodID {
+		// SubscribeAck / Subscribe control traffic; no client-side action needed.
+		return
+	}
+
 	switch msg.MessageType {
 	case someip.MsgTypeNotification:
-		if val, ok := svc.subs.Load(msg.MethodID); ok {
-			if chans, ok := val.([]chan someip.Message); ok {
-				for _, ch := range chans {
-					select {
-					case ch <- msg:
-					default:
-					}
-				}
+		// Hold mu for the snapshot AND the sends (not just the snapshot):
+		// Unsubscribe removes a channel from subs and then Close closes it,
+		// both under mu. If we released mu before sending, a channel could
+		// be removed-and-closed between our snapshot and our send, causing
+		// a send on a closed channel. Serializing against Unsubscribe like
+		// this guarantees any channel in our snapshot is not closed until
+		// after we're done with it (sends are non-blocking, so the lock is
+		// held only briefly).
+		svc.mu.Lock()
+		for _, ch := range svc.subs[someip.EventID(msg.MethodID)] {
+			select {
+			case ch <- msg:
+			default:
 			}
 		}
+		svc.mu.Unlock()
 	case someip.MsgTypeResponse, someip.MsgTypeError:
 		svc.mu.Lock()
 		ch, ok := svc.pending[msg.SessionID]
@@ -470,17 +636,25 @@ func (s *udpSubscription) C() <-chan someip.Message { return s.ch }
 
 //fusa:req REQ-UDP-011
 func (s *udpSubscription) Unsubscribe() error {
-	if val, ok := s.svc.subs.Load(s.eventID); ok {
-		if chans, ok := val.([]chan someip.Message); ok {
-			filtered := chans[:0]
-			for _, c := range chans {
-				if c != s.ch {
-					filtered = append(filtered, c)
-				}
-			}
-			s.svc.subs.Store(s.eventID, filtered)
+	s.svc.mu.Lock()
+	chans := s.svc.subs[s.eventID]
+	// Build filtered into a fresh backing array rather than mutating chans
+	// in place: dispatchFrame may concurrently hold (and range over) a
+	// slice snapshot taken under this same mutex, so writing into that
+	// array's memory here — even under the lock, since dispatchFrame's
+	// range happens after it has released the lock — would be an
+	// unsynchronized concurrent read/write of shared memory.
+	filtered := make([]chan someip.Message, 0, len(chans))
+	for _, c := range chans {
+		if c != s.ch {
+			filtered = append(filtered, c)
 		}
 	}
+	s.svc.subs[s.eventID] = filtered
+	s.svc.mu.Unlock()
+
+	frame := encodeSDEntryFrame(sd.EntryTypeSubscribe, s.svc.cfg.ServiceID, s.svc.cfg.InstanceID, s.eventID, 0)
+	_, _ = s.svc.conn.WriteToUDP(frame, s.svc.serverAddr)
 	return nil
 }
 

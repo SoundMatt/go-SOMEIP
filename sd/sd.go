@@ -47,10 +47,10 @@ const (
 
 // Entry type identifiers (AUTOSAR PRS_SOMEIPServiceDiscovery).
 const (
-	EntryTypeFind             uint8 = 0x00
-	EntryTypeOffer            uint8 = 0x01
-	EntryTypeSubscribe        uint8 = 0x06
-	EntryTypeSubscribeAck     uint8 = 0x07
+	EntryTypeFind         uint8 = 0x00
+	EntryTypeOffer        uint8 = 0x01
+	EntryTypeSubscribe    uint8 = 0x06
+	EntryTypeSubscribeAck uint8 = 0x07
 )
 
 // Option type identifiers.

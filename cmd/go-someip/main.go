@@ -25,7 +25,7 @@ const toolName = "go-someip"
 
 // binVersion is the semantic version of this binary. Overridable via
 // -ldflags "-X main.binVersion=X.Y.Z" at build time.
-var binVersion = "1.0.0"
+var binVersion = "1.1.0"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -39,6 +39,10 @@ func main() {
 		runCapabilities()
 	case "status":
 		runStatus(os.Args[2:])
+	case "convert":
+		os.Exit(runConvert(os.Args[2:]))
+	case "send":
+		os.Exit(runSend(os.Args[2:]))
 	default:
 		fmt.Fprintf(os.Stderr, "go-someip: unknown command %q\n", os.Args[1])
 		usage()
@@ -48,7 +52,7 @@ func main() {
 
 func usage() {
 	fmt.Fprintln(os.Stderr, "Usage: go-someip <command> [flags]")
-	fmt.Fprintln(os.Stderr, "Commands: version, capabilities, status")
+	fmt.Fprintln(os.Stderr, "Commands: version, capabilities, status, convert, send")
 }
 
 func writeJSON(v any) {
@@ -94,6 +98,8 @@ func runVersion(args []string) {
 type capabilitiesDoc struct {
 	Kind               string   `json:"kind"`
 	Tool               string   `json:"tool"`
+	Protocol           string   `json:"protocol"`
+	ProtocolInt        int      `json:"protocol_int"`
 	Version            string   `json:"version"`
 	SpecVersion        string   `json:"spec_version"`
 	Commands           []string `json:"commands"`
@@ -108,9 +114,11 @@ func runCapabilities() {
 	writeJSON(capabilitiesDoc{
 		Kind:               "capabilities",
 		Tool:               toolName,
+		Protocol:           relay.SOMEIP.String(),
+		ProtocolInt:        int(relay.SOMEIP),
 		Version:            binVersion,
 		SpecVersion:        someip.SpecVersion,
-		Commands:           []string{"version", "capabilities", "status"},
+		Commands:           []string{"version", "capabilities", "status", "convert", "send"},
 		Transports:         []string{"mock", "udp", "tcp"},
 		Features:           []string{"sd", "tp", "e2e"},
 		Interfaces:         []string{"Node", "Caller"},
