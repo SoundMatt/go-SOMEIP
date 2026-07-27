@@ -6,11 +6,14 @@
 package someip_test
 
 import (
+	"context"
 	"errors"
 	"testing"
+	"time"
 
 	relay "github.com/SoundMatt/RELAY"
 	someip "github.com/SoundMatt/go-SOMEIP"
+	"github.com/SoundMatt/go-SOMEIP/mock"
 )
 
 // ── Named types ───────────────────────────────────────────────────────────────
@@ -248,8 +251,8 @@ func TestSOMEIPProtocolVersion(t *testing.T) {
 
 func TestSpecVersion(t *testing.T) {
 	//fusa:test REQ-SPEC-001
-	if someip.SpecVersion != "1.0" {
-		t.Errorf("SpecVersion: got %q, want %q", someip.SpecVersion, "1.0")
+	if someip.SpecVersion != "1.11" {
+		t.Errorf("SpecVersion: got %q, want %q", someip.SpecVersion, "1.11")
 	}
 	// Drift detector: our declared spec version must match the pinned RELAY
 	// module's spec version. If a dependency bump changes relay.SpecVersion,
@@ -291,6 +294,7 @@ func TestWithBackPressure(t *testing.T) {
 
 func TestToMessage(t *testing.T) {
 	//fusa:test REQ-ADAPT-002
+	//fusa:test REQ-MSG-003
 	m := someip.Message{
 		ServiceID:        0x1234,
 		MethodID:         0x0001,
@@ -420,5 +424,117 @@ func TestFromMessageMalformed(t *testing.T) {
 		if !errors.Is(err, someip.ErrMalformedMessage) {
 			t.Errorf("FromMessage(%q): want ErrMalformedMessage, got %v", id, err)
 		}
+	}
+}
+
+// ── Adapt (RELAY spec §10.3) ─────────────────────────────────────────────────
+
+func TestAdapt(t *testing.T) {
+	//fusa:test REQ-ADAPT-001
+	//fusa:test REQ-SERVER-001
+	//fusa:test REQ-SERVER-002
+	bus := mock.NewBus()
+	srv, err := bus.NewServer(0x1234, 0x0001)
+	if err != nil {
+		t.Fatalf("NewServer: %v", err)
+	}
+	defer srv.Close()
+	_ = srv.RegisterMethod(0x0001, func(_ context.Context, req someip.Message) ([]byte, error) {
+		return req.Payload, nil
+	})
+
+	svc, err := bus.NewService(0x1234, 0x0001)
+	if err != nil {
+		t.Fatalf("NewService: %v", err)
+	}
+
+	caller := someip.Adapt(svc)
+	defer caller.Close()
+
+	if caller.Protocol() != relay.SOMEIP {
+		t.Errorf("Protocol: got %v, want %v", caller.Protocol(), relay.SOMEIP)
+	}
+
+	req := someip.Message{ServiceID: 0x1234, MethodID: 0x0001, Payload: []byte("adapt")}.ToMessage()
+	resp, err := caller.Call(context.Background(), req)
+	if err != nil {
+		t.Fatalf("Call: %v", err)
+	}
+	if string(resp.Payload) != "adapt" {
+		t.Errorf("Call Payload: got %q, want %q", resp.Payload, "adapt")
+	}
+
+	noReturn := someip.Message{
+		ServiceID: 0x1234, MethodID: 0x0001,
+		MessageType: someip.MsgTypeRequestNoReturn,
+		Payload:     []byte("fire"),
+	}.ToMessage()
+	if sendErr := caller.Send(context.Background(), noReturn); sendErr != nil {
+		t.Fatalf("Send: %v", sendErr)
+	}
+
+	if _, subErr := caller.Subscribe(); !errors.Is(subErr, someip.ErrNotConnected) {
+		t.Errorf("Subscribe without WithEventID: want ErrNotConnected, got %v", subErr)
+	}
+
+	ch, err := caller.Subscribe(relay.WithEventID(0x8001))
+	if err != nil {
+		t.Fatalf("Subscribe: %v", err)
+	}
+	if err := srv.Emit(0x8001, []byte("evt")); err != nil {
+		t.Fatalf("Emit: %v", err)
+	}
+	select {
+	case m := <-ch:
+		if string(m.Payload) != "evt" {
+			t.Errorf("Subscribe payload: got %q, want %q", m.Payload, "evt")
+		}
+	case <-time.After(time.Second):
+		t.Fatal("event not received within 1 s")
+	}
+}
+
+// ── Optional interfaces (RELAY spec §9) ──────────────────────────────────────
+
+type fakeHealthProvider struct{}
+
+func (fakeHealthProvider) Health() someip.Health {
+	return someip.Health{Status: someip.HealthOK}
+}
+
+func TestHealthProviderInterface(t *testing.T) {
+	//fusa:test REQ-OPT-001
+	var hp someip.HealthProvider = fakeHealthProvider{}
+	if got := hp.Health(); got.Status != someip.HealthOK {
+		t.Errorf("Health: got %v, want HealthOK", got.Status)
+	}
+}
+
+type fakeMetricsProvider struct{}
+
+func (fakeMetricsProvider) Metrics() someip.Metrics {
+	return someip.Metrics{WriteCount: 1}
+}
+
+func TestMetricsProviderInterface(t *testing.T) {
+	//fusa:test REQ-OPT-002
+	var mp someip.MetricsProvider = fakeMetricsProvider{}
+	if got := mp.Metrics(); got.WriteCount != 1 {
+		t.Errorf("Metrics: got %d, want 1", got.WriteCount)
+	}
+}
+
+type fakeDrainer struct{ drained bool }
+
+func (d *fakeDrainer) CloseWithDrain(_ context.Context) error {
+	d.drained = true
+	return nil
+}
+
+func TestDrainerInterface(t *testing.T) {
+	//fusa:test REQ-OPT-003
+	var d someip.Drainer = &fakeDrainer{}
+	if err := d.CloseWithDrain(context.Background()); err != nil {
+		t.Errorf("CloseWithDrain: %v", err)
 	}
 }

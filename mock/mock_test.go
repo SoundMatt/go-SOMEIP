@@ -34,6 +34,7 @@ func TestCallEcho(t *testing.T) {
 	//fusa:test REQ-MOCK-002
 	//fusa:test REQ-MOCK-003
 	//fusa:test REQ-MOCK-007
+	//fusa:test REQ-SERVICE-001
 	bus, srv := newBusWithEchoServer(t)
 	defer srv.Close()
 
@@ -100,6 +101,7 @@ func TestNewServiceUnknownService(t *testing.T) {
 func TestCallNoReturn(t *testing.T) {
 	//fusa:test REQ-MOCK-004
 	//fusa:test REQ-MOCK-008
+	//fusa:test REQ-SERVICE-002
 	bus := mock.NewBus()
 	srv, _ := bus.NewServer(0x1234, 0x0001)
 	defer srv.Close()
@@ -128,6 +130,8 @@ func TestEventSubscribeEmit(t *testing.T) {
 	//fusa:test REQ-MOCK-005
 	//fusa:test REQ-MOCK-009
 	//fusa:test REQ-MOCK-011
+	//fusa:test REQ-SERVICE-003
+	//fusa:test REQ-SUB-002
 	bus, srv := newBusWithEchoServer(t)
 	defer srv.Close()
 

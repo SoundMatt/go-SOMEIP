@@ -21,11 +21,11 @@ import (
 )
 
 const (
-	testServiceID  someip.ServiceID = 0x1234
-	testInstanceID someip.InstanceID = 0x0001
-	testMethodEcho someip.MethodID  = 0x0001
-	testMethodErr  someip.MethodID  = 0x0002
-	testMethodNoRet someip.MethodID = 0x0003
+	testServiceID   someip.ServiceID  = 0x1234
+	testInstanceID  someip.InstanceID = 0x0001
+	testMethodEcho  someip.MethodID   = 0x0001
+	testMethodErr   someip.MethodID   = 0x0002
+	testMethodNoRet someip.MethodID   = 0x0003
 )
 
 func freeAddr(t *testing.T) string {

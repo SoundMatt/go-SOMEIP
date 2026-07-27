@@ -27,18 +27,22 @@ go get github.com/SoundMatt/go-SOMEIP
 
 ```go
 import (
+    "context"
+
     someip "github.com/SoundMatt/go-SOMEIP"
     "github.com/SoundMatt/go-SOMEIP/mock"
 )
 
+bus := mock.NewBus()
+
 // Server side
-srv, _ := mock.NewServer(someip.ServiceID(0x1234), someip.InstanceID(0x0001))
+srv, _ := bus.NewServer(someip.ServiceID(0x1234), someip.InstanceID(0x0001))
 srv.RegisterMethod(someip.MethodID(0x0001), func(ctx context.Context, req someip.Message) ([]byte, error) {
     return []byte("pong"), nil
 })
 
 // Client side
-svc, _ := mock.NewService(someip.ServiceID(0x1234), someip.InstanceID(0x0001))
+svc, _ := bus.NewService(someip.ServiceID(0x1234), someip.InstanceID(0x0001))
 resp, _ := svc.Call(context.Background(), someip.MethodID(0x0001), []byte("ping"))
 fmt.Println(string(resp.Payload)) // pong
 ```
@@ -56,18 +60,19 @@ See [docker/](docker/) for the full quickstart configuration.
 ```go
 // Development / tests — no network needed:
 import "github.com/SoundMatt/go-SOMEIP/mock"
-srv, _ := mock.NewServer(serviceID, instanceID)
-svc, _ := mock.NewService(serviceID, instanceID)
+bus := mock.NewBus()
+srv, _ := bus.NewServer(serviceID, instanceID)
+svc, _ := bus.NewService(serviceID, instanceID)
 
 // Production — pure-Go UDP:
 import "github.com/SoundMatt/go-SOMEIP/udp"
-srv, _ := udp.NewServer(someip.ServerConfig{...})
-svc, _ := udp.NewService(someip.ServiceConfig{...})
+srv, _ := udp.NewServer(udp.ServerConfig{...})
+svc, _ := udp.NewService(udp.ServiceConfig{...})
 
 // Production — pure-Go TCP (reliable):
 import "github.com/SoundMatt/go-SOMEIP/tcp"
-srv, _ := tcp.NewServer(someip.ServerConfig{...})
-svc, _ := tcp.NewService(someip.ServiceConfig{...})
+srv, _ := tcp.NewServer(tcp.ServerConfig{...})
+svc, _ := tcp.NewService(tcp.ServiceConfig{...})
 ```
 
 ## Related projects

@@ -745,6 +745,20 @@
       "text": "udp subscription.Close shall call Unsubscribe and then close the delivery channel exactly once, using sync.Once to guarantee idempotent closure; subsequent calls shall be no-ops.",
       "standard": "ISO 26262",
       "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-UDP-013",
+      "title": "udp.Server.RegisterSubscriber",
+      "text": "udp.Server.RegisterSubscriber shall record addr as a subscriber for eventID so that a subsequent Emit delivers to it, de-duplicating repeat registrations for the same eventID/addr pair; it shall return ErrClosed when the server is closed.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
+    },
+    {
+      "id": "REQ-UDP-014",
+      "title": "udp.Server.UnregisterSubscriber",
+      "text": "udp.Server.UnregisterSubscriber shall remove addr from eventID's subscriber list without disturbing other subscribers, and shall be a no-op if addr was not registered.",
+      "standard": "ISO 26262",
+      "level": "ASIL-B"
     }
   ]
 }

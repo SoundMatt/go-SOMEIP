@@ -1,9 +1,11 @@
 name: Release
 
 # Runs on every vX.Y.Z tag push.
-# Regenerates all go-FuSa safety artifacts (fmea, safety-case, sbom,
-# provenance, artifact-manifest) and commits them back to main so the
-# committed files always reflect the exact state at each release.
+# Regenerates all go-FuSa safety artifacts (fmea, tara, vuln, qualify-report,
+# safety-case, sbom, provenance, artifact-manifest) and commits them back to
+# main so the committed files always reflect the exact state at each release
+# (RELAY spec §20.4 evidence set: traced+tested requirements, HARA, dFMEA,
+# TARA, plus the §20.5 SBOM/provenance supply-chain evidence).
 on:
   push:
     tags:
@@ -33,6 +35,15 @@ jobs:
       - name: Regenerate dFMEA table
         run: gofusa fmea -cyber
 
+      - name: Regenerate TARA (ISO 21434 Chapter 9)
+        run: gofusa tara
+
+      - name: Regenerate dependency vulnerability scan
+        run: gofusa vuln
+
+      - name: Regenerate tool qualification report
+        run: gofusa qualify
+
       - name: Regenerate safety case
         run: gofusa safety-case
 
@@ -50,6 +61,8 @@ jobs:
           # These artifacts are .gitignored for local dev but are committed
           # on release, so force-add them past the ignore rules.
           git add -f fmea.csv fmea.json \
+                  tara.json tara.md \
+                  vuln.json qualify-report.json \
                   safety-case.json safety-case.md safety-case.mermaid \
                   sbom.json provenance.json artifact-manifest.json
           if git diff --cached --quiet; then

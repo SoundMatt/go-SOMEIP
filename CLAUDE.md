@@ -13,6 +13,9 @@ Go 1.25+, MPL-2.0, Copyright © 2026 Matt Jones.
 ```
 someip.go                   # Core interface: types, errors, Service, Server, Subscription
 someip_test.go
+adapt.go                    # RELAY adapter module (spec §13.7.1): Adapt, ToMessage, FromMessage
+cmd/go-someip/               # RELAY-conformant CLI (spec §11, §12): version, capabilities,
+                             # status, convert, send
 codec/                      # SOME/IP wire-frame encode/decode
   codec.go
   codec_test.go
@@ -24,9 +27,13 @@ mock/                       # In-process transport (no network)
 sd/                         # SOME/IP-SD Service Discovery
   sd.go
   sd_test.go
-udp/                        # UDP transport (unreliable unicast)
+  udp/                      # Real-socket SOME/IP-SD daemon (multicast offer/find/subscribe)
+udp/                         # UDP transport (unreliable unicast)
   udp.go
   udp_test.go               # build tag: integration
+tcp/                         # TCP transport (reliable unicast, session management)
+tp/                           # SOME/IP-TP segmentation and reassembly
+e2e/                          # AUTOSAR E2E protection (Profile 01, Profile 05)
 examples/
   quickstart/
     server/main.go
@@ -61,10 +68,11 @@ go test -tags integration -race ./udp/...
 | test-udp | push/PR | integration tag; skips if udp/ absent |
 | generate | push/PR | go generate + git diff --exit-code |
 | lint | push/PR | golangci-lint v2.12.2 |
-| gofusa | push/PR | go-FuSa v0.30.0 safety gate |
+| gofusa | push/PR | go-FuSa v0.30.0 full lifecycle: check, 100% requirement trace, cyber, vuln, qualify (RELAY spec §20.1.2) |
+| relay-conform | push/PR | `relay conform --strict` + `relay interop` against RELAY spec v1.11 |
 | dco | PRs only | Signed-off-by on every commit |
 | docker-publish | push main/tags | multi-arch amd64/arm64 to GHCR |
-| release | vX.Y.Z tag | Regenerate go-FuSa artifacts |
+| release | vX.Y.Z tag | Regenerate go-FuSa artifacts (fmea, tara, vuln, qualify-report, safety-case, sbom, provenance) |
 
 ## Design constraints
 

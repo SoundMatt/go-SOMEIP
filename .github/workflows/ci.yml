@@ -151,7 +151,11 @@ jobs:
           args: --timeout=5m
 
   # ── go-FuSa safety gate ────────────────────────────────────────────────────
-  # Pinned to v0.30.0; exits 1 on any ERROR-level finding.
+  # Pinned to v0.30.0. The full x-FuSa lifecycle (RELAY spec §20.1.2), not a
+  # subset: check (gate on ERROR — WARN/INFO findings are reported but do not
+  # fail the build), 100% requirement traceability (traced AND tested),
+  # cybersecurity analysis, dependency vulnerability scan, and the tool
+  # qualification suite.
   gofusa:
     name: go-FuSa safety check (v0.30.0)
     runs-on: ubuntu-latest
@@ -164,12 +168,22 @@ jobs:
         run: go install github.com/SoundMatt/go-FuSa/cmd/gofusa@v0.30.0
       - name: gofusa check
         run: gofusa check ./...
+      - name: Requirement traceability (100% traced + tested)
+        run: gofusa trace -req-coverage 100 -sec-tested 100
+      - name: Cybersecurity analysis (CYBER001–CYBER020)
+        run: gofusa cyber
+      - name: Dependency vulnerability scan (OSV / ISO 21434 §8.5)
+        run: gofusa vuln
+      - name: Tool qualification suite
+        run: gofusa qualify
 
   # ── RELAY conformance gate ─────────────────────────────────────────────────
   # Validates the go-someip CLI version/capabilities/status output against the
-  # RELAY §12 JSON schemas embedded in the relay binary (spec v1.0, stable).
+  # RELAY §12 JSON schemas embedded in the relay binary (spec v1.11, stable),
+  # and that convert (§11.2) produces output equivalent to the reference
+  # conversion (relay interop, §20.1.2 item 3).
   relay-conform:
-    name: RELAY conform (spec v1.0)
+    name: RELAY conform (spec v1.11)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -177,8 +191,10 @@ jobs:
         with:
           go-version: "1.25"
       - name: Install relay CLI
-        run: go install github.com/SoundMatt/RELAY/cmd/relay@v1.0.0
+        run: go install github.com/SoundMatt/RELAY/cmd/relay@v1.11.1
       - name: Build go-someip CLI
         run: go build -o /tmp/go-someip ./cmd/go-someip
       - name: relay conform
         run: relay conform --strict /tmp/go-someip
+      - name: relay interop
+        run: relay interop --protocol SOMEIP --strict /tmp/go-someip

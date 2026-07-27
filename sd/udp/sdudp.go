@@ -48,9 +48,9 @@ const (
 
 // SD payload fixed-field sizes.
 const (
-	sdFlagsSize         = 4 // Flags (1) + Reserved (3)
-	sdEntriesLenSize    = 4
-	sdOptionsLenSize    = 4
+	sdFlagsSize      = 4 // Flags (1) + Reserved (3)
+	sdEntriesLenSize = 4
+	sdOptionsLenSize = 4
 )
 
 // ── SD payload encode/decode ──────────────────────────────────────────────────

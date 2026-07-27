@@ -24,10 +24,10 @@ var knownGoodFrame = []byte{
 	0x00, 0x00, 0x00, 0x0c, // Length = 12
 	0x00, 0x05, // ClientID
 	0x00, 0x01, // SessionID
-	0x01,       // ProtocolVersion
-	0x01,       // InterfaceVersion
-	0x00,       // MessageType = Request
-	0x00,       // ReturnCode = OK
+	0x01,               // ProtocolVersion
+	0x01,               // InterfaceVersion
+	0x00,               // MessageType = Request
+	0x00,               // ReturnCode = OK
 	'p', 'i', 'n', 'g', // Payload
 }
 

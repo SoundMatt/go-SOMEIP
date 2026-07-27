@@ -11,6 +11,7 @@
 coverage.html
 coverage*.out
 check-report.json
+cyber-report.json
 
 # Build artifacts
 /bin/
@@ -28,6 +29,8 @@ artifact-manifest.json
 audit-pack.zip
 vuln.json
 qualify-report.json
+tara.json
+tara.md
 
 # IDE
 .idea/
