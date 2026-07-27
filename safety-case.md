@@ -1,6 +1,6 @@
 # Safety Case: github.com/SoundMatt/go-SOMEIP
 
-Generated: 2026-06-17T14:39:05Z  
+Generated: 2026-07-27T17:13:09Z  
 Standard: generic
 
 ## Top Claim
@@ -13,9 +13,9 @@ argued by demonstrating compliance with the safety development lifecycle.
 | ID | Description | Status | Detail |
 |---|---|---|---|
 | Sn1 | Coding standard and static analysis checks | ⚠ absent | run 'gofusa check --output check-report.json' to generate |
-| Sn2 | Requirements traceability matrix | ✅ present | 114 requirements |
+| Sn2 | Requirements traceability matrix | ✅ present | 116 requirements |
 | Sn3 | Test evidence bundle | ⚠ absent | run 'gofusa verify' to generate |
-| Sn4 | Tool qualification report | ⚠ absent | run 'gofusa qualify' to generate |
+| Sn4 | Tool qualification report | ✅ present | 44/44 cases passed |
 | Sn5 | SBOM (SPDX 3.0.1) | ✅ present |  |
 | Sn6 | Build provenance | ✅ present |  |
 
@@ -35,4 +35,3 @@ The following evidence items are absent:
 
 - `check`
 - `verify`
-- `qualify`

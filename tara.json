@@ -1,0 +1,967 @@
+{
+  "format": "go-FuSa TARA v1",
+  "generated_at": "2026-07-27T17:13:09.283181478Z",
+  "module": "github.com/SoundMatt/go-SOMEIP",
+  "entries": [
+    {
+      "id": "TARA-001",
+      "asset": "adapt.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
+      "source_line": 36
+    },
+    {
+      "id": "TARA-002",
+      "asset": "adapt.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
+      "source_line": 36
+    },
+    {
+      "id": "TARA-003",
+      "asset": "adapt.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
+      "source_line": 91
+    },
+    {
+      "id": "TARA-004",
+      "asset": "codec.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "source_line": 65
+    },
+    {
+      "id": "TARA-005",
+      "asset": "codec.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "source_line": 66
+    },
+    {
+      "id": "TARA-006",
+      "asset": "codec.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "source_line": 68
+    },
+    {
+      "id": "TARA-007",
+      "asset": "codec.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "source_line": 69
+    },
+    {
+      "id": "TARA-008",
+      "asset": "codec.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "source_line": 70
+    },
+    {
+      "id": "TARA-009",
+      "asset": "codec.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "source_line": 77
+    },
+    {
+      "id": "TARA-010",
+      "asset": "codec.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "source_line": 78
+    },
+    {
+      "id": "TARA-011",
+      "asset": "e2e.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "source_line": 60
+    },
+    {
+      "id": "TARA-012",
+      "asset": "e2e.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "source_line": 122
+    },
+    {
+      "id": "TARA-013",
+      "asset": "e2e.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "source_line": 126
+    },
+    {
+      "id": "TARA-014",
+      "asset": "e2e.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "source_line": 126
+    },
+    {
+      "id": "TARA-015",
+      "asset": "e2e.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "source_line": 151
+    },
+    {
+      "id": "TARA-016",
+      "asset": "e2e.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "source_line": 151
+    },
+    {
+      "id": "TARA-017",
+      "asset": "e2e.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "source_line": 170
+    },
+    {
+      "id": "TARA-018",
+      "asset": "e2e.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "source_line": 186
+    },
+    {
+      "id": "TARA-019",
+      "asset": "e2e_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e_test.go",
+      "source_line": 145
+    },
+    {
+      "id": "TARA-020",
+      "asset": "sd.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "source_line": 111
+    },
+    {
+      "id": "TARA-021",
+      "asset": "sd.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "source_line": 112
+    },
+    {
+      "id": "TARA-022",
+      "asset": "sd.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "source_line": 115
+    },
+    {
+      "id": "TARA-023",
+      "asset": "sd.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "source_line": 116
+    },
+    {
+      "id": "TARA-024",
+      "asset": "sd.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "source_line": 117
+    },
+    {
+      "id": "TARA-025",
+      "asset": "sd.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "source_line": 146
+    },
+    {
+      "id": "TARA-026",
+      "asset": "sd.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "source_line": 146
+    },
+    {
+      "id": "TARA-027",
+      "asset": "sd.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "source_line": 146
+    },
+    {
+      "id": "TARA-028",
+      "asset": "sdudp.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
+      "source_line": 87
+    },
+    {
+      "id": "TARA-029",
+      "asset": "sdudp.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
+      "source_line": 89
+    },
+    {
+      "id": "TARA-030",
+      "asset": "sdudp.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
+      "source_line": 397
+    },
+    {
+      "id": "TARA-031",
+      "asset": "someip_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "source_line": 24
+    },
+    {
+      "id": "TARA-032",
+      "asset": "someip_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "source_line": 25
+    },
+    {
+      "id": "TARA-033",
+      "asset": "someip_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "source_line": 32
+    },
+    {
+      "id": "TARA-034",
+      "asset": "someip_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "source_line": 33
+    },
+    {
+      "id": "TARA-035",
+      "asset": "someip_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "source_line": 40
+    },
+    {
+      "id": "TARA-036",
+      "asset": "someip_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "source_line": 41
+    },
+    {
+      "id": "TARA-037",
+      "asset": "someip_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "source_line": 48
+    },
+    {
+      "id": "TARA-038",
+      "asset": "someip_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "source_line": 49
+    },
+    {
+      "id": "TARA-039",
+      "asset": "someip_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "source_line": 56
+    },
+    {
+      "id": "TARA-040",
+      "asset": "someip_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "source_line": 57
+    },
+    {
+      "id": "TARA-041",
+      "asset": "someip_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "source_line": 414
+    },
+    {
+      "id": "TARA-042",
+      "asset": "tcp_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp_test.go",
+      "source_line": 345
+    },
+    {
+      "id": "TARA-043",
+      "asset": "tp.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
+      "source_line": 108
+    },
+    {
+      "id": "TARA-044",
+      "asset": "tp_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
+      "source_line": 69
+    },
+    {
+      "id": "TARA-045",
+      "asset": "tp_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
+      "source_line": 121
+    },
+    {
+      "id": "TARA-046",
+      "asset": "tp_test.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
+      "source_line": 162
+    },
+    {
+      "id": "TARA-047",
+      "asset": "udp.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
+      "source_line": 324
+    },
+    {
+      "id": "TARA-048",
+      "asset": "udp.go",
+      "threat": "Integer narrowing conversion causes silent data truncation",
+      "stride": [
+        "T",
+        "D"
+      ],
+      "cwe": "CWE-190",
+      "standard": "MISRA Rule 10.3",
+      "attack_vector": "Local",
+      "likelihood": "Low",
+      "impact": "Medium",
+      "security_level": 1,
+      "current_control": "Add range check before conversion",
+      "residual_risk": "Low after remediation",
+      "cyber_rule_id": "CYBER009",
+      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
+      "source_line": 330
+    }
+  ]
+}

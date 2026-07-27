@@ -1,6 +1,6 @@
 {
   "format": "go-FuSa Safety Case v1",
-  "generatedAt": "2026-06-17T14:39:05.875339934Z",
+  "generatedAt": "2026-07-27T17:13:09.601665268Z",
   "module": "github.com/SoundMatt/go-SOMEIP",
   "standard": "generic",
   "evidence": [
@@ -16,7 +16,7 @@
       "description": "Requirements traceability matrix",
       "file": ".fusa-reqs.json",
       "status": "present",
-      "detail": "114 requirements"
+      "detail": "116 requirements"
     },
     {
       "id": "verify",
@@ -29,8 +29,8 @@
       "id": "qualify",
       "description": "Tool qualification report",
       "file": "qualify-report.json",
-      "status": "absent",
-      "detail": "run 'gofusa qualify' to generate"
+      "status": "present",
+      "detail": "44/44 cases passed"
     },
     {
       "id": "sbom",
@@ -90,7 +90,6 @@
   ],
   "gaps": [
     "check",
-    "verify",
-    "qualify"
+    "verify"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "format": "go-FuSa dFMEA v1",
-  "generated_at": "2026-06-17T14:39:05.726737773Z",
+  "generated_at": "2026-07-27T17:13:08.912600508Z",
   "module": "github.com/SoundMatt/go-SOMEIP",
   "entries": [
     {
@@ -212,7 +212,7 @@
     {
       "component": "go-SOMEIP (someip)",
       "function": "Adapt",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
       "failure_modes": [
         "Incorrect output"
       ],
@@ -241,17 +241,12 @@
       "detection_control": "requirement testing + unit tests",
       "requirement_ids": [
         "REQ-SUB-001"
-      ],
-      "cyber_risks": [
-        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
       "component": "go-SOMEIP (someip)",
       "function": "Call",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
       "failure_modes": [
         "Returns unexpected error"
       ],
@@ -269,7 +264,7 @@
     {
       "component": "go-SOMEIP (someip)",
       "function": "Close",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
       "failure_modes": [
         "Returns unexpected error"
       ],
@@ -287,7 +282,7 @@
     {
       "component": "go-SOMEIP (someip)",
       "function": "FromMessage",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
       "failure_modes": [
         "Returns unexpected error"
       ],
@@ -308,7 +303,7 @@
     {
       "component": "go-SOMEIP (someip)",
       "function": "Protocol",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
       "failure_modes": [
         "Incorrect output"
       ],
@@ -326,7 +321,7 @@
     {
       "component": "go-SOMEIP (someip)",
       "function": "Send",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
       "failure_modes": [
         "Returns unexpected error"
       ],
@@ -352,17 +347,12 @@
         "Incorrect system behavior"
       ],
       "severity": "low",
-      "detection_control": "unit tests",
-      "cyber_risks": [
-        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
-      ]
+      "detection_control": "unit tests"
     },
     {
       "component": "go-SOMEIP (someip)",
       "function": "Subscribe",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
       "failure_modes": [
         "Returns unexpected error",
         "Goroutine not terminated"
@@ -382,7 +372,7 @@
     {
       "component": "go-SOMEIP (someip)",
       "function": "ToMessage",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
       "failure_modes": [
         "Incorrect output"
       ],
@@ -414,11 +404,6 @@
       "detection_control": "requirement testing + unit tests",
       "requirement_ids": [
         "REQ-PROTO-002"
-      ],
-      "cyber_risks": [
-        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
@@ -435,11 +420,6 @@
       "detection_control": "requirement testing + unit tests",
       "requirement_ids": [
         "REQ-SUB-004"
-      ],
-      "cyber_risks": [
-        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
@@ -456,11 +436,6 @@
       "detection_control": "requirement testing + unit tests",
       "requirement_ids": [
         "REQ-SUB-001"
-      ],
-      "cyber_risks": [
-        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
@@ -526,7 +501,7 @@
       "severity": "high",
       "detection_control": "requirement testing + unit tests",
       "requirement_ids": [
-        "REQ-MOCK-013"
+        "REQ-MOCK-006"
       ]
     },
     {
@@ -558,7 +533,7 @@
       "severity": "high",
       "detection_control": "requirement testing + unit tests",
       "requirement_ids": [
-        "REQ-MOCK-006"
+        "REQ-MOCK-013"
       ]
     },
     {
@@ -1099,6 +1074,10 @@
       "detection_control": "requirement testing + unit tests",
       "requirement_ids": [
         "REQ-UDP-010"
+      ],
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
@@ -1112,7 +1091,11 @@
         "Silent failure propagated to caller"
       ],
       "severity": "medium",
-      "detection_control": "unit tests"
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
     },
     {
       "component": "udp",
@@ -1125,7 +1108,11 @@
         "Silent failure propagated to caller"
       ],
       "severity": "medium",
-      "detection_control": "unit tests"
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
     },
     {
       "component": "udp",
@@ -1138,7 +1125,11 @@
         "Silent failure propagated to caller"
       ],
       "severity": "medium",
-      "detection_control": "unit tests"
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
     },
     {
       "component": "udp",
@@ -1154,6 +1145,10 @@
       "detection_control": "requirement testing + unit tests",
       "requirement_ids": [
         "REQ-UDP-012"
+      ],
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
@@ -1167,7 +1162,11 @@
         "Silent failure propagated to caller"
       ],
       "severity": "medium",
-      "detection_control": "unit tests"
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
     },
     {
       "component": "udp",
@@ -1180,7 +1179,11 @@
         "Silent failure propagated to caller"
       ],
       "severity": "medium",
-      "detection_control": "unit tests"
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
     },
     {
       "component": "udp",
@@ -1193,7 +1196,11 @@
         "Incorrect system behavior"
       ],
       "severity": "low",
-      "detection_control": "unit tests"
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
     },
     {
       "component": "udp",
@@ -1208,7 +1215,11 @@
         "Memory leak or deadlock"
       ],
       "severity": "medium",
-      "detection_control": "unit tests"
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
     },
     {
       "component": "udp",
@@ -1223,7 +1234,11 @@
         "Memory leak or deadlock"
       ],
       "severity": "medium",
-      "detection_control": "unit tests"
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
     },
     {
       "component": "udp",
@@ -1236,7 +1251,28 @@
         "Silent failure propagated to caller"
       ],
       "severity": "medium",
-      "detection_control": "unit tests"
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
+    },
+    {
+      "component": "udp",
+      "function": "RegisterSubscriber",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
+      "failure_modes": [
+        "Returns unexpected error"
+      ],
+      "effects": [
+        "Silent failure propagated to caller"
+      ],
+      "severity": "medium",
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
     },
     {
       "component": "udp",
@@ -1249,7 +1285,28 @@
         "Silent failure propagated to caller"
       ],
       "severity": "medium",
-      "detection_control": "unit tests"
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
+    },
+    {
+      "component": "udp",
+      "function": "UnregisterSubscriber",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
+      "failure_modes": [
+        "Returns unexpected error"
+      ],
+      "effects": [
+        "Silent failure propagated to caller"
+      ],
+      "severity": "medium",
+      "detection_control": "unit tests",
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
     },
     {
       "component": "udp",
@@ -1265,6 +1322,10 @@
       "detection_control": "requirement testing + unit tests",
       "requirement_ids": [
         "REQ-UDP-011"
+      ],
+      "cyber_risks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
