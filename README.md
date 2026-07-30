@@ -13,9 +13,48 @@ The API is a stable Go interface. Implementations are swappable without changing
 |---|---|---|
 | `mock` | In-process transport. Zero dependencies. Default for development and testing. | Nothing |
 | `codec` | SOME/IP wire-frame serialization and deserialization. | Nothing |
-| `sd` | SOME/IP Service Discovery (SOME/IP-SD). | Nothing |
+| `sd` | SOME/IP Service Discovery (SOME/IP-SD): entry/IPv4-option codec, in-process `Registry`. | Nothing |
+| `sd/udp` | Real-socket SOME/IP-SD daemon (multicast offer/find/subscribe). | Nothing |
 | `udp` | Pure-Go UDP transport — unreliable unicast and multicast. | Nothing |
 | `tcp` | Pure-Go TCP transport — reliable unicast with session management. | Nothing |
+| `tp` | SOME/IP-TP segmentation and reassembly for payloads > MTU. | Nothing |
+| `e2e` | AUTOSAR E2E protection (Profile 01 CRC-8, Profile 05 CRC-32). | Nothing |
+| `cmd/go-someip` | RELAY-conformant CLI: `version`, `capabilities`, `status`, `convert`, `send`. | Nothing |
+
+## RELAY conformance
+
+go-SOMEIP is a RELAY-conformant port (RELAY spec v1.11; see `SpecVersion` in
+`someip.go`). The RELAY adapter lives in `adapt.go` (spec §13.7.1):
+
+- `Adapt(Service) relay.Caller` — wraps a native [`Service`] as a
+  protocol-agnostic `relay.Caller`/`Node` (§10.3). `Subscribe` reads
+  `relay.WithEventID` to select the SOME/IP event group and honours the
+  `relay.BackPressurePolicy` (§10.5).
+- `Message.ToMessage()` / `FromMessage(relay.Message)` — lossless conversion
+  between a native [`Message`] and the universal `relay.Message` envelope
+  (§15.7.6).
+
+### Meta keys
+
+| Key | Meaning |
+|---|---|
+| `someip.client_id` | 16-bit Client ID |
+| `someip.session_id` | 16-bit Session ID |
+| `someip.msg_type` | numeric `MessageType` (round-trip) |
+| `someip.msg_type_name` | human-readable message type (diagnostic; ignored on decode) |
+| `someip.return_code` | 8-bit Return Code |
+| `someip.interface_version` | 8-bit Interface Version |
+
+### CLI
+
+```bash
+go-someip version        # tool + spec version (JSON)
+go-someip capabilities   # declared RELAY capabilities (JSON)
+go-someip status         # health/status
+go-someip convert        # frame ↔ relay.Message conversion
+go-someip send           # NDJSON message sink
+```
+
 
 ## Install
 

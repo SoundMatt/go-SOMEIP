@@ -332,12 +332,14 @@ func encodeSDEntryFrame(entryType uint8, serviceID someip.ServiceID, instanceID 
 	payload = binary.BigEndian.AppendUint32(payload, 0) // no options
 
 	msg := someip.Message{
-		ServiceID:       sd.SDServiceID,
-		MethodID:        sd.SDMethodID,
-		ProtocolVersion: someip.SOMEIPProtocolVersion,
-		MessageType:     someip.MsgTypeNotification,
-		ReturnCode:      someip.RetOK,
-		Payload:         payload,
+		ServiceID:        sd.SDServiceID,
+		MethodID:         sd.SDMethodID,
+		SessionID:        1, // AUTOSAR SOME/IP-SD: Session ID starts at 0x0001, never 0.
+		ProtocolVersion:  someip.SOMEIPProtocolVersion,
+		InterfaceVersion: 0x01, // AUTOSAR SOME/IP-SD mandates Interface Version = 0x01.
+		MessageType:      someip.MsgTypeNotification,
+		ReturnCode:       someip.RetOK,
+		Payload:          payload,
 	}
 	return codec.Encode(nil, msg)
 }
