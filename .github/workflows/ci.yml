@@ -151,13 +151,13 @@ jobs:
           args: --timeout=5m
 
   # ── go-FuSa safety gate ────────────────────────────────────────────────────
-  # Pinned to v0.36.0. The full x-FuSa lifecycle (RELAY spec §20.1.2), not a
+  # Pinned to v0.48.0. The full x-FuSa lifecycle (RELAY spec §20.1.2), not a
   # subset: check (gate on ERROR — WARN/INFO findings are reported but do not
   # fail the build), 100% requirement traceability (traced AND tested),
   # cybersecurity analysis, dependency vulnerability scan, and the tool
   # qualification suite.
   gofusa:
-    name: go-FuSa safety check (v0.36.0)
+    name: go-FuSa safety check (v0.48.0)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -165,7 +165,7 @@ jobs:
         with:
           go-version: "1.25"
       - name: Install go-FuSa
-        run: go install github.com/SoundMatt/go-FuSa/cmd/gofusa@v0.36.0
+        run: go install github.com/SoundMatt/go-FuSa/cmd/gofusa@v0.48.0
       - name: gofusa check
         run: gofusa check ./...
       - name: Requirement traceability (100% traced + tested)
