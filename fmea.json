@@ -1,24 +1,38 @@
 {
+  "schemaVersion": "1.14",
+  "kind": "fmea-report",
+  "tool": "go-FuSa",
+  "toolVersion": "0.36.0",
+  "language": "go",
+  "generatedAt": "2026-07-30T21:20:29.566913959Z",
   "format": "go-FuSa dFMEA v1",
-  "generated_at": "2026-07-27T17:13:08.912600508Z",
   "module": "github.com/SoundMatt/go-SOMEIP",
   "entries": [
     {
+      "id": "FMEA-001",
+      "item": "codec.Decode",
       "component": "codec",
       "function": "Decode",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-CODEC-002"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-CODEC-002"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -29,21 +43,30 @@
       ]
     },
     {
+      "id": "FMEA-002",
+      "item": "codec.Encode",
       "component": "codec",
       "function": "Encode",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-CODEC-001"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-CODEC-001"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -54,47 +77,30 @@
       ]
     },
     {
+      "id": "FMEA-003",
+      "item": "e2e.Check",
       "component": "e2e",
       "function": "Check",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "failure_modes": [
-        "Returns unexpected error"
-      ],
-      "effects": [
-        "Silent failure propagated to caller"
-      ],
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
       "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
         "REQ-E2E-008"
       ],
-      "cyber_risks": [
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
-      ]
-    },
-    {
-      "component": "e2e",
-      "function": "Check",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "failure_modes": [
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-E2E-004"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -106,21 +112,65 @@
       ]
     },
     {
+      "id": "FMEA-004",
+      "item": "e2e.Check",
+      "component": "e2e",
+      "function": "Check",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-E2E-004"
+      ],
+      "failureModes": [
+        "Returns unexpected error"
+      ],
+      "effects": [
+        "Silent failure propagated to caller"
+      ],
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
+    },
+    {
+      "id": "FMEA-005",
+      "item": "e2e.NewProfile01",
       "component": "e2e",
       "function": "NewProfile01",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-E2E-002"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-E2E-002"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -132,21 +182,30 @@
       ]
     },
     {
+      "id": "FMEA-006",
+      "item": "e2e.NewProfile05",
       "component": "e2e",
       "function": "NewProfile05",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-E2E-006"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-E2E-006"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -158,47 +217,30 @@
       ]
     },
     {
+      "id": "FMEA-007",
+      "item": "e2e.Protect",
       "component": "e2e",
       "function": "Protect",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "failure_modes": [
-        "Returns unexpected error"
-      ],
-      "effects": [
-        "Silent failure propagated to caller"
-      ],
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
       "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
         "REQ-E2E-007"
       ],
-      "cyber_risks": [
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
-      ]
-    },
-    {
-      "component": "e2e",
-      "function": "Protect",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "failure_modes": [
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-E2E-003"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -210,150 +252,268 @@
       ]
     },
     {
+      "id": "FMEA-008",
+      "item": "e2e.Protect",
+      "component": "e2e",
+      "function": "Protect",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-E2E-003"
+      ],
+      "failureModes": [
+        "Returns unexpected error"
+      ],
+      "effects": [
+        "Silent failure propagated to caller"
+      ],
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
+    },
+    {
+      "id": "FMEA-009",
+      "item": "go-SOMEIP (someip).Adapt",
       "component": "go-SOMEIP (someip)",
       "function": "Adapt",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "low",
+      "actionPriority": "low",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "low",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-010",
+      "item": "go-SOMEIP (someip).ApplySubscriberOpts",
       "component": "go-SOMEIP (someip)",
       "function": "ApplySubscriberOpts",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-SUB-001"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-SUB-001"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-011",
+      "item": "go-SOMEIP (someip).Call",
       "component": "go-SOMEIP (someip)",
       "function": "Call",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-012",
+      "item": "go-SOMEIP (someip).Close",
       "component": "go-SOMEIP (someip)",
       "function": "Close",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-013",
+      "item": "go-SOMEIP (someip).FromMessage",
       "component": "go-SOMEIP (someip)",
       "function": "FromMessage",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-ADAPT-003"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-ADAPT-003"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-014",
+      "item": "go-SOMEIP (someip).Protocol",
       "component": "go-SOMEIP (someip)",
       "function": "Protocol",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "low",
+      "actionPriority": "low",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "low",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-015",
+      "item": "go-SOMEIP (someip).Send",
       "component": "go-SOMEIP (someip)",
       "function": "Send",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-016",
+      "item": "go-SOMEIP (someip).String",
       "component": "go-SOMEIP (someip)",
       "function": "String",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "low",
+      "actionPriority": "low",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "low",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-017",
+      "item": "go-SOMEIP (someip).Subscribe",
       "component": "go-SOMEIP (someip)",
       "function": "Subscribe",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error; Goroutine not terminated",
+      "effect": "Silent failure propagated to caller; Memory leak or deadlock",
+      "cause": "an unhandled error path in the function body or a callee; a spawned goroutine with no cancellation, timeout, or WaitGroup join",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path",
+        "join or cancel the goroutine before the function returns"
+      ],
+      "failureModes": [
         "Returns unexpected error",
         "Goroutine not terminated"
       ],
@@ -361,120 +521,187 @@
         "Silent failure propagated to caller",
         "Memory leak or deadlock"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-018",
+      "item": "go-SOMEIP (someip).ToMessage",
       "component": "go-SOMEIP (someip)",
       "function": "ToMessage",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-ADAPT-002"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-ADAPT-002"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-019",
+      "item": "go-SOMEIP (someip).Validate",
       "component": "go-SOMEIP (someip)",
       "function": "Validate",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-PROTO-002"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-PROTO-002"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-020",
+      "item": "go-SOMEIP (someip).WithBackPressure",
       "component": "go-SOMEIP (someip)",
       "function": "WithBackPressure",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-SUB-004"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-SUB-004"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-021",
+      "item": "go-SOMEIP (someip).WithChannelDepth",
       "component": "go-SOMEIP (someip)",
       "function": "WithChannelDepth",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-SUB-001"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-SUB-001"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-022",
+      "item": "mock.C",
       "component": "mock",
       "function": "C",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-MOCK-011"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-MOCK-011"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-023",
+      "item": "mock.Call",
       "component": "mock",
       "function": "Call",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-MOCK-007"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-MOCK-007"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-024",
+      "item": "mock.CallNoReturn",
       "component": "mock",
       "function": "CallNoReturn",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error; Goroutine not terminated",
+      "effect": "Silent failure propagated to caller; Memory leak or deadlock",
+      "cause": "an unhandled error path in the function body or a callee; a spawned goroutine with no cancellation, timeout, or WaitGroup join",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path",
+        "join or cancel the goroutine before the function returns"
+      ],
+      "requirementIds": [
+        "REQ-MOCK-008"
+      ],
+      "failureModes": [
         "Returns unexpected error",
         "Goroutine not terminated"
       ],
@@ -482,179 +709,274 @@
         "Silent failure propagated to caller",
         "Memory leak or deadlock"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-MOCK-008"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-025",
+      "item": "mock.Close",
       "component": "mock",
       "function": "Close",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
-        "Returns unexpected error"
-      ],
-      "effects": [
-        "Silent failure propagated to caller"
-      ],
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
       "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
         "REQ-MOCK-006"
-      ]
-    },
-    {
-      "component": "mock",
-      "function": "Close",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
+      "detectionControl": "requirement testing + unit tests"
+    },
+    {
+      "id": "FMEA-026",
+      "item": "mock.Close",
+      "component": "mock",
+      "function": "Close",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
       "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
         "REQ-MOCK-010"
-      ]
-    },
-    {
-      "component": "mock",
-      "function": "Close",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-MOCK-013"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-027",
+      "item": "mock.Close",
+      "component": "mock",
+      "function": "Close",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-MOCK-013"
+      ],
+      "failureModes": [
+        "Returns unexpected error"
+      ],
+      "effects": [
+        "Silent failure propagated to caller"
+      ],
+      "detectionControl": "requirement testing + unit tests"
+    },
+    {
+      "id": "FMEA-028",
+      "item": "mock.Emit",
       "component": "mock",
       "function": "Emit",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-MOCK-005"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-MOCK-005"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-029",
+      "item": "mock.NewBus",
       "component": "mock",
       "function": "NewBus",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "low",
+      "actionPriority": "low",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "low",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-030",
+      "item": "mock.NewServer",
       "component": "mock",
       "function": "NewServer",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-031",
+      "item": "mock.NewService",
       "component": "mock",
       "function": "NewService",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-032",
+      "item": "mock.RegisterMethod",
       "component": "mock",
       "function": "RegisterMethod",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-MOCK-004"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-MOCK-004"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-033",
+      "item": "mock.Subscribe",
       "component": "mock",
       "function": "Subscribe",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-MOCK-009"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-MOCK-009"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-034",
+      "item": "mock.Unsubscribe",
       "component": "mock",
       "function": "Unsubscribe",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/mock/mock.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-MOCK-012"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-MOCK-012"
-      ]
+      "detectionControl": "requirement testing + unit tests"
     },
     {
+      "id": "FMEA-035",
+      "item": "sd.DecodeEntry",
       "component": "sd",
       "function": "DecodeEntry",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-SD-003"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-SD-003"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -666,18 +988,27 @@
       ]
     },
     {
+      "id": "FMEA-036",
+      "item": "sd.DecodeIPv4Option",
       "component": "sd",
       "function": "DecodeIPv4Option",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -689,21 +1020,30 @@
       ]
     },
     {
+      "id": "FMEA-037",
+      "item": "sd.EncodeEntry",
       "component": "sd",
       "function": "EncodeEntry",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-SD-002"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-SD-002"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -715,18 +1055,27 @@
       ]
     },
     {
+      "id": "FMEA-038",
+      "item": "sd.EncodeIPv4Option",
       "component": "sd",
       "function": "EncodeIPv4Option",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "low",
+      "actionPriority": "low",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "low",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -738,18 +1087,27 @@
       ]
     },
     {
+      "id": "FMEA-039",
+      "item": "sd.Find",
       "component": "sd",
       "function": "Find",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "low",
+      "actionPriority": "low",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "low",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -761,18 +1119,27 @@
       ]
     },
     {
+      "id": "FMEA-040",
+      "item": "sd.NewRegistry",
       "component": "sd",
       "function": "NewRegistry",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "low",
+      "actionPriority": "low",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "low",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -784,18 +1151,27 @@
       ]
     },
     {
+      "id": "FMEA-041",
+      "item": "sd.Offer",
       "component": "sd",
       "function": "Offer",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "low",
+      "actionPriority": "low",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "low",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint8(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
@@ -807,88 +1183,153 @@
       ]
     },
     {
+      "id": "FMEA-042",
+      "item": "tcp.Call",
       "component": "tcp",
       "function": "Call",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-043",
+      "item": "tcp.CallNoReturn",
       "component": "tcp",
       "function": "CallNoReturn",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-044",
+      "item": "tcp.Close",
       "component": "tcp",
       "function": "Close",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-045",
+      "item": "tcp.Close",
       "component": "tcp",
       "function": "Close",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-046",
+      "item": "tcp.Emit",
       "component": "tcp",
       "function": "Emit",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-047",
+      "item": "tcp.LocalAddr",
       "component": "tcp",
       "function": "LocalAddr",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "low",
+      "actionPriority": "low",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "low",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-048",
+      "item": "tcp.NewServer",
       "component": "tcp",
       "function": "NewServer",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error; Goroutine not terminated",
+      "effect": "Silent failure propagated to caller; Memory leak or deadlock",
+      "cause": "an unhandled error path in the function body or a callee; a spawned goroutine with no cancellation, timeout, or WaitGroup join",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path",
+        "join or cancel the goroutine before the function returns"
+      ],
+      "failureModes": [
         "Returns unexpected error",
         "Goroutine not terminated"
       ],
@@ -896,14 +1337,24 @@
         "Silent failure propagated to caller",
         "Memory leak or deadlock"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-049",
+      "item": "tcp.NewService",
       "component": "tcp",
       "function": "NewService",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error; Goroutine not terminated",
+      "effect": "Silent failure propagated to caller; Memory leak or deadlock",
+      "cause": "an unhandled error path in the function body or a callee; a spawned goroutine with no cancellation, timeout, or WaitGroup join",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path",
+        "join or cancel the goroutine before the function returns"
+      ],
+      "failureModes": [
         "Returns unexpected error",
         "Goroutine not terminated"
       ],
@@ -911,302 +1362,456 @@
         "Silent failure propagated to caller",
         "Memory leak or deadlock"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-050",
+      "item": "tcp.RegisterMethod",
       "component": "tcp",
       "function": "RegisterMethod",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-051",
+      "item": "tcp.Subscribe",
       "component": "tcp",
       "function": "Subscribe",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests"
+      "detectionControl": "unit tests"
     },
     {
+      "id": "FMEA-052",
+      "item": "tp.Add",
       "component": "tp",
       "function": "Add",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
-      "failure_modes": [
-        "Returns unexpected error"
-      ],
-      "effects": [
-        "Silent failure propagated to caller"
-      ],
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
       "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
         "REQ-TP-008",
         "REQ-TP-009",
         "REQ-TP-010",
         "REQ-TP-011",
         "REQ-TP-012"
       ],
-      "cyber_risks": [
-        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
-      ]
-    },
-    {
-      "component": "tp",
-      "function": "BaseMessageType",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
-      "failure_modes": [
-        "Incorrect output"
-      ],
-      "effects": [
-        "Incorrect system behavior"
-      ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-TP-005"
-      ],
-      "cyber_risks": [
-        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
-      ]
-    },
-    {
-      "component": "tp",
-      "function": "Close",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
-      "failure_modes": [
-        "Incorrect output"
-      ],
-      "effects": [
-        "Incorrect system behavior"
-      ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-TP-013"
-      ],
-      "cyber_risks": [
-        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
-      ]
-    },
-    {
-      "component": "tp",
-      "function": "IsTP",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
-      "failure_modes": [
-        "Incorrect output"
-      ],
-      "effects": [
-        "Incorrect system behavior"
-      ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-TP-004"
-      ],
-      "cyber_risks": [
-        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
-      ]
-    },
-    {
-      "component": "tp",
-      "function": "NewReassembler",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
-      "failure_modes": [
-        "Goroutine not terminated"
-      ],
-      "effects": [
-        "Memory leak or deadlock"
-      ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-TP-007"
-      ],
-      "cyber_risks": [
-        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
-      ]
-    },
-    {
-      "component": "tp",
-      "function": "Segment",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
-      "failure_modes": [
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
+    },
+    {
+      "id": "FMEA-053",
+      "item": "tp.BaseMessageType",
+      "component": "tp",
+      "function": "BaseMessageType",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
       "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-TP-005"
+      ],
+      "failureModes": [
+        "Incorrect output"
+      ],
+      "effects": [
+        "Incorrect system behavior"
+      ],
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
+    },
+    {
+      "id": "FMEA-054",
+      "item": "tp.Close",
+      "component": "tp",
+      "function": "Close",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-TP-013"
+      ],
+      "failureModes": [
+        "Incorrect output"
+      ],
+      "effects": [
+        "Incorrect system behavior"
+      ],
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
+    },
+    {
+      "id": "FMEA-055",
+      "item": "tp.IsTP",
+      "component": "tp",
+      "function": "IsTP",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-TP-004"
+      ],
+      "failureModes": [
+        "Incorrect output"
+      ],
+      "effects": [
+        "Incorrect system behavior"
+      ],
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
+    },
+    {
+      "id": "FMEA-056",
+      "item": "tp.NewReassembler",
+      "component": "tp",
+      "function": "NewReassembler",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
+      "failureMode": "Goroutine not terminated",
+      "effect": "Memory leak or deadlock",
+      "cause": "a spawned goroutine with no cancellation, timeout, or WaitGroup join",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "join or cancel the goroutine before the function returns"
+      ],
+      "requirementIds": [
+        "REQ-TP-007"
+      ],
+      "failureModes": [
+        "Goroutine not terminated"
+      ],
+      "effects": [
+        "Memory leak or deadlock"
+      ],
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
+    },
+    {
+      "id": "FMEA-057",
+      "item": "tp.Segment",
+      "component": "tp",
+      "function": "Segment",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
         "REQ-TP-001",
         "REQ-TP-002",
         "REQ-TP-003"
       ],
-      "cyber_risks": [
+      "failureModes": [
+        "Returns unexpected error"
+      ],
+      "effects": [
+        "Silent failure propagated to caller"
+      ],
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-058",
+      "item": "udp.C",
       "component": "udp",
       "function": "C",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-UDP-010"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-UDP-010"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-059",
+      "item": "udp.Call",
       "component": "udp",
       "function": "Call",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-060",
+      "item": "udp.CallNoReturn",
       "component": "udp",
       "function": "CallNoReturn",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-061",
+      "item": "udp.Close",
       "component": "udp",
       "function": "Close",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-062",
+      "item": "udp.Close",
       "component": "udp",
       "function": "Close",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
-        "Returns unexpected error"
-      ],
-      "effects": [
-        "Silent failure propagated to caller"
-      ],
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
       "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
         "REQ-UDP-012"
       ],
-      "cyber_risks": [
-        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
-        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
-      ]
-    },
-    {
-      "component": "udp",
-      "function": "Close",
-      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-063",
+      "item": "udp.Close",
+      "component": "udp",
+      "function": "Close",
+      "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
+        "Returns unexpected error"
+      ],
+      "effects": [
+        "Silent failure propagated to caller"
+      ],
+      "detectionControl": "unit tests",
+      "cyberRisks": [
+        "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
+        "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
+      ]
+    },
+    {
+      "id": "FMEA-064",
+      "item": "udp.Emit",
       "component": "udp",
       "function": "Emit",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-065",
+      "item": "udp.LocalAddr",
       "component": "udp",
       "function": "LocalAddr",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "low",
+      "actionPriority": "low",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "low",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-066",
+      "item": "udp.NewServer",
       "component": "udp",
       "function": "NewServer",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error; Goroutine not terminated",
+      "effect": "Silent failure propagated to caller; Memory leak or deadlock",
+      "cause": "an unhandled error path in the function body or a callee; a spawned goroutine with no cancellation, timeout, or WaitGroup join",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path",
+        "join or cancel the goroutine before the function returns"
+      ],
+      "failureModes": [
         "Returns unexpected error",
         "Goroutine not terminated"
       ],
@@ -1214,18 +1819,28 @@
         "Silent failure propagated to caller",
         "Memory leak or deadlock"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-067",
+      "item": "udp.NewService",
       "component": "udp",
       "function": "NewService",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error; Goroutine not terminated",
+      "effect": "Silent failure propagated to caller; Memory leak or deadlock",
+      "cause": "an unhandled error path in the function body or a callee; a spawned goroutine with no cancellation, timeout, or WaitGroup join",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path",
+        "join or cancel the goroutine before the function returns"
+      ],
+      "failureModes": [
         "Returns unexpected error",
         "Goroutine not terminated"
       ],
@@ -1233,148 +1848,224 @@
         "Silent failure propagated to caller",
         "Memory leak or deadlock"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-068",
+      "item": "udp.RegisterMethod",
       "component": "udp",
       "function": "RegisterMethod",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-069",
+      "item": "udp.RegisterSubscriber",
       "component": "udp",
       "function": "RegisterSubscriber",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-070",
+      "item": "udp.Subscribe",
       "component": "udp",
       "function": "Subscribe",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-071",
+      "item": "udp.UnregisterSubscriber",
       "component": "udp",
       "function": "UnregisterSubscriber",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "medium",
+      "actionPriority": "medium",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "medium",
-      "detection_control": "unit tests",
-      "cyber_risks": [
+      "detectionControl": "unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-072",
+      "item": "udp.Unsubscribe",
       "component": "udp",
       "function": "Unsubscribe",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-UDP-011"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-UDP-011"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-073",
+      "item": "udp (sdudp).Close",
       "component": "udp (sdudp)",
       "function": "Close",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-SDUDP-008"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-SDUDP-008"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-074",
+      "item": "udp (sdudp).Find",
       "component": "udp (sdudp)",
       "function": "Find",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-SDUDP-007"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-SDUDP-007"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-075",
+      "item": "udp (sdudp).NewDaemon",
       "component": "udp (sdudp)",
       "function": "NewDaemon",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error; Goroutine not terminated",
+      "effect": "Silent failure propagated to caller; Memory leak or deadlock",
+      "cause": "an unhandled error path in the function body or a callee; a spawned goroutine with no cancellation, timeout, or WaitGroup join",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path",
+        "join or cancel the goroutine before the function returns"
+      ],
+      "requirementIds": [
+        "REQ-SDUDP-004"
+      ],
+      "failureModes": [
         "Returns unexpected error",
         "Goroutine not terminated"
       ],
@@ -1382,79 +2073,110 @@
         "Silent failure propagated to caller",
         "Memory leak or deadlock"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-SDUDP-004"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-076",
+      "item": "udp (sdudp).Offer",
       "component": "udp (sdudp)",
       "function": "Offer",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
-      "failure_modes": [
+      "failureMode": "Goroutine not terminated",
+      "effect": "Memory leak or deadlock",
+      "cause": "a spawned goroutine with no cancellation, timeout, or WaitGroup join",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "join or cancel the goroutine before the function returns"
+      ],
+      "requirementIds": [
+        "REQ-SDUDP-006"
+      ],
+      "failureModes": [
         "Goroutine not terminated"
       ],
       "effects": [
         "Memory leak or deadlock"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-SDUDP-006"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-077",
+      "item": "udp (sdudp).Registry",
       "component": "udp (sdudp)",
       "function": "Registry",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
-      "failure_modes": [
+      "failureMode": "Incorrect output",
+      "effect": "Incorrect system behavior",
+      "cause": "a logic error not surfaced as an error return or panic",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add requirement-traced unit tests covering this function's documented behaviour"
+      ],
+      "requirementIds": [
+        "REQ-SDUDP-005"
+      ],
+      "failureModes": [
         "Incorrect output"
       ],
       "effects": [
         "Incorrect system behavior"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-SDUDP-005"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     },
     {
+      "id": "FMEA-078",
+      "item": "udp (sdudp).SubscribeEventgroup",
       "component": "udp (sdudp)",
       "function": "SubscribeEventgroup",
       "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
-      "failure_modes": [
+      "failureMode": "Returns unexpected error",
+      "effect": "Silent failure propagated to caller",
+      "cause": "an unhandled error path in the function body or a callee",
+      "severity": "high",
+      "actionPriority": "high",
+      "mitigations": [
+        "add unit test coverage for every returned error path"
+      ],
+      "requirementIds": [
+        "REQ-SDUDP-009"
+      ],
+      "failureModes": [
         "Returns unexpected error"
       ],
       "effects": [
         "Silent failure propagated to caller"
       ],
-      "severity": "high",
-      "detection_control": "requirement testing + unit tests",
-      "requirement_ids": [
-        "REQ-SDUDP-009"
-      ],
-      "cyber_risks": [
+      "detectionControl": "requirement testing + unit tests",
+      "cyberRisks": [
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint32(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range",
         "CYBER009: uint16(x) — explicit narrowing conversion may silently truncate bits if x exceeds the target type's range"
       ]
     }
-  ]
+  ],
+  "summary": {
+    "total": 78,
+    "highPriority": 41,
+    "componentsAnalyzed": 78,
+    "componentsInProject": 78,
+    "coveragePct": 100,
+    "componentsInProjectMethod": "raw regex scan for top-level exported func declarations in non-test .go files under non-vendor/testdata/dot-directories (CountProjectFunctions) — independent of Scan's own go/ast parse, so a file Scan's parser rejects still counts toward the denominator; componentsAnalyzed counts entries Scan actually emitted (every exported function in every file it could parse — Scan does not curate a subset)"
+  }
 }

@@ -1,8 +1,13 @@
 {
+  "schemaVersion": "1.14",
+  "kind": "tara-report",
+  "tool": "go-FuSa",
+  "toolVersion": "0.36.0",
+  "language": "go",
+  "generatedAt": "2026-07-30T21:20:29.920526364Z",
   "format": "go-FuSa TARA v1",
-  "generated_at": "2026-07-27T17:13:09.283181478Z",
   "module": "github.com/SoundMatt/go-SOMEIP",
-  "entries": [
+  "threats": [
     {
       "id": "TARA-001",
       "asset": "adapt.go",
@@ -13,15 +18,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
-      "source_line": 36
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
+        "line": 36
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
+      "sourceLine": 36
     },
     {
       "id": "TARA-002",
@@ -33,15 +52,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
-      "source_line": 36
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
+        "line": 36
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
+      "sourceLine": 36
     },
     {
       "id": "TARA-003",
@@ -53,15 +86,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
-      "source_line": 91
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
+        "line": 97
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/adapt.go",
+      "sourceLine": 97
     },
     {
       "id": "TARA-004",
@@ -73,15 +120,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
-      "source_line": 65
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+        "line": 67
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "sourceLine": 67
     },
     {
       "id": "TARA-005",
@@ -93,15 +154,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
-      "source_line": 66
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+        "line": 68
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "sourceLine": 68
     },
     {
       "id": "TARA-006",
@@ -113,15 +188,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
-      "source_line": 68
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+        "line": 70
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "sourceLine": 70
     },
     {
       "id": "TARA-007",
@@ -133,15 +222,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
-      "source_line": 69
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+        "line": 71
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "sourceLine": 71
     },
     {
       "id": "TARA-008",
@@ -153,15 +256,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
-      "source_line": 70
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+        "line": 72
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "sourceLine": 72
     },
     {
       "id": "TARA-009",
@@ -173,15 +290,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
-      "source_line": 77
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+        "line": 79
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "sourceLine": 79
     },
     {
       "id": "TARA-010",
@@ -193,15 +324,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
-      "source_line": 78
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+        "line": 80
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/codec/codec.go",
+      "sourceLine": 80
     },
     {
       "id": "TARA-011",
@@ -213,15 +358,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "source_line": 60
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+        "line": 60
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "sourceLine": 60
     },
     {
       "id": "TARA-012",
@@ -233,15 +392,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "source_line": 122
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+        "line": 122
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "sourceLine": 122
     },
     {
       "id": "TARA-013",
@@ -253,15 +426,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "source_line": 126
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+        "line": 126
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "sourceLine": 126
     },
     {
       "id": "TARA-014",
@@ -273,15 +460,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "source_line": 126
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+        "line": 126
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "sourceLine": 126
     },
     {
       "id": "TARA-015",
@@ -293,15 +494,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "source_line": 151
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+        "line": 151
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "sourceLine": 151
     },
     {
       "id": "TARA-016",
@@ -313,15 +528,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "source_line": 151
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+        "line": 151
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "sourceLine": 151
     },
     {
       "id": "TARA-017",
@@ -333,15 +562,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "source_line": 170
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+        "line": 170
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "sourceLine": 170
     },
     {
       "id": "TARA-018",
@@ -353,15 +596,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
-      "source_line": 186
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+        "line": 186
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e.go",
+      "sourceLine": 186
     },
     {
       "id": "TARA-019",
@@ -373,15 +630,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e_test.go",
-      "source_line": 145
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e_test.go",
+        "line": 145
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/e2e/e2e_test.go",
+      "sourceLine": 145
     },
     {
       "id": "TARA-020",
@@ -393,15 +664,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "source_line": 111
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+        "line": 121
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "sourceLine": 121
     },
     {
       "id": "TARA-021",
@@ -413,15 +698,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "source_line": 112
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+        "line": 122
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "sourceLine": 122
     },
     {
       "id": "TARA-022",
@@ -433,15 +732,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "source_line": 115
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+        "line": 125
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "sourceLine": 125
     },
     {
       "id": "TARA-023",
@@ -453,15 +766,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "source_line": 116
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+        "line": 126
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "sourceLine": 126
     },
     {
       "id": "TARA-024",
@@ -473,15 +800,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "source_line": 117
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+        "line": 127
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "sourceLine": 127
     },
     {
       "id": "TARA-025",
@@ -493,15 +834,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "source_line": 146
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+        "line": 156
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "sourceLine": 156
     },
     {
       "id": "TARA-026",
@@ -513,15 +868,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "source_line": 146
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+        "line": 156
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "sourceLine": 156
     },
     {
       "id": "TARA-027",
@@ -533,15 +902,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
-      "source_line": 146
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+        "line": 156
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/sd.go",
+      "sourceLine": 156
     },
     {
       "id": "TARA-028",
@@ -553,15 +936,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
-      "source_line": 87
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
+        "line": 87
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
+      "sourceLine": 87
     },
     {
       "id": "TARA-029",
@@ -573,15 +970,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
-      "source_line": 89
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
+        "line": 89
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
+      "sourceLine": 89
     },
     {
       "id": "TARA-030",
@@ -593,15 +1004,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
-      "source_line": 397
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
+        "line": 397
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/sd/udp/sdudp.go",
+      "sourceLine": 397
     },
     {
       "id": "TARA-031",
@@ -613,15 +1038,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
-      "source_line": 24
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+        "line": 24
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "sourceLine": 24
     },
     {
       "id": "TARA-032",
@@ -633,15 +1072,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
-      "source_line": 25
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+        "line": 25
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "sourceLine": 25
     },
     {
       "id": "TARA-033",
@@ -653,15 +1106,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
-      "source_line": 32
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+        "line": 32
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "sourceLine": 32
     },
     {
       "id": "TARA-034",
@@ -673,15 +1140,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
-      "source_line": 33
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+        "line": 33
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "sourceLine": 33
     },
     {
       "id": "TARA-035",
@@ -693,15 +1174,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
-      "source_line": 40
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+        "line": 40
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "sourceLine": 40
     },
     {
       "id": "TARA-036",
@@ -713,15 +1208,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
-      "source_line": 41
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+        "line": 41
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "sourceLine": 41
     },
     {
       "id": "TARA-037",
@@ -733,15 +1242,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
-      "source_line": 48
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+        "line": 48
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "sourceLine": 48
     },
     {
       "id": "TARA-038",
@@ -753,15 +1276,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
-      "source_line": 49
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+        "line": 49
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "sourceLine": 49
     },
     {
       "id": "TARA-039",
@@ -773,15 +1310,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
-      "source_line": 56
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+        "line": 56
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "sourceLine": 56
     },
     {
       "id": "TARA-040",
@@ -793,15 +1344,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
-      "source_line": 57
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+        "line": 57
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "sourceLine": 57
     },
     {
       "id": "TARA-041",
@@ -813,15 +1378,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
-      "source_line": 414
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+        "line": 414
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/someip_test.go",
+      "sourceLine": 414
     },
     {
       "id": "TARA-042",
@@ -833,15 +1412,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp_test.go",
-      "source_line": 345
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp_test.go",
+        "line": 345
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/tcp/tcp_test.go",
+      "sourceLine": 345
     },
     {
       "id": "TARA-043",
@@ -853,15 +1446,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
-      "source_line": 108
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
+        "line": 108
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp.go",
+      "sourceLine": 108
     },
     {
       "id": "TARA-044",
@@ -873,15 +1480,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
-      "source_line": 69
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
+        "line": 69
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
+      "sourceLine": 69
     },
     {
       "id": "TARA-045",
@@ -893,15 +1514,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
-      "source_line": 121
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
+        "line": 121
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
+      "sourceLine": 121
     },
     {
       "id": "TARA-046",
@@ -913,15 +1548,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
-      "source_line": 162
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
+        "line": 162
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/tp/tp_test.go",
+      "sourceLine": 162
     },
     {
       "id": "TARA-047",
@@ -933,15 +1582,29 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "source_line": 324
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
+        "line": 324
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
+      "sourceLine": 324
     },
     {
       "id": "TARA-048",
@@ -953,15 +1616,35 @@
       ],
       "cwe": "CWE-190",
       "standard": "MISRA Rule 10.3",
-      "attack_vector": "Local",
-      "likelihood": "Low",
-      "impact": "Medium",
-      "security_level": 1,
-      "current_control": "Add range check before conversion",
-      "residual_risk": "Low after remediation",
-      "cyber_rule_id": "CYBER009",
-      "source_file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
-      "source_line": 330
+      "attackVector": "Local",
+      "attackFeasibility": "low",
+      "impact": {
+        "safety": "medium",
+        "financial": "low",
+        "operational": "medium",
+        "privacy": "low"
+      },
+      "risk": "medium",
+      "treatment": "mitigate",
+      "securityLevel": 1,
+      "mitigations": [
+        "Add range check before conversion"
+      ],
+      "currentControl": "Add range check before conversion",
+      "residualRisk": "Low after remediation",
+      "location": {
+        "file": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
+        "line": 330
+      },
+      "cyberRuleId": "CYBER009",
+      "sourceFile": "/home/runner/work/go-SOMEIP/go-SOMEIP/udp/udp.go",
+      "sourceLine": 330
     }
-  ]
+  ],
+  "summary": {
+    "assetsAnalyzed": 11,
+    "assetsInProject": 15,
+    "coveragePct": 73.33333333333333,
+    "assetInventoryMethod": "every non-test .go source file in the project (excluding vendor/testdata/dot-directories) is treated as one candidate asset (CountProjectFiles); assetsAnalyzed counts the distinct files that ended up with at least one CYBER-derived threat entry — this is file-level granularity, not a deeper per-symbol or per-data-flow asset model"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "format": "go-FuSa Vulnerability Report v1",
-  "generated_at": "2026-07-27T17:13:09.303461409Z",
+  "generated_at": "2026-07-30T21:20:29.937849289Z",
   "module": "github.com/SoundMatt/go-SOMEIP",
   "scanned": 1,
   "findings": null

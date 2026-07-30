@@ -1,14 +1,14 @@
 {
-  "schemaVersion": "1.9",
+  "schemaVersion": "1.14.0",
   "kind": "qualification",
   "tool": "go-FuSa",
-  "toolVersion": "0.30.0",
+  "toolVersion": "0.36.0",
   "language": "go",
-  "generatedAt": "2026-07-27T17:13:09.500924621Z",
+  "generatedAt": "2026-07-30T21:20:30.168895029Z",
   "goVersion": "go1.25.12",
   "module": "github.com/SoundMatt/go-FuSa",
-  "total": 44,
-  "passed": 44,
+  "total": 46,
+  "passed": 46,
   "failed": 0,
   "results": [
     {
@@ -24,6 +24,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -40,6 +41,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -54,6 +56,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -70,6 +73,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -84,6 +88,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -100,6 +105,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -114,6 +120,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -130,6 +137,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -145,6 +153,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -161,6 +170,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -178,6 +188,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -195,6 +206,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -212,6 +224,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -229,6 +242,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -246,6 +260,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -263,6 +278,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -280,6 +296,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -297,6 +314,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -314,6 +332,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -331,6 +350,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -348,6 +368,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -365,6 +386,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -382,6 +404,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -399,6 +422,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -416,6 +440,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -433,6 +458,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -450,6 +476,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -467,6 +494,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -484,6 +512,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -501,6 +530,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -517,6 +547,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -534,6 +565,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -551,6 +583,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -569,6 +602,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -585,6 +619,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -602,6 +637,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -619,6 +655,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -636,6 +673,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -652,6 +690,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -669,6 +708,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -685,6 +725,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -702,6 +743,7 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -718,6 +760,7 @@
         },
         "expectFinding": true
       },
+      "result": "PASS",
       "passed": true
     },
     {
@@ -735,8 +778,45 @@
         },
         "expectFinding": false
       },
+      "result": "PASS",
+      "passed": true
+    },
+    {
+      "case": {
+        "name": "TRACE008-pos: orphaned LLR requirement",
+        "ruleId": "TRACE008",
+        "description": "Project with an LLR whose parentId is empty must produce a TRACE008 finding.",
+        "files": {
+          ".fusa-reqs.json": "{\"requirements\":[{\"id\":\"HLR-001\",\"title\":\"High\",\"level\":\"HLR\"},{\"id\":\"LLR-001\",\"title\":\"Orphan\",\"level\":\"LLR\",\"parentId\":\"\"}]}",
+          ".fusa.json": "{\n  \"version\": \"1\",\n  \"project\": {\n    \"name\": \"qualify-test\",\n    \"module\": \"github.com/fusa-qualify/test\",\n    \"standard\": \"generic\"\n  },\n  \"rules\": {},\n  \"report\": {\"format\": \"text\"}\n}",
+          ".github/workflows/ci.yml": "name: CI\n",
+          "LICENSE": "Mozilla Public License 2.0\n",
+          "README.md": "# qualify-test\n",
+          "go.mod": "module github.com/fusa-qualify/test\n\ngo 1.22\n"
+        },
+        "expectFinding": true
+      },
+      "result": "PASS",
+      "passed": true
+    },
+    {
+      "case": {
+        "name": "TRACE008-neg: well-formed HLR/LLR hierarchy",
+        "ruleId": "TRACE008",
+        "description": "Project with a properly decomposed HLR/LLR hierarchy must not produce a TRACE008 finding.",
+        "files": {
+          ".fusa-reqs.json": "{\"requirements\":[{\"id\":\"HLR-001\",\"title\":\"High\",\"level\":\"HLR\"},{\"id\":\"LLR-001\",\"title\":\"Low\",\"level\":\"LLR\",\"parentId\":\"HLR-001\"}]}",
+          ".fusa.json": "{\n  \"version\": \"1\",\n  \"project\": {\n    \"name\": \"qualify-test\",\n    \"module\": \"github.com/fusa-qualify/test\",\n    \"standard\": \"generic\"\n  },\n  \"rules\": {},\n  \"report\": {\"format\": \"text\"}\n}",
+          ".github/workflows/ci.yml": "name: CI\n",
+          "LICENSE": "Mozilla Public License 2.0\n",
+          "README.md": "# qualify-test\n",
+          "go.mod": "module github.com/fusa-qualify/test\n\ngo 1.22\n"
+        },
+        "expectFinding": false
+      },
+      "result": "PASS",
       "passed": true
     }
   ],
-  "hash": "sha256:e3285273f90f3ab0986e22d7b932fe7b98f1e624640d3be831301dededbb73b0"
+  "hash": "sha256:f7a056a86e737657b1be9c71728a8c23dbc1692ddf38fa6d1ac77f7b1696df76"
 }

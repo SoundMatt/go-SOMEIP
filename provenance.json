@@ -1,15 +1,16 @@
 {
-  "schemaVersion": "1.9",
+  "schemaVersion": "1.14.0",
   "kind": "provenance",
   "tool": "go-FuSa",
-  "toolVersion": "0.30.0",
+  "toolVersion": "0.36.0",
   "language": "go",
-  "generatedAt": "2026-07-27T17:13:09.628089644Z",
+  "generatedAt": "2026-07-30T21:20:30.25807292Z",
   "format": "x-FuSa provenance v1",
   "module": "github.com/SoundMatt/go-SOMEIP",
   "goVersion": "go1.25.12",
   "goos": "linux",
   "goarch": "amd64",
-  "vcsRevision": "f971c5c204debff4c1cee2eaad1f7b092e96340b",
-  "vcsModified": true
+  "vcsRevision": "59d36ce04ee2b5cf4da02bbb1f0513aa79c1268c",
+  "vcsModified": true,
+  "builder": "github-actions:SoundMatt/go-SOMEIP/.github/workflows/release.yml@refs/tags/v1.2.0"
 }
