@@ -416,7 +416,7 @@
     },
     {
       "id": "REQ-SPEC-001",
-      "text": "The package shall export SpecVersion = \"1.11\" declaring conformance to RELAY specification v1.11 (stable), matching the pinned relay.SpecVersion.",
+      "text": "The package shall export SpecVersion = \"2.0\" declaring conformance to RELAY specification v2.0 (stable), matching the pinned relay.SpecVersion.",
       "asil": "B"
     },
     {

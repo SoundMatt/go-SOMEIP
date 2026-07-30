@@ -18,7 +18,7 @@ import (
 	"strings"
 	"time"
 
-	relay "github.com/SoundMatt/RELAY"
+	relay "github.com/SoundMatt/RELAY/v2"
 )
 
 // ToMessage converts m to the universal relay.Message envelope (RELAY spec §15.7.6).

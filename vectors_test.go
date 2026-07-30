@@ -13,7 +13,7 @@ import (
 	"reflect"
 	"testing"
 
-	relay "github.com/SoundMatt/RELAY"
+	relay "github.com/SoundMatt/RELAY/v2"
 	someip "github.com/SoundMatt/go-SOMEIP"
 )
 

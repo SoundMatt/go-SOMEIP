@@ -69,7 +69,7 @@ go test -tags integration -race ./udp/...
 | generate | push/PR | go generate + git diff --exit-code |
 | lint | push/PR | golangci-lint v2.12.2 |
 | gofusa | push/PR | go-FuSa v0.36.0 full lifecycle: check, 100% requirement trace, cyber, vuln, qualify (RELAY spec §20.1.2) |
-| relay-conform | push/PR | `relay conform --strict` + `relay interop` against RELAY spec v1.11 |
+| relay-conform | push/PR | `relay conform --strict` + `relay interop` against RELAY spec v2.0 |
 | dco | PRs only | Signed-off-by on every commit |
 | docker-publish | push main/tags | multi-arch amd64/arm64 to GHCR |
 | release | vX.Y.Z tag | Regenerate go-FuSa artifacts (fmea, tara, vuln, qualify-report, safety-case, sbom, provenance) |

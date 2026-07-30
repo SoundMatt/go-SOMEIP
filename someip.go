@@ -23,7 +23,7 @@
 //
 // # RELAY conformance
 //
-// This package conforms to RELAY spec v1.11 (stable); see [SpecVersion]. The
+// This package conforms to RELAY spec v2.0 (stable); see [SpecVersion]. The
 // RELAY adapter — [Adapt], [Message.ToMessage], and [FromMessage] — lives in
 // adapt.go per spec §13.7.1's cross-language module taxonomy.
 package someip
@@ -34,13 +34,13 @@ import (
 	"fmt"
 	"strconv"
 
-	relay "github.com/SoundMatt/RELAY"
+	relay "github.com/SoundMatt/RELAY/v2"
 )
 
 // SpecVersion is the RELAY specification version this package conforms to (spec §17.12).
 //
 //fusa:req REQ-SPEC-001
-const SpecVersion = "1.11"
+const SpecVersion = "2.0"
 
 // SOMEIPProtocolVersion is the protocol version byte placed in every SOME/IP header.
 // Inbound messages with a different value MUST be rejected with [ErrMalformedMessage].

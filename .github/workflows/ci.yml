@@ -179,11 +179,11 @@ jobs:
 
   # ── RELAY conformance gate ─────────────────────────────────────────────────
   # Validates the go-someip CLI version/capabilities/status output against the
-  # RELAY §12 JSON schemas embedded in the relay binary (spec v1.11, stable),
+  # RELAY §12 JSON schemas embedded in the relay binary (spec v2.0, stable),
   # and that convert (§11.2) produces output equivalent to the reference
   # conversion (relay interop, §20.1.2 item 3).
   relay-conform:
-    name: RELAY conform (spec v1.11)
+    name: RELAY conform (spec v2.0)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -191,7 +191,7 @@ jobs:
         with:
           go-version: "1.25"
       - name: Install relay CLI
-        run: go install github.com/SoundMatt/RELAY/cmd/relay@v1.11.1
+        run: go install github.com/SoundMatt/RELAY/v2/cmd/relay@v2.0.4
       - name: Build go-someip CLI
         run: go build -o /tmp/go-someip ./cmd/go-someip
       - name: relay conform

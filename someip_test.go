@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	relay "github.com/SoundMatt/RELAY"
+	relay "github.com/SoundMatt/RELAY/v2"
 	someip "github.com/SoundMatt/go-SOMEIP"
 	"github.com/SoundMatt/go-SOMEIP/mock"
 )
@@ -251,8 +251,8 @@ func TestSOMEIPProtocolVersion(t *testing.T) {
 
 func TestSpecVersion(t *testing.T) {
 	//fusa:test REQ-SPEC-001
-	if someip.SpecVersion != "1.11" {
-		t.Errorf("SpecVersion: got %q, want %q", someip.SpecVersion, "1.11")
+	if someip.SpecVersion != "2.0" {
+		t.Errorf("SpecVersion: got %q, want %q", someip.SpecVersion, "2.0")
 	}
 	// Drift detector: our declared spec version must match the pinned RELAY
 	// module's spec version. If a dependency bump changes relay.SpecVersion,
