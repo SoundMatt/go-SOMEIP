@@ -16,7 +16,7 @@ import (
 	"os"
 	"runtime"
 
-	relay "github.com/SoundMatt/RELAY"
+	relay "github.com/SoundMatt/RELAY/v2"
 	someip "github.com/SoundMatt/go-SOMEIP"
 )
 
@@ -25,7 +25,7 @@ const toolName = "go-someip"
 
 // binVersion is the semantic version of this binary. Overridable via
 // -ldflags "-X main.binVersion=X.Y.Z" at build time.
-var binVersion = "1.2.0"
+var binVersion = "1.2.1"
 
 func main() {
 	if len(os.Args) < 2 {

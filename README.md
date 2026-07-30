@@ -23,7 +23,7 @@ The API is a stable Go interface. Implementations are swappable without changing
 
 ## RELAY conformance
 
-go-SOMEIP is a RELAY-conformant port (RELAY spec v1.11; see `SpecVersion` in
+go-SOMEIP is a RELAY-conformant port (RELAY spec v2.0; see `SpecVersion` in
 `someip.go`). The RELAY adapter lives in `adapt.go` (spec §13.7.1):
 
 - `Adapt(Service) relay.Caller` — wraps a native [`Service`] as a
