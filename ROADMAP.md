@@ -64,25 +64,25 @@ AUTOSAR spec completeness does not.
 
 ### v0.2.0 — TCP Transport
 
-- [ ] `tcp/`: TCP `Server` and `Service` with session management
+- [x] `tcp/`: TCP `Server` and `Service` with session management
 - [ ] Connection lifecycle: connect, keepalive, reconnect backoff
 - [ ] Concurrent call multiplexing over a single TCP connection
 
 ### v0.3.0 — SOME/IP-SD over UDP
 
-- [ ] `sd/udp/`: periodic OfferService announcements, FindService with response
+- [x] `sd/udp/`: periodic OfferService announcements, FindService with response
 - [ ] Subscribe/SubscribeAck eventgroup management
 - [ ] TTL refresh timers, stop-offering on shutdown
 
 ### v0.4.0 — SOME/IP-TP
 
-- [ ] `tp/`: segmentation and reassembly for payloads > MTU
+- [x] `tp/`: segmentation and reassembly for payloads > MTU
 - [ ] TP header bit (bit 5 of MessageType)
 - [ ] Reassembly timeout and partial-frame cleanup
 
 ### v0.5.0 — E2E Protection
 
-- [ ] `e2e/`: E2E Profile 01 (CRC-8) and Profile 05 (CRC-32)
+- [x] `e2e/`: E2E Profile 01 (CRC-8) and Profile 05 (CRC-32)
 - [ ] Counter-based freshness
 - [ ] Integration with `Server.Emit` and `Service.Call`
 

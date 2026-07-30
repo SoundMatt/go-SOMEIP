@@ -55,6 +55,12 @@ func (m Message) ToMessage() relay.Message {
 // ReturnCode, and InterfaceVersion are restored from Meta. Missing Meta keys
 // default to zero; "someip.msg_type_name" is diagnostic and ignored.
 //
+// ProtocolVersion is version-normalising: it is always set to
+// [SOMEIPProtocolVersion] (0x01, the only valid value) regardless of the
+// envelope, since there is no someip.protocol_version Meta key. Wrong-version
+// detection is therefore enforced only at the wire boundary by codec.Decode,
+// not through the adapter/Node API.
+//
 //fusa:req REQ-ADAPT-003
 func FromMessage(msg relay.Message) (Message, error) {
 	parts := strings.SplitN(msg.ID, "/", 2)
@@ -116,7 +122,7 @@ func metaUint(meta map[string]string, key string, bits int) *uint64 {
 // (RELAY spec §10.3). Use [Message.ToMessage] / [FromMessage] for message conversion.
 //
 // The returned adapter's Subscribe reads the [relay.WithEventID] option to
-// determine which SOME/IP event group to subscribe to (spec v0.3, REQ-RELAY-051);
+// determine which SOME/IP event group to subscribe to (RELAY spec §14.1);
 // it returns [ErrNotConnected] if no EventID is supplied.
 func Adapt(s Service) relay.Caller {
 	return &serviceAdapter{s: s}
@@ -151,7 +157,7 @@ func (a *serviceAdapter) Send(ctx context.Context, msg relay.Message) error {
 }
 
 // Subscribe subscribes to the SOME/IP event group named by [relay.WithEventID]
-// (spec v0.3, REQ-RELAY-051) and returns a channel of converted relay.Messages.
+// (RELAY spec §14.1) and returns a channel of converted relay.Messages.
 // Returns [ErrNotConnected] if no EventID was supplied. Channel-depth and
 // back-pressure options are forwarded to the underlying [Service.Subscribe].
 func (a *serviceAdapter) Subscribe(opts ...relay.SubscriberOption) (<-chan relay.Message, error) {
@@ -167,7 +173,33 @@ func (a *serviceAdapter) Subscribe(opts ...relay.SubscriberOption) (<-chan relay
 	go func() {
 		defer close(out)
 		for m := range sub.C() {
-			out <- m.ToMessage()
+			rm := m.ToMessage()
+			// Honour the RELAY BackPressurePolicy (spec §10.5(3)) rather than
+			// blocking unconditionally: a stalled subscriber must not stall the
+			// underlying Service delivery under the DropNewest/DropOldest policies.
+			switch cfg.BackPressure {
+			case relay.Block:
+				out <- rm
+			case relay.DropOldest:
+				// Drain the oldest buffered sample to make room, then enqueue.
+				for {
+					select {
+					case out <- rm:
+					default:
+						select {
+						case <-out:
+						default:
+						}
+						continue
+					}
+					break
+				}
+			default: // relay.DropNewest (spec default): drop the arriving sample when full.
+				select {
+				case out <- rm:
+				default:
+				}
+			}
 		}
 	}()
 	return out, nil

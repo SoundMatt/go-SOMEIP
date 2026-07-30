@@ -72,7 +72,7 @@
       "description": "Reject any inbound frame that is structurally malformed or carries an unsupported ProtocolVersion before it reaches application code.",
       "hazards": ["H-001"],
       "asil": "ASIL-B",
-      "safeState": "codec.Decode returns ErrShortFrame/ErrLengthMismatch and Message.Validate returns ErrWrongProtocolVersion; the caller never sees a Message built from the malformed bytes."
+      "safeState": "codec.Decode returns ErrMalformedMessage (via ErrShortFrame/ErrLengthMismatch, which wrap it) and Message.Validate returns ErrWrongProtocolVersion; the caller never sees a Message built from the malformed bytes."
     },
     {
       "id": "SG-002",

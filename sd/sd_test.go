@@ -18,14 +18,53 @@ import (
 // ServiceID=0x1234, InstanceID=0x0001, MajorVersion=0x01, TTL=3, MinorVersion=0.
 var knownGoodOfferEntry = []byte{
 	0x01,       // Type = OfferService
-	0x00,       // Index1
-	0x00,       // NumOpts1/Index2
-	0x00,       // NumOpts2
+	0x00,       // Index1 (Index First Option Run)
+	0x00,       // Index2 (Index Second Option Run)
+	0x00,       // NumOpts1<<4 | NumOpts2
 	0x12, 0x34, // ServiceID
 	0x00, 0x01, // InstanceID
 	0x01,             // MajorVersion
 	0x00, 0x00, 0x03, // TTL = 3
 	0x00, 0x00, 0x00, 0x00, // MinorVersion = 0
+}
+
+// TestEncodeEntryOptionRunLayout asserts the exact AUTOSAR PRS byte layout of
+// the option-run fields (bytes 1–3): byte1 = Index1, byte2 = Index2 (full 8
+// bits), byte3 = high nibble NumOpts1 | low nibble NumOpts2. This is a golden
+// vector with Index2 > 15, NumOpts1 > 0 and NumOpts2 > 0 so the packing is
+// actually exercised, cross-checked against the PRS rather than self round-trip.
+func TestEncodeEntryOptionRunLayout(t *testing.T) {
+	//fusa:test REQ-SD-002
+	//fusa:test REQ-SD-003
+	e := sd.Entry{
+		Type:       sd.EntryTypeOffer,
+		Index1:     0x01,
+		Index2:     0x20, // > 15: must occupy the full byte2, never overflow byte2's nibble
+		NumOpts1:   0x03,
+		NumOpts2:   0x05,
+		ServiceID:  0x1234,
+		InstanceID: 0x0001,
+		TTL:        3,
+	}
+	enc := sd.EncodeEntry(nil, e)
+	if enc[1] != 0x01 {
+		t.Errorf("byte1 (Index1): got 0x%02x, want 0x01", enc[1])
+	}
+	if enc[2] != 0x20 {
+		t.Errorf("byte2 (Index2): got 0x%02x, want 0x20", enc[2])
+	}
+	if enc[3] != 0x35 { // (3<<4)|5
+		t.Errorf("byte3 (NumOpts1<<4|NumOpts2): got 0x%02x, want 0x35", enc[3])
+	}
+	got, err := sd.DecodeEntry(enc)
+	if err != nil {
+		t.Fatalf("DecodeEntry: %v", err)
+	}
+	if got.Index1 != e.Index1 || got.Index2 != e.Index2 ||
+		got.NumOpts1 != e.NumOpts1 || got.NumOpts2 != e.NumOpts2 {
+		t.Errorf("option-run round-trip mismatch: got %+v, want Index1=%d Index2=%d NumOpts1=%d NumOpts2=%d",
+			got, e.Index1, e.Index2, e.NumOpts1, e.NumOpts2)
+	}
 }
 
 func TestDecodeOfferEntry(t *testing.T) {

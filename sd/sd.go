@@ -20,6 +20,11 @@
 // This package provides:
 //   - Wire encode/decode for SD entries and IPv4 endpoint options
 //   - An in-process [Registry] for unit tests (no UDP sockets)
+//
+// Only the IPv4 unicast endpoint option (type 0x04) is implemented. IPv6
+// endpoint options (type 0x06) and IPv4 multicast options (type 0x14) are not
+// supported and their type constants are intentionally omitted rather than
+// advertised without an encoder/decoder.
 package sd
 
 import (
@@ -53,11 +58,10 @@ const (
 	EntryTypeSubscribeAck uint8 = 0x07
 )
 
-// Option type identifiers.
+// Option type identifiers. Only the IPv4 unicast endpoint option is
+// encoded/decoded by this package (see EncodeIPv4Option/DecodeIPv4Option).
 const (
-	OptionTypeIPv4Endpoint  uint8 = 0x04
-	OptionTypeIPv6Endpoint  uint8 = 0x06
-	OptionTypeIPv4Multicast uint8 = 0x14
+	OptionTypeIPv4Endpoint uint8 = 0x04
 )
 
 // EntrySize is the fixed size of a SOME/IP-SD entry in bytes.
@@ -93,7 +97,9 @@ type Entry struct {
 	// TTL is the time-to-live in seconds. 0 = stop offering / unsubscribe.
 	TTL uint32
 	// MinorVersion (Offer/Find) or EventgroupID (Subscribe/SubscribeAck).
-	// Stored in the lower 24 bits on the wire for Offer/Find, lower 16 bits for Subscribe.
+	// MinorVersion is a full 32-bit big-endian value at bytes 12–15 and is only
+	// present on Offer/Find entries; Subscribe/SubscribeAck carry no MinorVersion
+	// and instead use EventgroupID at bytes 14–15.
 	MinorVersion uint32
 	// EventgroupID is populated for Subscribe / SubscribeAck entries.
 	EventgroupID uint16
@@ -105,9 +111,13 @@ type Entry struct {
 func EncodeEntry(dst []byte, e Entry) []byte {
 	b := [EntrySize]byte{}
 	b[0] = e.Type
+	// AUTOSAR PRS_SOMEIPServiceDiscoveryProtocol layout:
+	//   byte1 = Index First Option Run (full 8 bits)
+	//   byte2 = Index Second Option Run (full 8 bits)
+	//   byte3 = high nibble Number of Options 1 | low nibble Number of Options 2
 	b[1] = e.Index1
-	b[2] = (e.NumOpts1 & 0x0F) | (e.Index2 << 4)
-	b[3] = e.NumOpts2 & 0x0F
+	b[2] = e.Index2
+	b[3] = (e.NumOpts1 << 4) | (e.NumOpts2 & 0x0F)
 	binary.BigEndian.PutUint16(b[4:6], uint16(e.ServiceID))
 	binary.BigEndian.PutUint16(b[6:8], uint16(e.InstanceID))
 	b[8] = e.MajorVersion
@@ -137,8 +147,8 @@ func DecodeEntry(b []byte) (Entry, error) {
 	e := Entry{
 		Type:         b[0],
 		Index1:       b[1],
-		Index2:       b[2] >> 4,
-		NumOpts1:     b[2] & 0x0F,
+		Index2:       b[2],
+		NumOpts1:     b[3] >> 4,
 		NumOpts2:     b[3] & 0x0F,
 		ServiceID:    someip.ServiceID(binary.BigEndian.Uint16(b[4:6])),
 		InstanceID:   someip.InstanceID(binary.BigEndian.Uint16(b[6:8])),

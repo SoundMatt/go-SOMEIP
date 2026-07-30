@@ -25,7 +25,6 @@ package codec
 
 import (
 	"encoding/binary"
-	"errors"
 	"fmt"
 
 	someip "github.com/SoundMatt/go-SOMEIP"
@@ -38,10 +37,13 @@ const HeaderSize = 16
 const minLength = 8
 
 // ErrShortFrame is returned when a byte slice is too short to contain a SOME/IP header.
-var ErrShortFrame = errors.New("codec: frame too short for SOME/IP header")
+// It wraps [someip.ErrMalformedMessage] (which in turn wraps the RELAY sentinel)
+// so that errors.Is(err, someip.ErrMalformedMessage) holds (RELAY spec §5.4).
+var ErrShortFrame = fmt.Errorf("codec: frame too short for SOME/IP header: %w", someip.ErrMalformedMessage)
 
 // ErrLengthMismatch is returned when the Length field does not match the actual frame size.
-var ErrLengthMismatch = errors.New("codec: length field does not match frame size")
+// It wraps [someip.ErrMalformedMessage] so errors.Is(err, someip.ErrMalformedMessage) holds.
+var ErrLengthMismatch = fmt.Errorf("codec: length field does not match frame size: %w", someip.ErrMalformedMessage)
 
 // ProtocolVersion is the SOME/IP protocol version placed in every header.
 const ProtocolVersion uint8 = 0x01
