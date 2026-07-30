@@ -68,7 +68,7 @@ go test -tags integration -race ./udp/...
 | test-udp | push/PR | integration tag; skips if udp/ absent |
 | generate | push/PR | go generate + git diff --exit-code |
 | lint | push/PR | golangci-lint v2.12.2 |
-| gofusa | push/PR | go-FuSa v0.36.0 full lifecycle: check, 100% requirement trace, cyber, vuln, qualify (RELAY spec §20.1.2) |
+| gofusa | push/PR | go-FuSa v0.48.0 full lifecycle: check, 100% requirement trace, cyber, vuln, qualify (RELAY spec §20.1.2) |
 | relay-conform | push/PR | `relay conform --strict` + `relay interop` against RELAY spec v2.0 |
 | dco | PRs only | Signed-off-by on every commit |
 | docker-publish | push main/tags | multi-arch amd64/arm64 to GHCR |
