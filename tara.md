@@ -1,7 +1,7 @@
 # Threat Analysis and Risk Assessment (TARA)
 
 **Module:** github.com/SoundMatt/go-SOMEIP  
-**Generated:** 2026-07-30T21:20:29Z  
+**Generated:** 2026-07-30T22:32:17Z  
 **Standard:** ISO/SAE 21434:2021 Clause 15  
 **Coverage:** 11 / 15 assets (73.3%)
 
