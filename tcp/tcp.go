@@ -46,6 +46,10 @@ import (
 const (
 	defaultTimeout     = 5 * time.Second
 	defaultDialTimeout = 10 * time.Second
+	// maxFrameSize bounds a single SOME/IP frame read from the stream so a
+	// crafted Length field cannot trigger an integer overflow or an unbounded
+	// allocation (RELAY spec §5 ErrPayloadTooLarge).
+	maxFrameSize = 64 << 20 // 64 MiB
 )
 
 // ServerConfig configures a TCP [Server].
@@ -160,6 +164,12 @@ func (s *Server) serveConn(conn net.Conn) {
 
 func (s *Server) handleMessage(conn net.Conn, msg someip.Message) {
 	if msg.MessageType == someip.MsgTypeRequestNoReturn {
+		// Fire-and-forget requests never receive a response (AUTOSAR SOME/IP,
+		// no error path for RequestNoReturn), but a wrong-interface request
+		// must still not reach the handler.
+		if msg.InterfaceVersion != s.cfg.InterfaceVersion {
+			return
+		}
 		s.mu.RLock()
 		handler, ok := s.handlers[msg.MethodID]
 		s.mu.RUnlock()
@@ -180,6 +190,17 @@ func (s *Server) handleMessage(conn net.Conn, msg someip.Message) {
 		SessionID:        msg.SessionID,
 		ProtocolVersion:  0x01,
 		InterfaceVersion: s.cfg.InterfaceVersion,
+	}
+
+	// AUTOSAR SOME/IP Protocol Specification, Table 27: a request whose
+	// InterfaceVersion does not match the served interface must be rejected
+	// with RetWrongInterfaceVersion (0x08) rather than dispatched to a
+	// handler that assumes the configured interface's wire format.
+	if msg.InterfaceVersion != s.cfg.InterfaceVersion {
+		resp.MessageType = someip.MsgTypeError
+		resp.ReturnCode = someip.RetWrongInterfaceVersion
+		_, _ = conn.Write(codec.Encode(nil, resp))
+		return
 	}
 
 	if !ok {
@@ -407,13 +428,17 @@ func readFrame(r io.Reader) (someip.Message, error) {
 	if _, err := io.ReadFull(r, hdr); err != nil {
 		return someip.Message{}, err
 	}
-	// Length field (bytes 4-7) = 8 + payload length.
-	length := binary.BigEndian.Uint32(hdr[4:8])
+	// Length field (bytes 4-7) = 8 + payload length. Compute in a wide type
+	// and bound it before allocating to avoid uint32 overflow / memory DoS.
+	length := int64(binary.BigEndian.Uint32(hdr[4:8]))
 	if length < 8 {
 		return someip.Message{}, someip.ErrMalformedMessage
 	}
 	payloadLen := length - 8
-	frame := make([]byte, codec.HeaderSize+payloadLen)
+	if int64(codec.HeaderSize)+payloadLen > maxFrameSize {
+		return someip.Message{}, someip.ErrPayloadTooLarge
+	}
+	frame := make([]byte, codec.HeaderSize+int(payloadLen))
 	copy(frame, hdr)
 	if payloadLen > 0 {
 		if _, err := io.ReadFull(r, frame[codec.HeaderSize:]); err != nil {
