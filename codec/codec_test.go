@@ -7,6 +7,7 @@ package codec_test
 
 import (
 	"bytes"
+	"encoding/binary"
 	"errors"
 	"testing"
 
@@ -135,6 +136,31 @@ func TestDecodeLengthMismatch(t *testing.T) {
 	// Valid header but Length field claims more bytes than present.
 	b := make([]byte, codec.HeaderSize)
 	b[4], b[5], b[6], b[7] = 0x00, 0x00, 0x00, 0x10 // Length = 16 → expects 24-byte frame
+	_, err := codec.Decode(b)
+	if !errors.Is(err, codec.ErrLengthMismatch) {
+		t.Errorf("expected ErrLengthMismatch, got %v", err)
+	}
+}
+
+// TestDecodeLengthNearUint32Wraparound is a regression test for
+// go-SOMEIP-04: `wantTotal := int(8 + length)` computed `8 + length` in
+// wrapping uint32 arithmetic before converting to int, so a Length field
+// above 0xFFFFFFF7 wrapped to a small value instead of the huge one it
+// actually represents. It is not exploitable today only because the
+// len(b) != wantTotal check happens to reject these frames either way (no
+// caller in this repo ever presents Decode with a real multi-GB buffer);
+// this test pins that rejection so a future caller-path change can't quietly
+// resurrect the wraparound as a real bug.
+func TestDecodeLengthNearUint32Wraparound(t *testing.T) {
+	//fusa:test REQ-CODEC-002
+	// length = 0xFFFFFFF8: 8 + length wraps to 0 in uint32 arithmetic, but
+	// 8 + int64(length) correctly evaluates to ~4.29 billion. Either way the
+	// frame (16 bytes) cannot match wantTotal, but a wrapped computation
+	// could — for other length values near this boundary — coincidentally
+	// equal a small len(b) and be wrongly accepted; the widened computation
+	// must not permit that.
+	b := make([]byte, codec.HeaderSize)
+	binary.BigEndian.PutUint32(b[4:8], 0xFFFFFFF8)
 	_, err := codec.Decode(b)
 	if !errors.Is(err, codec.ErrLengthMismatch) {
 		t.Errorf("expected ErrLengthMismatch, got %v", err)

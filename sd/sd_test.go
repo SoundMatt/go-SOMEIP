@@ -67,6 +67,33 @@ func TestEncodeEntryOptionRunLayout(t *testing.T) {
 	}
 }
 
+// TestEncodeEntryNumOptsSaturates is a regression test for go-SOMEIP-05:
+// NumOpts1/NumOpts2 are 4-bit nibble fields, but EncodeEntry used to shift an
+// unmasked NumOpts1 into byte3 unchecked, so an out-of-range count (e.g. 17)
+// silently wrapped to an unrelated smaller value (1) instead of failing safe.
+// EncodeEntry must instead saturate at the field's maximum (15) so an
+// over-large count is always unambiguously "too many", never a
+// smaller-but-plausible wrong count.
+func TestEncodeEntryNumOptsSaturates(t *testing.T) {
+	//fusa:test REQ-SD-002
+	e := sd.Entry{
+		Type:       sd.EntryTypeOffer,
+		NumOpts1:   17, // > 0x0F: would wrap to nibble value 1 without saturation
+		NumOpts2:   32, // > 0x0F: would wrap to nibble value 0 without saturation
+		ServiceID:  0x1234,
+		InstanceID: 0x0001,
+	}
+	enc := sd.EncodeEntry(nil, e)
+	gotNumOpts1 := enc[3] >> 4
+	gotNumOpts2 := enc[3] & 0x0F
+	if gotNumOpts1 != 0x0F {
+		t.Errorf("NumOpts1 nibble: got %d, want 15 (saturated), not a wrapped value", gotNumOpts1)
+	}
+	if gotNumOpts2 != 0x0F {
+		t.Errorf("NumOpts2 nibble: got %d, want 15 (saturated), not a wrapped value", gotNumOpts2)
+	}
+}
+
 func TestDecodeOfferEntry(t *testing.T) {
 	//fusa:test REQ-SD-003
 	e, err := sd.DecodeEntry(knownGoodOfferEntry)
@@ -180,6 +207,87 @@ func TestIPv4OptionRoundTrip(t *testing.T) {
 	}
 	if got.Port != original.Port {
 		t.Errorf("Port: got %d, want %d", got.Port, original.Port)
+	}
+}
+
+// TestDecodeOptionsAndResolveIPv4Endpoint is a regression test for
+// go-SOMEIP-03: an OfferService entry's real endpoint (IP/port/L4-protocol)
+// is carried by the option it references via Index1/NumOpts1 into the
+// decoded Options array, not implied by anything else. This verifies the
+// options array decodes correctly and that ResolveIPv4Endpoint follows the
+// entry's option-run indices to the right option.
+func TestDecodeOptionsAndResolveIPv4Endpoint(t *testing.T) {
+	//fusa:test REQ-SD-008
+	//fusa:test REQ-SD-009
+	want := sd.IPv4EndpointOption{
+		IP:       net.ParseIP("192.168.1.50").To4(),
+		Protocol: 0x06, // TCP — must not be silently reported as UDP
+		Port:     30510,
+	}
+	optsBuf := sd.EncodeIPv4Option(nil, sd.OptionTypeIPv4Endpoint, want)
+
+	opts, err := sd.DecodeOptions(optsBuf)
+	if err != nil {
+		t.Fatalf("DecodeOptions: %v", err)
+	}
+	if len(opts) != 1 {
+		t.Fatalf("DecodeOptions: got %d options, want 1", len(opts))
+	}
+	if opts[0].Type != sd.OptionTypeIPv4Endpoint {
+		t.Errorf("option Type: got 0x%02x, want 0x%02x", opts[0].Type, sd.OptionTypeIPv4Endpoint)
+	}
+
+	entry := sd.Entry{
+		Type:     sd.EntryTypeOffer,
+		Index1:   0,
+		NumOpts1: 1,
+	}
+	got, ok := sd.ResolveIPv4Endpoint(entry, opts)
+	if !ok {
+		t.Fatal("ResolveIPv4Endpoint: ok = false, want true")
+	}
+	if !got.IP.Equal(want.IP) || got.Protocol != want.Protocol || got.Port != want.Port {
+		t.Errorf("ResolveIPv4Endpoint: got %+v, want %+v", got, want)
+	}
+}
+
+// TestResolveIPv4Endpoint_OutOfRangeRunIgnored is a regression test for
+// go-SOMEIP-03: Index1/NumOpts1 come from an attacker-controlled SD entry.
+// A run that falls outside the decoded Options array must be ignored, not
+// trusted (which would panic or read unrelated memory via a bad slice).
+func TestResolveIPv4Endpoint_OutOfRangeRunIgnored(t *testing.T) {
+	//fusa:test REQ-SD-009
+	opts := []sd.Option{} // no options decoded at all
+	entry := sd.Entry{
+		Type:     sd.EntryTypeOffer,
+		Index1:   5,
+		NumOpts1: 3, // references options[5:8] into an empty slice
+	}
+	_, ok := sd.ResolveIPv4Endpoint(entry, opts)
+	if ok {
+		t.Error("ResolveIPv4Endpoint: ok = true for an out-of-range option run, want false")
+	}
+}
+
+// TestDecodeOptions_TruncatedHeaderIsMalformed verifies a truncated option
+// header is rejected rather than read out of bounds.
+func TestDecodeOptions_TruncatedHeaderIsMalformed(t *testing.T) {
+	//fusa:test REQ-SD-008
+	_, err := sd.DecodeOptions([]byte{0x00, 0x09}) // only 2 of the required 3 header bytes
+	if !errors.Is(err, sd.ErrShortOption) {
+		t.Errorf("DecodeOptions: err = %v, want ErrShortOption", err)
+	}
+}
+
+// TestDecodeOptions_LengthExceedsBufferIsMalformed verifies a Length field
+// claiming more bytes than are actually present is rejected, not used to
+// read (or slice) past the end of the buffer.
+func TestDecodeOptions_LengthExceedsBufferIsMalformed(t *testing.T) {
+	//fusa:test REQ-SD-008
+	b := []byte{0xFF, 0xFF, 0x04} // Length=65535, Type=IPv4Endpoint, no data follows
+	_, err := sd.DecodeOptions(b)
+	if !errors.Is(err, sd.ErrShortOption) {
+		t.Errorf("DecodeOptions: err = %v, want ErrShortOption", err)
 	}
 }
 

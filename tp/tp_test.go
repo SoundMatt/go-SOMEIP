@@ -6,12 +6,37 @@
 package tp_test
 
 import (
+	"encoding/binary"
+	"errors"
 	"testing"
 	"time"
 
 	someip "github.com/SoundMatt/go-SOMEIP"
 	"github.com/SoundMatt/go-SOMEIP/tp"
 )
+
+// buildTPSegment constructs a raw TP-framed someip.Message with a
+// hand-crafted offset/more field, bypassing [tp.Segment] so tests can
+// exercise offsets and interleavings a legitimate sender would never
+// produce but an attacker controlling the wire can.
+func buildTPSegment(offsetUnits uint32, more bool, chunk []byte) someip.Message {
+	tpHdr := make([]byte, 4)
+	word := offsetUnits << 4
+	if more {
+		word |= 0x01
+	}
+	binary.BigEndian.PutUint32(tpHdr, word)
+	payload := make([]byte, 0, len(tpHdr)+len(chunk))
+	payload = append(payload, tpHdr...)
+	payload = append(payload, chunk...)
+	return someip.Message{
+		ServiceID:   0x1234,
+		MethodID:    0x0001,
+		SessionID:   0x0001,
+		MessageType: someip.MsgTypeTPRequest,
+		Payload:     payload,
+	}
+}
 
 func makeMsg(payload []byte) someip.Message {
 	return someip.Message{
@@ -277,6 +302,72 @@ func TestReassembler_Close(t *testing.T) {
 	_, _ = r.Add(segs[0]) // first segment only — incomplete
 
 	r.Close() // must not panic or deadlock
+}
+
+// TestReassembler_CraftedOffsetDoesNotPanic is a regression test for
+// go-SOMEIP-01: a segment stored at a large offset (received while More=1,
+// before totalSize is known) followed by a final segment whose totalSize
+// turns out smaller than that offset used to reach
+// `copy(payload[off:], data)` with off > len(payload) in the pre-fix code,
+// panicking with "slice bounds out of range" and crashing the goroutine
+// handling the connection. The reassembler must never panic on
+// attacker-controlled offsets, no matter how segments interleave; a chunk
+// that ends up outside the final totalSize is simply dropped.
+func TestReassembler_CraftedOffsetDoesNotPanic(t *testing.T) {
+	//fusa:test REQ-TP-009
+	r := tp.NewReassembler(tp.ReassemblerConfig{})
+	defer r.Close()
+
+	defer func() {
+		if rec := recover(); rec != nil {
+			t.Fatalf("Add panicked: %v", rec)
+		}
+	}()
+
+	// First segment: More=1, offset 1600 bytes (100 * 16 units), 4-byte
+	// chunk. Well within MaxReassembledSize, so it is accepted and stored —
+	// totalSize is still unknown at this point.
+	seg1 := buildTPSegment(100, true, []byte{0xAA, 0xBB, 0xCC, 0xDD})
+	if _, err := r.Add(seg1); err != nil {
+		t.Fatalf("Add(seg1): %v", err)
+	}
+
+	// Final segment: More=0, offset 0, 4-byte chunk — sets totalSize=4, far
+	// smaller than the 1600-byte offset already stored for seg1, and enough
+	// received bytes (4+4=8 >= totalSize=4) to trigger reassembly.
+	seg2 := buildTPSegment(0, false, []byte{0x01, 0x02, 0x03, 0x04})
+	got, err := r.Add(seg2)
+	if err != nil {
+		t.Fatalf("Add(seg2): %v", err)
+	}
+	if got == nil {
+		t.Fatal("expected a reassembled message once totalSize is reached")
+	}
+	if len(got.Payload) != 4 {
+		t.Fatalf("payload len = %d, want 4 (totalSize)", len(got.Payload))
+	}
+	if string(got.Payload) != "\x01\x02\x03\x04" {
+		t.Errorf("payload = %x, want 01020304 (the out-of-range chunk must be dropped, not copied)", got.Payload)
+	}
+}
+
+// TestReassembler_OffsetExceedsMaxReassembledSize is a regression test for
+// go-SOMEIP-01: a single crafted segment with a near-max 28-bit offset used
+// to force a ~4 GiB `make([]byte, totalSize)` allocation (unbounded-memory
+// DoS). The reassembler must reject it with ErrMalformedSegment before ever
+// allocating.
+func TestReassembler_OffsetExceedsMaxReassembledSize(t *testing.T) {
+	//fusa:test REQ-TP-009
+	r := tp.NewReassembler(tp.ReassemblerConfig{})
+	defer r.Close()
+
+	// offsetUnits is a 28-bit field; its maximum value yields a byte offset
+	// of ~4 GiB, far beyond tp.MaxReassembledSize.
+	seg := buildTPSegment(0x0FFFFFFF, false, []byte{0x01})
+	_, err := r.Add(seg)
+	if !errors.Is(err, tp.ErrMalformedSegment) {
+		t.Fatalf("Add: err = %v, want ErrMalformedSegment", err)
+	}
 }
 
 // TestIsTP verifies TP bit detection in MessageType.

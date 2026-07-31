@@ -89,6 +89,20 @@ func TestEncodeDecodeSDFrame_OfferWithEndpointOption(t *testing.T) {
 	if got.NumOpts1 != 1 {
 		t.Errorf("NumOpts1 = %d, want 1", got.NumOpts1)
 	}
+
+	// Regression for go-SOMEIP-03: decodeSDPayload must actually decode the
+	// Options array (not just skip past it), and the entry's option run must
+	// resolve to the endpoint carried on the wire.
+	if len(msg.Options) != 1 {
+		t.Fatalf("Options = %d, want 1", len(msg.Options))
+	}
+	resolved, ok := sd.ResolveIPv4Endpoint(got, msg.Options)
+	if !ok {
+		t.Fatal("ResolveIPv4Endpoint: ok = false, want true")
+	}
+	if !resolved.IP.Equal(opt.IP) || resolved.Protocol != opt.Protocol || resolved.Port != opt.Port {
+		t.Errorf("resolved endpoint = %+v, want %+v", resolved, opt)
+	}
 }
 
 func TestEncodeDecodeSDFrame_Find(t *testing.T) {

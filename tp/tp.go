@@ -44,6 +44,11 @@ const DefaultSegmentSize = 1392
 // a TP message before discarding partially received data.
 const DefaultReassemblyTimeout = 5 * time.Second
 
+// MaxReassembledSize bounds the total reassembled payload size. It caps both
+// the per-segment byte offset and the final message length so that a crafted
+// segment set cannot force an out-of-range copy or an unbounded allocation.
+const MaxReassembledSize = 64 << 20 // 64 MiB
+
 // tpBit is the TP flag in MessageType (bit 5).
 const tpBit MessageType = 0x20
 
@@ -239,6 +244,14 @@ func (r *Reassembler) Add(seg someip.Message) (*someip.Message, error) {
 	byteOffset := int(offsetUnits) * 16
 	chunk := seg.Payload[tpHeaderSize:]
 
+	// Reject segments whose position would exceed the reassembly bound. This
+	// guards both the make([]byte, totalSize) allocation and the copy below
+	// from attacker-controlled 28-bit offsets (ErrMalformedSegment, not panic).
+	if byteOffset < 0 || byteOffset > MaxReassembledSize ||
+		byteOffset+len(chunk) > MaxReassembledSize {
+		return nil, fmt.Errorf("%w: segment offset %d out of range", ErrMalformedSegment, byteOffset)
+	}
+
 	key := assemblyKey{seg.ServiceID, seg.MethodID, seg.SessionID}
 
 	r.mu.Lock()
@@ -281,10 +294,20 @@ func (r *Reassembler) Add(seg someip.Message) (*someip.Message, error) {
 		return nil, nil
 	}
 
-	// Reassemble.
+	// Reassemble. Every stored offset was bounds-checked against
+	// MaxReassembledSize on arrival, but a chunk may still straddle the
+	// totalSize learned from the final segment; clamp defensively so the copy
+	// can never run past the destination.
 	payload := make([]byte, win.totalSize)
 	for off, data := range win.segments {
-		copy(payload[off:], data)
+		if off < 0 || off >= win.totalSize {
+			continue
+		}
+		end := off + len(data)
+		if end > win.totalSize {
+			end = win.totalSize
+		}
+		copy(payload[off:end], data[:end-off])
 	}
 	delete(r.windows, key)
 

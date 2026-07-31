@@ -97,8 +97,8 @@ func Decode(b []byte) (someip.Message, error) {
 	if length < minLength {
 		return someip.Message{}, fmt.Errorf("%w: length field %d < minimum %d", ErrLengthMismatch, length, minLength)
 	}
-	wantTotal := int(8 + length) // 8 (ServiceID+MethodID+Length) + length
-	if len(b) != wantTotal {
+	wantTotal := 8 + int64(length) // 8 (ServiceID+MethodID+Length) + length, widened to avoid uint32 overflow
+	if int64(len(b)) != wantTotal {
 		return someip.Message{}, fmt.Errorf("%w: frame is %d bytes, length field implies %d", ErrLengthMismatch, len(b), wantTotal)
 	}
 

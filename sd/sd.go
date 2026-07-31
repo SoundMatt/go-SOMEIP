@@ -117,7 +117,21 @@ func EncodeEntry(dst []byte, e Entry) []byte {
 	//   byte3 = high nibble Number of Options 1 | low nibble Number of Options 2
 	b[1] = e.Index1
 	b[2] = e.Index2
-	b[3] = (e.NumOpts1 << 4) | (e.NumOpts2 & 0x0F)
+	// NumOpts1/NumOpts2 are 4-bit nibble fields; a count above 15 cannot be
+	// represented on the wire. Left-shifting an unmasked NumOpts1 wraps
+	// silently in the destination byte (e.g. 17 encodes indistinguishably
+	// from 1), which would misrepresent how many options the entry's first
+	// run actually covers. Saturate both fields at the field's maximum
+	// instead so an over-large count always reads back as 15 (unambiguously
+	// "too many to represent"), never as a smaller-but-plausible wrong count.
+	numOpts1, numOpts2 := e.NumOpts1, e.NumOpts2
+	if numOpts1 > 0x0F {
+		numOpts1 = 0x0F
+	}
+	if numOpts2 > 0x0F {
+		numOpts2 = 0x0F
+	}
+	b[3] = (numOpts1 << 4) | numOpts2
 	binary.BigEndian.PutUint16(b[4:6], uint16(e.ServiceID))
 	binary.BigEndian.PutUint16(b[6:8], uint16(e.InstanceID))
 	b[8] = e.MajorVersion
@@ -213,6 +227,76 @@ func DecodeIPv4Option(b []byte) (IPv4EndpointOption, error) {
 		Protocol: b[9],
 		Port:     binary.BigEndian.Uint16(b[10:12]),
 	}, nil
+}
+
+// Option is a generically-decoded SOME/IP-SD option: its wire Type and the
+// full option bytes beginning at the Length field (the layout
+// [DecodeIPv4Option] expects). Only [OptionTypeIPv4Endpoint] has an
+// interpretable payload in this package; other types are preserved as raw
+// bytes purely so that option-run indices into the array still line up.
+type Option struct {
+	Type uint8
+	Raw  []byte
+}
+
+// DecodeOptions walks the SOME/IP-SD Options array in b and returns one
+// [Option] per entry, in wire order. An [Entry]'s Index1/Index2 fields are
+// indices into this slice (AUTOSAR PRS_SOMEIPServiceDiscoveryProtocol:
+// "Index of First/Second Options Run"), not byte offsets, so callers must
+// resolve option runs against the full returned slice.
+//
+//fusa:req REQ-SD-008
+func DecodeOptions(b []byte) ([]Option, error) {
+	var opts []Option
+	offset := 0
+	for offset < len(b) {
+		if offset+3 > len(b) {
+			return nil, fmt.Errorf("%w: truncated option header", ErrShortOption)
+		}
+		length := int(binary.BigEndian.Uint16(b[offset : offset+2]))
+		optType := b[offset+2]
+		// Physical size on the wire = 2 (Length field) + 1 (Type field) + length,
+		// where Length counts every byte after Type (matches ipv4OptionLength=9
+		// for the 12-byte IPv4 endpoint option: 2+1+9=12).
+		size := 2 + 1 + length
+		if length < 1 || offset+size > len(b) {
+			return nil, fmt.Errorf("%w: option length %d exceeds remaining options bytes", ErrShortOption, length)
+		}
+		opts = append(opts, Option{Type: optType, Raw: b[offset : offset+size]})
+		offset += size
+	}
+	return opts, nil
+}
+
+// ResolveIPv4Endpoint returns the IPv4 endpoint option referenced by entry's
+// option runs (Index1/NumOpts1 and Index2/NumOpts2) in opts, decoding the
+// first referenced option of type [OptionTypeIPv4Endpoint] it finds. ok is
+// false if entry references no options, an option run's index/count falls
+// outside opts (an out-of-range run is ignored rather than trusted — the
+// index and count both come from the attacker-controlled entry), or none of
+// the referenced options is a decodable IPv4 endpoint option.
+//
+//fusa:req REQ-SD-009
+func ResolveIPv4Endpoint(entry Entry, opts []Option) (IPv4EndpointOption, bool) {
+	runs := [2][2]uint8{{entry.Index1, entry.NumOpts1}, {entry.Index2, entry.NumOpts2}}
+	for _, run := range runs {
+		idx, num := int(run[0]), int(run[1])
+		if num == 0 {
+			continue
+		}
+		if idx < 0 || num < 0 || idx+num > len(opts) {
+			continue
+		}
+		for _, opt := range opts[idx : idx+num] {
+			if opt.Type != OptionTypeIPv4Endpoint {
+				continue
+			}
+			if ep, err := DecodeIPv4Option(opt.Raw); err == nil {
+				return ep, true
+			}
+		}
+	}
+	return IPv4EndpointOption{}, false
 }
 
 // ── In-process Registry (no UDP) ──────────────────────────────────────────────

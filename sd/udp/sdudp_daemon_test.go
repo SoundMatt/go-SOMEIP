@@ -81,3 +81,89 @@ func TestDaemonOfferRegistersOffer(t *testing.T) {
 		t.Errorf("offers map size after re-Offer: got %d, want 1 (replace, not append)", n)
 	}
 }
+
+// TestHandleEntryOffer_UsesReferencedEndpointOption is a regression test for
+// go-SOMEIP-03: an OfferService entry's registered endpoint must come from
+// the IPv4 endpoint option it references (Index1/NumOpts1), not the UDP
+// source address/port the SD packet happened to arrive on — those are
+// typically different (SD multicast source port 30490 vs. the service's own
+// port), and a TCP-offered service must not be registered as UDP.
+func TestHandleEntryOffer_UsesReferencedEndpointOption(t *testing.T) {
+	//fusa:test REQ-SDUDP-002
+	d, err := NewDaemon(DaemonConfig{MulticastAddr: "239.192.255.251:0"})
+	if err != nil {
+		t.Fatalf("NewDaemon: %v", err)
+	}
+	defer func() { _ = d.Close() }()
+
+	entry := sd.Entry{
+		Type:       sd.EntryTypeOffer,
+		ServiceID:  0x1234,
+		InstanceID: 0x0001,
+		TTL:        60,
+		Index1:     0,
+		NumOpts1:   1,
+	}
+	realEndpoint := sd.IPv4EndpointOption{
+		IP:       net.ParseIP("10.0.0.42").To4(),
+		Protocol: 0x06, // TCP — the SD packet still arrives over UDP
+		Port:     30777,
+	}
+	opts := []sd.Option{{
+		Type: sd.OptionTypeIPv4Endpoint,
+		Raw:  sd.EncodeIPv4Option(nil, sd.OptionTypeIPv4Endpoint, realEndpoint),
+	}}
+	// The SD packet's source address/port, which must NOT end up in the
+	// registry now that the entry references a real endpoint option.
+	from := &net.UDPAddr{IP: net.ParseIP("192.168.99.99"), Port: 30490}
+
+	d.handleEntry(entry, opts, from)
+
+	records := d.Registry().Find(0x1234)
+	if len(records) != 1 {
+		t.Fatalf("Registry.Find: got %d records, want 1", len(records))
+	}
+	got := records[0].Endpoint
+	if !got.IP.Equal(realEndpoint.IP) {
+		t.Errorf("registered IP = %v, want %v (the option's IP, not the SD source %v)", got.IP, realEndpoint.IP, from.IP)
+	}
+	if got.Protocol != realEndpoint.Protocol {
+		t.Errorf("registered Protocol = 0x%02x, want 0x%02x (TCP, not hardcoded UDP)", got.Protocol, realEndpoint.Protocol)
+	}
+	if got.Port != realEndpoint.Port {
+		t.Errorf("registered Port = %d, want %d (the option's port, not the SD source port %d)", got.Port, realEndpoint.Port, from.Port)
+	}
+}
+
+// TestHandleEntryOffer_FallsBackToSourceWhenNoOption verifies that an offer
+// with no resolvable endpoint option still registers something (best-effort
+// fallback to the SD source address), preserving prior behaviour for
+// non-conformant peers instead of silently dropping the offer.
+func TestHandleEntryOffer_FallsBackToSourceWhenNoOption(t *testing.T) {
+	//fusa:test REQ-SDUDP-002
+	d, err := NewDaemon(DaemonConfig{MulticastAddr: "239.192.255.251:0"})
+	if err != nil {
+		t.Fatalf("NewDaemon: %v", err)
+	}
+	defer func() { _ = d.Close() }()
+
+	entry := sd.Entry{
+		Type:       sd.EntryTypeOffer,
+		ServiceID:  0x5678,
+		InstanceID: 0x0001,
+		TTL:        60,
+		// No option run: Index1/NumOpts1 are zero.
+	}
+	from := &net.UDPAddr{IP: net.ParseIP("192.168.1.5"), Port: 30490}
+
+	d.handleEntry(entry, nil, from)
+
+	records := d.Registry().Find(0x5678)
+	if len(records) != 1 {
+		t.Fatalf("Registry.Find: got %d records, want 1", len(records))
+	}
+	got := records[0].Endpoint
+	if !got.IP.Equal(from.IP) || got.Port != uint16(from.Port) {
+		t.Errorf("fallback endpoint = %+v, want IP=%v Port=%d (SD source)", got, from.IP, from.Port)
+	}
+}

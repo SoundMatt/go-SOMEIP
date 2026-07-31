@@ -59,7 +59,7 @@ const (
 type sdMessage struct {
 	Flags   uint8
 	Entries []sd.Entry
-	// Options are not parsed beyond counting them for future use.
+	Options []sd.Option
 }
 
 // encodeSDFrame builds a complete SOME/IP-SD frame (header + SD payload) with
@@ -130,7 +130,25 @@ func decodeSDPayload(payload []byte) (sdMessage, error) {
 		offset += sd.EntrySize
 	}
 
-	return sdMessage{Flags: flags, Entries: entries}, nil
+	// Options array follows the Entries array: a 4-byte length, then the
+	// options themselves. Entries reference this array by index (Index1/
+	// Index2, NumOpts1/NumOpts2), so it must be decoded for those indices to
+	// resolve to anything meaningful.
+	offset = entriesEnd
+	if offset+sdOptionsLenSize > len(payload) {
+		return sdMessage{}, someip.ErrMalformedMessage
+	}
+	optionsLen := int(binary.BigEndian.Uint32(payload[offset:]))
+	offset += sdOptionsLenSize
+	if optionsLen < 0 || offset+optionsLen > len(payload) {
+		return sdMessage{}, someip.ErrMalformedMessage
+	}
+	options, err := sd.DecodeOptions(payload[offset : offset+optionsLen])
+	if err != nil {
+		return sdMessage{}, err
+	}
+
+	return sdMessage{Flags: flags, Entries: entries, Options: options}, nil
 }
 
 // ── Daemon ────────────────────────────────────────────────────────────────────
@@ -383,18 +401,29 @@ func (d *Daemon) handleFrame(frame []byte, from *net.UDPAddr) {
 	}
 
 	for _, entry := range sdMsg.Entries {
-		d.handleEntry(entry, from)
+		d.handleEntry(entry, sdMsg.Options, from)
 	}
 }
 
-func (d *Daemon) handleEntry(entry sd.Entry, from *net.UDPAddr) {
+func (d *Daemon) handleEntry(entry sd.Entry, opts []sd.Option, from *net.UDPAddr) {
 	switch entry.Type {
 	case sd.EntryTypeOffer:
-		// Update registry with this remote offer.
-		endpoint := sd.IPv4EndpointOption{
-			IP:       from.IP,
-			Protocol: 0x11, // UDP
-			Port:     uint16(from.Port),
+		// The offer's actual endpoint (IP/port/L4-protocol) is carried by the
+		// IPv4 endpoint option its entry references via Index1/NumOpts1 (or
+		// Index2/NumOpts2), not the SD source socket the offer happened to
+		// arrive on — those are typically the same host but the SD multicast
+		// source port (30490) is not generally the offered service's port,
+		// and a TCP-offered service must not be registered as UDP.
+		endpoint, ok := sd.ResolveIPv4Endpoint(entry, opts)
+		if !ok {
+			// No decodable endpoint option referenced: fall back to the SD
+			// source address/port (best-effort for a non-conformant offer)
+			// rather than dropping the offer entirely.
+			endpoint = sd.IPv4EndpointOption{
+				IP:       from.IP,
+				Protocol: 0x11, // UDP
+				Port:     uint16(from.Port),
+			}
 		}
 		d.registry.Offer(entry, endpoint)
 
